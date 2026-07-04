@@ -34,6 +34,10 @@ enum GamePersistenceKind: String, CaseIterable, Codable {
     case connectFour
     case checkers
     case rubiksCube
+    case gomoku
+    case seaBattle
+    case crazyEight
+    case spider
 
     var fileName: String {
         switch self {
@@ -51,6 +55,10 @@ enum GamePersistenceKind: String, CaseIterable, Codable {
         case .connectFour: return "connect-four.json"
         case .checkers: return "checkers.json"
         case .rubiksCube: return "rubiks-cube.json"
+        case .gomoku: return "gomoku.json"
+        case .seaBattle: return "sea-battle.json"
+        case .crazyEight: return "crazy-8.json"
+        case .spider: return "spider.json"
         }
     }
 }
@@ -259,6 +267,14 @@ final class GamePersistenceStore {
 
     func loadRubiksCube(windowSessionID: String) throws -> RubiksCubeSessionSnapshot? {
         try load(RubiksCubeSessionSnapshot.self, from: url(for: .rubiksCube, windowSessionID: windowSessionID))
+    }
+
+    func saveSnapshot<T: Codable>(_ value: T, kind: GamePersistenceKind, windowSessionID: String) throws {
+        try save(value, to: url(for: kind, windowSessionID: windowSessionID))
+    }
+
+    func loadSnapshot<T: Codable>(_ type: T.Type, kind: GamePersistenceKind, windowSessionID: String) throws -> T? {
+        try load(type, from: url(for: kind, windowSessionID: windowSessionID))
     }
 
     func exportChess(_ snapshot: ChessGameSnapshot, to url: URL) throws {
