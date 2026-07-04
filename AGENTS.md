@@ -30,6 +30,7 @@ Each app also has its own `docs/` with deeper, app-specific notes.
 - **Sage** — owner (`artists@deutschleartistry.com`, GitHub `sagedeutschle`). Design/polish lane.
 - **Ben** — Sage's dad, **newly joining with his own agents**. Picks a lane and announces it in the ledger.
 - **Agents** — Claude / Fable (design, polish, visual identity) and Codex (wiring, function, backend, data, builds/deploys).
+  Sage's Claude agents may appear under the **prismet org** account (`xx_gtrktscrb_xx@prismet.xyz`) — same human, same lanes.
 
 ## 3. Sync model — git through GitHub (NOT file-copy)
 
