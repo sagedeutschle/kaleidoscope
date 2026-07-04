@@ -1,4 +1,4 @@
-// PRISM: RELEASE Agent-Design/Fable 2026-07-04 — "The Moguls" board (Debt Clock lens).
+// PRISM: RELEASE Agent-Design/Fable 2026-07-04 — "The Moguls" board (Debt Clock lens) — macOS mirror.
 // Data shapes for the billionaire/CEO vibe-check ledger. The council pipeline runs
 // offline (Claude + Codex + DeepSeek CLIs/APIs on the source laptop), publishes
 // moguls.json to a public gist, and the app reads it — same serve pattern as decrees.

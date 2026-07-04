@@ -35,7 +35,31 @@ struct DebtClockStatsView: View {
         }
     }
 
+    // PRISM: Agent-Design/Fable 2026-07-04 — Moguls board switcher (iOS parity mirror).
+    /// The lens hosts two boards behind a top-bar switcher: THE DEBT and THE MOGULS.
+    private enum Board: String, CaseIterable {
+        case debt = "THE DEBT"
+        case moguls = "THE MOGULS"
+    }
+    @State private var board: Board = .debt
+
     var body: some View {
+        VStack(spacing: 0) {
+            boardSwitcher
+                .padding(.horizontal, 18)
+                .padding(.top, 10)
+                .padding(.bottom, 4)
+            switch board {
+            case .debt: debtBoard
+            case .moguls: MogulBoardView()
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(background)
+        .navigationTitle(board == .debt ? "Debt Clock" : "The Moguls")
+    }
+
+    private var debtBoard: some View {
         ScrollView {
             // Re-render ~8×/sec so live figures tick smoothly between the infrequent
             // official-source refreshes.
@@ -48,11 +72,52 @@ struct DebtClockStatsView: View {
                 .padding(18)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(background)
-        .navigationTitle("Debt Clock")
         .task { await store.load() }
         .refreshable { await store.load() }
+    }
+
+    /// LED segmented switcher — active segment glows in its board's hue.
+    private var boardSwitcher: some View {
+        HStack(spacing: 8) {
+            BoardSegment(title: Board.debt.rawValue,
+                         active: board == .debt,
+                         hue: Hue.debt) { board = .debt }
+            BoardSegment(title: Board.moguls.rawValue,
+                         active: board == .moguls,
+                         hue: MogulBoardView.Hue.gold) { board = .moguls }
+        }
+    }
+
+    private struct BoardSegment: View {
+        let title: String
+        let active: Bool
+        let hue: Color
+        let action: () -> Void
+
+        private var fillColor: Color { active ? hue.opacity(0.16) : Color.white.opacity(0.04) }
+        private var borderColor: Color { active ? hue.opacity(0.6) : Color.white.opacity(0.10) }
+        private var textColor: Color { active ? hue : Color(white: 0.72) }
+
+        var body: some View {
+            Button(action: action) {
+                Text(title)
+                    .font(.system(size: 12.5, weight: .heavy, design: .rounded))
+                    .tracking(2)
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 9)
+                    .background(
+                        RoundedRectangle(cornerRadius: 11, style: .continuous)
+                            .fill(fillColor)
+                            .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous)
+                                .strokeBorder(borderColor, lineWidth: 1))
+                    )
+                    .foregroundStyle(textColor)
+                    .shadow(color: active ? hue.opacity(0.35) : .clear, radius: 8)
+            }
+            .buttonStyle(.plain)
+            .accessibilityAddTraits(active ? [.isSelected] : [])
+        }
     }
 
     private var background: some View {

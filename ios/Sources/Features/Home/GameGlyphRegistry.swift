@@ -30,5 +30,5 @@ func gameGlyph(for id: String) -> some View {
 let gameTileImageIDs: Set<String> = [
     "2048", "snake", "sliding", "lightsout", "sudoku", "nonogram", "minesweeper", "rubiks",
     "chess", "checkers", "reversi", "connectfour", "solitaire", "brickbench", "oracle",
-    "debtclock", "wordle", "gomoku", "spider", "crazyeight", "seabattle"
+    "debtclock", "wordle", "gomoku", "spider", "crazyeight", "seabattle", "steamrewind"
 ]

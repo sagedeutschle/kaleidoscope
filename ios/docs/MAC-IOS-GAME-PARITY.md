@@ -140,7 +140,4 @@ one canonical feature identity to the current iOS/macOS legacy IDs.
   THE DEBT / THE MOGULS; billionaire/CEO ledger with Council-of-Bots satire verdicts +
   boss-vs-median-worker pay ratios; new files `Sources/Core/Stats/MogulModel.swift`,
   `Sources/Backend/MogulSource.swift`, `Sources/Features/Stats/MogulsView.swift`,
-  `Resources/moguls.json`; gist-served like decrees). **macOS decision: NOT mirrored this
-  pass — parity debt.** Owner: design lane. Blocker: none technical; the macOS Debt Clock
-  view needs the same switcher + board port (models are UI-independent and copy verbatim).
-  Next action: port alongside the outstanding v10/v11 macOS mirror batch.
+  `Resources/moguls.json`; gist-served like decrees). **macOS decision: MIRRORED same-day (2026-07-04)** — model/source/view ported to macos/Sources/{Model,Views}, bundled moguls.json added, switcher wired into the macOS DebtClockStatsView; macOS build green (CODE_SIGNING_ALLOWED=NO path).

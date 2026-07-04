@@ -1857,3 +1857,23 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   Codex's key-holding proxy remains HIS slice per the original PRISM split; engine
   convergence onto SteamKit also stays Codex's lane. The standalone mac app at
   apps/steam-rewind is NOT moved — it keeps living there until SteamKit convergence.
+
+- `PRISM: RELEASE Agent-Design/Fable (Sage), 2026-07-04 ~11:45 ET (Council v2 bench + SteamRewind fold-in + macOS Moguls mirror)` —
+  (1) **Council v2**: bench = Justices Opus + GPT-5.5 (detailed written opinions) + Sonnet Jury
+  + Mini Jury (3 persona jurors each: Skeptic/Builder/Ledger Clerk; Quant/Populist/Butler).
+  Voting: 4 seats, strict majority; tie → agreeing Justices; Justices split → aight. Opus
+  court-reporter consensus + voteSummary per mogul. Full 8-voice board (9 gaming/12 aight/
+  4 fraud) published to the gist + bundled. Rich discourse detail sheet (consensus panel,
+  justice cards, jury boxes, rules footnote). GOTCHA: ChatGPT-account codex has NO
+  gpt-5.5-mini → Mini Jury = gpt-5.5 @ model_reasoning_effort=low, labeled honestly.
+  Pipeline v2 in oracle/tools/mogul-council/ (v1 scripts retired).
+  (2) **SteamRewind folded in as Home ▸ Lenses ▸ Steam Rewind**: engine (9 files incl.
+  LensCatalog) at ios/Sources/Core/Steam/, touch-first SteamRewindView (11 lenses, demo
+  fixture first-run, BYO Steam key on-device only), tile art + registry, 9 engine tests.
+  Standalone mac app at apps/steam-rewind stays put; SteamKit convergence remains Codex's.
+  (3) **macOS Moguls mirror LANDED** (parity debt paid): model/source/view + bundled board
+  + DebtClock switcher on macOS, build green. NOTE: spend-limit killed 3 assist agents
+  mid-flight this session; tile agent + macOS agent work was recovered/completed inline.
+  iOS: 31/31 focused tests, sim-screenshot verified (board, discourse, steam lens).
+  Deployed to Poopoohead (v2+Steam live); iPad pending wake. TestFlight build 12 = v1
+  Moguls only (pre-bench) — next ASC upload will carry v2+Steam as build 13.

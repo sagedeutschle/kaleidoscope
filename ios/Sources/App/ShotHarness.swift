@@ -52,6 +52,13 @@ struct ShotHarness: View {
         case "oracle":             OracleView()
         case "debtclock":          DebtClockStatsView()
         case "moguls":             MogulBoardView()   // The Moguls board, direct
+        case "steamrewind":        SteamRewindView()  // Steam Rewind lens (demo library)
+        case "moguldetail":        // First bundled mogul's full bench discourse
+            if let mogul = MogulSource.loadBundled()?.ranked.first {
+                MogulDetailSheet(mogul: mogul)
+            } else {
+                Text("no bundled moguls")
+            }
         case "settings":           SettingsView()
         case "glyphs":             AllGlyphsGrid()
         default:                   ChessView(accountID: nil, playMode: .soloBot)

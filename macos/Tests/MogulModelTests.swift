@@ -1,4 +1,4 @@
-// PRISM: RELEASE Agent-Design/Fable 2026-07-04 — Moguls board model tests.
+// PRISM: RELEASE Agent-Design/Fable 2026-07-04 — Moguls board model tests — macOS mirror (ports verbatim).
 import XCTest
 @testable import Kaleidoscope
 

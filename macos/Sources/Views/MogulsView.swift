@@ -1,3 +1,11 @@
+// PRISM: RELEASE Agent-MacParity/Fable 2026-07-04 — Moguls board macOS mirror of
+// ios/Sources/Features/Stats/MogulsView.swift (v2 bench discourse: consensus panel,
+// justice cards, jury boxes, voting-rules footnote). macOS adaptations: sheet loses
+// presentationDetents/DragIndicator and gains a Done bar + window frame (DecreeDetailView
+// house pattern); .preferredColorScheme(.dark) → .environment(\.colorScheme, .dark)
+// (DecreeView house pattern); header gains an explicit refresh button (no pull-to-refresh
+// on macOS). Store gains isRefreshing for the spinner.
+//
 // PRISM: RELEASE Agent-Design/Fable 2026-07-04 — "The Moguls" board (Debt Clock lens).
 // A live wealth board for the top billionaires + highest-paid CEOs, each vibe-checked
 // by the Council of Bots (Claude · Codex · DeepSeek) with a comedic ruling:
@@ -10,6 +18,7 @@ import SwiftUI
 @MainActor
 final class MogulStore: ObservableObject {
     @Published private(set) var ledger: MogulLedger?
+    @Published private(set) var isRefreshing = false
     /// Once a live board lands, a late bundled/persisted snapshot can't clobber it
     /// (same guard the Oracle uses for its chronicle).
     private var gotLiveBoard = false
@@ -20,6 +29,8 @@ final class MogulStore: ObservableObject {
     }
 
     func refresh() async {
+        isRefreshing = true
+        defer { isRefreshing = false }
         if let live = await MogulSource.fetchLatest() {
             gotLiveBoard = true
             ledger = live
@@ -115,16 +126,13 @@ struct MogulBoardView: View {
             }
             .ignoresSafeArea()
         )
-        .preferredColorScheme(.dark)
+        .environment(\.colorScheme, .dark)
         .task {
             store.bootstrap()
             await store.refresh()
         }
-        .refreshable { await store.refresh() }
         .sheet(item: $selected) { mogul in
             MogulDetailSheet(mogul: mogul)
-                .presentationDetents([.large])
-                .presentationDragIndicator(.visible)
         }
     }
 
@@ -146,7 +154,30 @@ struct MogulBoardView: View {
                 }
                 .font(Kaleido.rounded(11, .semibold))
             }
+            refreshControl
         }
+    }
+
+    /// Explicit refresh affordance — macOS has no pull-to-refresh gesture, so the
+    /// board mirrors the Oracle's refresh button (DecreeView house pattern).
+    private var refreshControl: some View {
+        Group {
+            if store.isRefreshing {
+                ProgressView()
+                    .controlSize(.small)
+            } else {
+                Button {
+                    Task { await store.refresh() }
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(Hue.gold)
+                }
+                .buttonStyle(.plain)
+                .help("Reconvene the council — fetch the latest board.")
+            }
+        }
+        .padding(.leading, 6)
     }
 
     // MARK: Combined ticker hero — the board's one big flowing counter.
@@ -268,7 +299,7 @@ struct MogulBoardView: View {
                     .strokeBorder(Hue.gold.opacity(0.25), lineWidth: 1))
         )
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("The council is convening. Pull to refresh.")
+        .accessibilityLabel("The council is convening. Refresh to try again.")
     }
 
     private func disclaimer(_ ledger: MogulLedger) -> some View {
@@ -416,61 +447,76 @@ struct VerdictStamp: View {
 struct MogulDetailSheet: View {
     let mogul: Mogul
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dismiss) private var dismiss
     @State private var opened = Date()
     private typealias Hue = MogulBoardView.Hue
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(mogul.name)
-                            .font(.system(size: 26, weight: .heavy, design: .rounded))
-                            .foregroundStyle(.white)
-                        Text(mogul.title)
-                            .font(Kaleido.rounded(13, .semibold))
-                            .foregroundStyle(Hue.label)
-                        Text(mogul.category.label.uppercased())
-                            .font(Kaleido.rounded(10, .heavy)).tracking(1.6)
-                            .foregroundStyle(Hue.gold.opacity(0.8))
+        VStack(spacing: 0) {
+            // macOS sheets have no drag-to-dismiss — house pattern is an explicit
+            // Done bar up top (see DecreeDetailView).
+            HStack {
+                Text(mogul.category.label.uppercased())
+                    .font(Kaleido.rounded(10, .heavy)).tracking(1.6)
+                    .foregroundStyle(Hue.gold.opacity(0.8))
+                Spacer()
+                Button("Done") { dismiss() }
+                    .keyboardShortcut(.defaultAction)
+            }
+            .padding(.horizontal, 18)
+            .padding(.vertical, 12)
+            Divider().overlay(Color.white.opacity(0.1))
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(mogul.name)
+                                .font(.system(size: 26, weight: .heavy, design: .rounded))
+                                .foregroundStyle(.white)
+                            Text(mogul.title)
+                                .font(Kaleido.rounded(13, .semibold))
+                                .foregroundStyle(Hue.label)
+                        }
+                        Spacer()
+                        VerdictStamp(verdict: mogul.finalVerdict)
                     }
-                    Spacer()
-                    VerdictStamp(verdict: mogul.finalVerdict)
-                }
 
-                if let worth = mogul.netWorthUSD {
-                    liveWorthPanel(worth)
-                }
-                if let comp = mogul.annualCompUSD {
-                    compRow(comp)
-                }
+                    if let worth = mogul.netWorthUSD {
+                        liveWorthPanel(worth)
+                    }
+                    if let comp = mogul.annualCompUSD {
+                        compRow(comp)
+                    }
 
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("KNOWN FOR")
-                        .font(Kaleido.rounded(11, .heavy)).tracking(2)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("KNOWN FOR")
+                            .font(Kaleido.rounded(11, .heavy)).tracking(2)
+                            .foregroundStyle(Hue.sublabel)
+                        Text(mogul.knownFor)
+                            .font(Kaleido.rounded(14, .regular))
+                            .foregroundStyle(.white.opacity(0.92))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    councilSection
+
+                    Text("Satire: the council's verdicts and quips are comedy written by AI bots, not factual claims. Figures: \(mogul.source).")
+                        .font(Kaleido.rounded(10.5, .regular))
                         .foregroundStyle(Hue.sublabel)
-                    Text(mogul.knownFor)
-                        .font(Kaleido.rounded(14, .regular))
-                        .foregroundStyle(.white.opacity(0.92))
                         .fixedSize(horizontal: false, vertical: true)
                 }
-
-                councilSection
-
-                Text("Satire: the council's verdicts and quips are comedy written by AI bots, not factual claims. Figures: \(mogul.source).")
-                    .font(Kaleido.rounded(10.5, .regular))
-                    .foregroundStyle(Hue.sublabel)
-                    .fixedSize(horizontal: false, vertical: true)
+                .padding(20)
             }
-            .padding(20)
         }
+        .frame(minWidth: 480, idealWidth: 560, minHeight: 480, idealHeight: 660)
         .background(
             LinearGradient(colors: [Color(red: 0.05, green: 0.05, blue: 0.09),
                                     Color(red: 0.02, green: 0.03, blue: 0.06)],
                            startPoint: .top, endPoint: .bottom)
             .ignoresSafeArea()
         )
-        .preferredColorScheme(.dark)
+        .environment(\.colorScheme, .dark)
     }
 
     /// The full-digit flowing counter — the wealth ticking in real time (estimated).
@@ -792,4 +838,8 @@ struct MogulDetailSheet: View {
         default: return "cpu"
         }
     }
+}
+
+#Preview {
+    MogulBoardView().frame(width: 760, height: 740)
 }

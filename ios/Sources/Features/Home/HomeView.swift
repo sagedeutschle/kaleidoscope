@@ -4,6 +4,8 @@ import SwiftUI
 
 struct GameCard: Identifiable {
     static let debtClockID = "debtclock"
+    // PRISM: Agent-Design/Fable 2026-07-04 — SteamRewind fold-in (Lens)
+    static let steamRewindID = "steamrewind"
 
     let id: String
     let title: String
@@ -37,7 +39,8 @@ struct GameCard: Identifiable {
             .init(id: "crazyeight", title: "Crazy 8", icon: "8.circle.fill", accent: Color(red: 0.60, green: 0.28, blue: 0.42), ready: true, category: "Cards"),
             .init(id: "brickbench", title: "Brick Bench", icon: "square.stack.3d.up.fill", accent: Color(red: 0.80, green: 0.20, blue: 0.20), ready: true, category: "Workshop"),
             .init(id: "oracle", title: "Oracle", icon: "sparkles", accent: Color(red: 0.72, green: 0.54, blue: 0.20), ready: true, category: "Lenses"),
-            .init(id: debtClockID, title: "Debt Clock", icon: "chart.line.uptrend.xyaxis", accent: Color(red: 0.20, green: 0.62, blue: 0.42), ready: true, category: "Lenses")
+            .init(id: debtClockID, title: "Debt Clock", icon: "chart.line.uptrend.xyaxis", accent: Color(red: 0.20, green: 0.62, blue: 0.42), ready: true, category: "Lenses"),
+            .init(id: steamRewindID, title: "Steam Rewind", icon: "gamecontroller.fill", accent: Color(red: 0.26, green: 0.42, blue: 0.72), ready: true, category: "Lenses")
         ]
 
         if WordleLaunchConfiguration.isEnabledForLaunchReview {
@@ -86,6 +89,8 @@ struct HomeView: View {
             .navigationDestination(for: String.self) { id in
                 if id == GameCard.debtClockID {
                     DebtClockStatsView()
+                } else if id == GameCard.steamRewindID {
+                    SteamRewindView()
                 } else if let card = GameCard.all.first(where: { $0.id == id }),
                    let gameID = card.canonicalGameID {
                     if GameModeCatalog.requiresLaunchModeSelection(for: gameID) {
