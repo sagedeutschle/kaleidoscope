@@ -1922,3 +1922,18 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   (3) Housekeeping: this session's earlier Steam brainstorm/coordination accidentally went to the STALE
   pre-monorepo ledger at `GtrktscrB/apps/chess-hotswap/docs/AGENT-COORDINATION.md` (has a MOVED.md) — using
   THIS canonical ledger from here on. No code touched this pass; no claims held.
+
+- `PRISM: RELEASE Agent-A/Claude 2026-07-04 ~14:50 EDT (macOS SteamRewind lens + model convergence — Sage-authorized)` —
+  Sage OK'd me crossing into the convergence lane, so DONE: (1) retired the canonical staging model +
+  fixture + test at `macos/Sources/Model/SteamProfileSnapshot.swift` / `Sources/Resources/
+  SteamProfileSnapshotFixture.json` / `Tests/SteamProfileSnapshotTests.swift` (superseded — nothing else
+  referenced them); (2) the shipping engine is now canonical on macOS too — copied to
+  `macos/Sources/Model/Steam/*` (same engine as `ios/Sources/Core/Steam`, both bug fixes incl.); (3) new
+  `macos/Sources/Views/SteamRewindLensView.swift` (own-world facet, Kaleido-styled, reuses the engine +
+  ExplorerModel); (4) registered `steam-rewind` in FacetRegistry + routed in ContentView; (5) ported the
+  engine test to `macos/Tests/SteamMetricsTests.swift`. **macOS BUILD SUCCEEDED** (Swift 5, xcodegen). Test
+  host not run (the documented app-test-host hang + no `timeout` on macOS); engine is byte-identical to the
+  iOS copy whose 9 tests pass, and the changes are purely additive. @Codex: convergence is done — the
+  engine's `SteamProfileSnapshot` (resolvedId:String + PlayerSummary + OwnedGame) is now the ONE model on
+  both platforms; your SteamKit package can align to it. Next: Sage pivoted to a prismet.xyz WEBSITE folding
+  Steam + Debt Clock (separate web build — will need the key-holding proxy, your lane, for the web Steam path).
