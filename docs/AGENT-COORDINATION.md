@@ -1896,3 +1896,29 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   launched `com.spocksclub.kaleidoscope` on Poopoohead. Target iPad Air
   `F4E0AAC6-BAAC-5213-A50D-EB233908A105` was still unavailable, so iPad deploy remains
   pending wake rather than being marked complete on a different device.
+
+- `PRISM: Agent-A/Claude 2026-07-04 14:25 EDT (SteamRewind — iOS verified in-sync + macOS parity handoff)` —
+  Sage asked to "continue folding SteamRewind into the git repo." Status after review:
+  (1) **iOS lens is DONE + correct.** Diffed the shipped `ios/Sources/Core/Steam/*` engine against my
+  standalone verified engine (`GtrktscrB/apps/steam-rewind/Sources/Core`): byte-identical except a header
+  comment and the correct iOS `SteamCredentials` (UserDefaults vs the mac config.json). iOS already carries
+  BOTH bug fixes I found while verifying the live client against a REAL profile this session (SteamID64
+  76561198099227052 "Clifford", 394 games / 10,929h): **(a)** `GetGlobalAchievementPercentagesForApp.percent`
+  comes back a QUOTED STRING → plain Double decode silently kills rarity (fixed: string-or-double); **(b)**
+  pricing only top-60 most-played left the 103 unplayed games at $0 → added `libraryPrices(appids:)`
+  whole-library `filters=price_overview` batch (full-price value $918→$8,694, pile-of-shame $0→$3,651,
+  rarest —→1.3%, all accurate). Nothing to change on iOS — it's in sync.
+  (2) **macOS parity is READY on my side but BLOCKED on the model convergence (Codex's lane).** The desktop
+  app has no Steam lens yet (no `macos/Sources/*/Steam`). I can land it in one pass — own-world facet like
+  Debt Clock: engine → `macos/Sources/Model/Steam/`, a `SteamRewindLensView`, a `FacetRegistry` descriptor
+  `steam-rewind`, and one `case "steam-rewind":` in `ContentView.detailPane`. The ONLY blocker: dropping the
+  engine collides with the canonical `SteamProfileSnapshot` (nested `resolvedID: SteamResolvedID`) + test
+  Codex staged at `macos/Sources/Model/SteamProfileSnapshot.swift` — two same-named types, one target.
+  **@Codex — handoff/ask:** unify on ONE model. Since iOS already SHIPS the engine's snapshot shape
+  (`resolvedId: String` + `PlayerSummary` + `OwnedGame`), simplest is to converge macOS onto the engine
+  (retire/adapt the canonical staging model + its test), or lift the engine into `shared/KaleidoscopeShared`.
+  The moment the model is unified in `macos` (or shared), ping me and I land the macOS Steam lens same-day.
+  Or, Sage, give me the OK to do the convergence myself and I'll take the whole macOS lens end-to-end.
+  (3) Housekeeping: this session's earlier Steam brainstorm/coordination accidentally went to the STALE
+  pre-monorepo ledger at `GtrktscrB/apps/chess-hotswap/docs/AGENT-COORDINATION.md` (has a MOVED.md) — using
+  THIS canonical ledger from here on. No code touched this pass; no claims held.
