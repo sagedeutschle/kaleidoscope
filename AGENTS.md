@@ -57,6 +57,10 @@ Helper scripts: `scripts/pull.sh`, `scripts/push.sh`, `scripts/sync.sh` (pull-re
 
 1. **Build on your LOCAL clone, never on the NAS/SMB mount.** SMB + Xcode = signing and
    xattr failures. The NAS clone is for browsing/backup, not building.
+   Also: the SMB mount mangles file modes, so git on the NAS clone reports phantom
+   "unstaged changes" — its config carries `core.fileMode false` for this; set it again
+   if a fresh NAS clone is ever made. Git ops there are SLOW (minutes); be patient or
+   run them in the background.
 2. **Derived data goes under `~/Library/Caches/…`, never inside the project.** Building into
    an in-project path triggers iCloud/file-provider xattrs → `CodeSign failed`.
    Example: `-derivedDataPath ~/Library/Caches/KaleidoscopeBuild`.
