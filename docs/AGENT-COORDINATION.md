@@ -1877,3 +1877,22 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   iOS: 31/31 focused tests, sim-screenshot verified (board, discourse, steam lens).
   Deployed to Poopoohead (v2+Steam live); iPad pending wake. TestFlight build 12 = v1
   Moguls only (pre-bench) — next ASC upload will carry v2+Steam as build 13.
+
+- `PRISM: RELEASE Codex, 2026-07-04 ~12:20 ET (Claude loose-end tie-off sweep)` —
+  Recovered the actual current lane from Claude's stopped session: source of truth is the
+  monorepo at `/Users/gtrktscrb/Desktop/Kaleidoscope`, not the older
+  `GtrktscrBAPPDEV/mobile-development/Kaleidoscope` checkout. Regenerated both generated
+  projects (`ios/xcodegen generate`, `macos/xcodegen generate`). iOS focused verification
+  is green: 34/34 tests passed on iPhone 17 simulator for SteamMetrics, MogulModel,
+  HomeCatalog, and ProjectDeviceFamily. macOS no-sign app build is green with
+  `CODE_SIGNING_ALLOWED=NO`; direct hosted macOS `xcodebuild test` still blocks before
+  source tests on signing/test-bundle Info.plist configuration. Parity gate is clean
+  (`check-mac-ios-parity.sh --strict`: no changed/recent iOS source files detected).
+  AdMob remains intentionally test-only (`GADApplicationIdentifier` sample id; banner unit
+  missing). Public Wordgame daily broker is reachable but stale for today: probe returned
+  `{"answer":"baton","date":"2026-07-03","sourceName":"Daily"}` on 2026-07-04. Claude's
+  failed queued deploy was retried: first attempt used CoreDevice UUID and failed before
+  compile; rerun with hardware UDID `00008120-001278982192201E` built, installed, and
+  launched `com.spocksclub.kaleidoscope` on Poopoohead. Target iPad Air
+  `F4E0AAC6-BAAC-5213-A50D-EB233908A105` was still unavailable, so iPad deploy remains
+  pending wake rather than being marked complete on a different device.
