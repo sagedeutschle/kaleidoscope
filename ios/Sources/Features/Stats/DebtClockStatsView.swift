@@ -11,6 +11,15 @@ struct DebtClockStatsView: View {
     @StateObject private var store = DebtClockStatsStore()
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    /// The lens hosts two boards behind a top-bar switcher (Oracle-style):
+    /// THE DEBT (the LED counter board) and THE MOGULS (the council-audited
+    /// billionaire/CEO ledger — see `MogulsView.swift`, Agent-Design lane).
+    private enum Board: String, CaseIterable {
+        case debt = "THE DEBT"
+        case moguls = "THE MOGULS"
+    }
+    @State private var board: Board = .debt
+
     // usdebtclock-style palette on a dark field.
     private enum Hue {
         static let debt     = Color(red: 1.00, green: 0.42, blue: 0.33)  // red — the debt
@@ -35,6 +44,24 @@ struct DebtClockStatsView: View {
     }
 
     var body: some View {
+        VStack(spacing: 0) {
+            boardSwitcher
+                .padding(.horizontal, 18)
+                .padding(.top, 10)
+                .padding(.bottom, 4)
+            switch board {
+            case .debt: debtBoard
+            case .moguls: MogulBoardView()
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(background)
+        .navigationTitle(board == .debt ? "Debt Clock" : "The Moguls")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+    }
+
+    private var debtBoard: some View {
         ScrollView {
             // Re-render ~8×/sec so live figures tick smoothly between the infrequent
             // official-source refreshes.
@@ -47,13 +74,64 @@ struct DebtClockStatsView: View {
                 .padding(18)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(background)
-        .navigationTitle("Debt Clock")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.dark, for: .navigationBar)
         .task { await store.load() }
         .refreshable { await store.load() }
+    }
+
+    /// LED segmented switcher between the lens's boards. The active segment glows
+    /// in its board's signature hue — debt red, mogul gold. (Each segment is its
+    /// own small view so the type-checker doesn't choke on the inline chain.)
+    private var boardSwitcher: some View {
+        HStack(spacing: 8) {
+            BoardSegment(title: Board.debt.rawValue,
+                         active: board == .debt,
+                         hue: Hue.debt,
+                         a11y: "The Debt board") { board = .debt }
+            BoardSegment(title: Board.moguls.rawValue,
+                         active: board == .moguls,
+                         hue: MogulBoardView.Hue.gold,
+                         a11y: "The Moguls board") { board = .moguls }
+        }
+    }
+
+    private struct BoardSegment: View {
+        let title: String
+        let active: Bool
+        let hue: Color
+        let a11y: String
+        let action: () -> Void
+
+        private var fillColor: Color { active ? hue.opacity(0.16) : Color.white.opacity(0.04) }
+        private var borderColor: Color { active ? hue.opacity(0.6) : Color.white.opacity(0.10) }
+        private var textColor: Color { active ? hue : Color(white: 0.72) }
+        private var glow: Color { active ? hue.opacity(0.35) : .clear }
+
+        var body: some View {
+            Button(action: action) {
+                Text(title)
+                    .font(Kaleido.rounded(12.5, .heavy))
+                    .tracking(2)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 9)
+                    .background(segmentBackground)
+                    .foregroundStyle(textColor)
+                    .shadow(color: glow, radius: 8)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(a11y)
+            .accessibilityAddTraits(active ? [.isSelected] : [])
+        }
+
+        private var segmentBackground: some View {
+            RoundedRectangle(cornerRadius: 11, style: .continuous)
+                .fill(fillColor)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 11, style: .continuous)
+                        .strokeBorder(borderColor, lineWidth: 1)
+                )
+        }
     }
 
     private var background: some View {

@@ -1825,3 +1825,23 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   Data pipeline: research agents + council audit run offline this session; output bundled +
   published to a public gist (same serve pattern as decrees). Deploying to iPad when green.
   macOS parity: NOT mirrored this pass — logged as parity debt in ios/docs/MAC-IOS-GAME-PARITY.md.
+
+- `PRISM: RELEASE Agent-Design/Fable (Sage), 2026-07-04 ~10:25 ET (The Moguls board SHIPPED)` —
+  Debt Clock lens now hosts a top-bar switcher (THE DEBT / THE MOGULS). The Moguls =
+  satirical wealth board: 25 real billionaires/CEOs (Forbes Real-Time + Equilar FY2025,
+  researched 2026-07-04), each vibe-checked by the **Council of Bots** with stamps
+  FRAUD!/Aight.../GAMING!!!! + one-liner roasts, plus **boss-vs-median-worker pay ratios**
+  (SEC Dodd-Frank disclosures; Shah 5,674×, Buffett 4.94× counterpoint). Council seats:
+  Claude (Max CLI) + Codex (CLI) live; DeepSeek seat coded but benched — API key valid,
+  account has NO CREDIT ("Insufficient Balance"; top up at platform.deepseek.com and rerun).
+  NEW: ios/Sources/Core/Stats/MogulModel.swift (+12 tests green), ios/Sources/Backend/
+  MogulSource.swift (gist 89deccae62f7fcd458d47fa464d82e0c, serve pattern = decrees),
+  ios/Sources/Features/Stats/MogulsView.swift, ios/Resources/moguls.json (bundled fallback),
+  oracle/tools/mogul-council/ (re-runnable pipeline: run-council.sh → merge-council.py →
+  publish; README has the flow + satire discipline rules). EDITED: DebtClockStatsView.swift
+  (switcher + BoardSegment; debt board content untouched — Codex's stats lane untouched),
+  ShotHarness.swift (+case "moguls"). GOTCHA logged: bare MogulBoardView rendered white-on-
+  light in ShotHarness → board now paints its own dark field + .preferredColorScheme(.dark).
+  GOTCHA: inline ForEach-with-conditional-hue segmented control hit swift type-checker
+  timeout → extracted BoardSegment subview. Sim build green, screenshot-verified; deploying
+  to iPad. macOS parity: tracked debt (see ios/docs/MAC-IOS-GAME-PARITY.md 2026-07-04 entry).

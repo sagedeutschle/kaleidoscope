@@ -51,6 +51,7 @@ struct ShotHarness: View {
         case "seabattle":          SeaBattleView(accountID: nil, playMode: .soloBot)
         case "oracle":             OracleView()
         case "debtclock":          DebtClockStatsView()
+        case "moguls":             MogulBoardView()   // The Moguls board, direct
         case "settings":           SettingsView()
         case "glyphs":             AllGlyphsGrid()
         default:                   ChessView(accountID: nil, playMode: .soloBot)

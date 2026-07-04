@@ -1,0 +1,680 @@
+{
+ "asOf": "2026-07-04",
+ "moguls": [
+  {
+   "id": "elon-musk",
+   "name": "Elon Musk",
+   "title": "CEO, Tesla & SpaceX; founder, xAI",
+   "category": "billionaire",
+   "netWorthUSD": 1053000000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": 57000,
+   "knownFor": "World's first trillionaire after the SpaceX IPO; rockets, robotaxis, and posting",
+   "source": "Forbes Real-Time Billionaires, 2026-07-01 | median: Tesla FY2024 proxy ($57,243)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "gaming",
+     "quip": "Caught a rocket with chopsticks and a trillion with memes. GAMING \u2014 but somebody take the phone away at 3am."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "gaming",
+     "quip": "Booked Mars, shipped in public, and never skipped a dramatic tweet. Big ideas, big noise, real hustle."
+    }
+   ],
+   "finalVerdict": "gaming"
+  },
+  {
+   "id": "larry-page",
+   "name": "Larry Page",
+   "title": "Co-founder, Google (Alphabet)",
+   "category": "billionaire",
+   "netWorthUSD": 291000000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": 311000,
+   "knownFor": "Co-invented the search engine that answers everything, including 'who is Larry Page'",
+   "source": "Forbes Real-Time Billionaires, 2026-07-01 | median: Alphabet FY2025 proxy ($310,826)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "gaming",
+     "quip": "Invented the machine that answers everything, then vanished so hard it can't find him. Respect the exit strategy."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "gaming",
+     "quip": "From a dorm room to the world\u2019s search bar, he built the shortcut for everything and still talks softly."
+    }
+   ],
+   "finalVerdict": "gaming"
+  },
+  {
+   "id": "sergey-brin",
+   "name": "Sergey Brin",
+   "title": "Co-founder, Google (Alphabet)",
+   "category": "billionaire",
+   "netWorthUSD": 269000000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": 311000,
+   "knownFor": "Google's other co-founder; back in the building helping steer Alphabet's AI push",
+   "source": "Forbes Real-Time Billionaires, 2026-07-01 | median: Alphabet FY2025 proxy ($310,826)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "aight",
+     "quip": "Back from retirement for the AI arc like a reunion tour. Cool cameo, but the encore is still buffering."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "gaming",
+     "quip": "Co-built Google and still gets to steer AI from the back row. Quiet, rich, and dangerous when caffeinated."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "jeff-bezos",
+   "name": "Jeff Bezos",
+   "title": "Founder & Executive Chairman, Amazon; co-CEO, Project Prometheus",
+   "category": "billionaire",
+   "netWorthUSD": 249000000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": 37000,
+   "knownFor": "Built the everything store, then left to do rockets and a new AI startup",
+   "source": "Forbes Real-Time Billionaires, 2026-07-01 | median: Amazon FY2024 proxy ($37,181)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "gaming",
+     "quip": "Built the everything store, then left to collect rockets and startups. The bald head is pure aerodynamic ambition."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "aight",
+     "quip": "Built the everything store, then bounced to rockets and AI startups. Legendary hustle, with a very extra side quest."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "michael-dell",
+   "name": "Michael Dell",
+   "title": "Chairman & CEO, Dell Technologies",
+   "category": "billionaire",
+   "netWorthUSD": 235000000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": 79000,
+   "knownFor": "Started selling PCs from a dorm room; the AI-server boom made 'Dude, you're getting a Dell' a $235B punchline",
+   "source": "Forbes Real-Time Billionaires, 2026-07-01 | median: Dell FY2026 proxy ($78,796)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "gaming",
+     "quip": "Dorm room to $235B because AI needs somewhere to live. Dude, you're getting a Dell \u2014 forever, apparently."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "gaming",
+     "quip": "Started in a dorm with used PCs; now your AI stack probably has a Dell in it. Proper DIY-to-colossus energy."
+    }
+   ],
+   "finalVerdict": "gaming"
+  },
+  {
+   "id": "mark-zuckerberg",
+   "name": "Mark Zuckerberg",
+   "title": "Co-founder & CEO, Meta",
+   "category": "billionaire",
+   "netWorthUSD": 194000000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": 388000,
+   "knownFor": "Facebook, Instagram, WhatsApp, and a famously symbolic $1 salary",
+   "source": "Forbes Real-Time Billionaires, 2026-07-01 | median: Meta FY2025 proxy ($388,200)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "fraud",
+     "quip": "The $1 salary next to $194B is the most expensive PR stunt alive. The metaverse legs saw everything. FRAUD!"
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "aight",
+     "quip": "One-dollar salary, billion-dollar network, and a social feed stretching back to your awkward teenage profile."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "larry-ellison",
+   "name": "Larry Ellison",
+   "title": "Co-founder, Chairman & CTO, Oracle",
+   "category": "billionaire",
+   "netWorthUSD": 192000000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": 159500,
+   "knownFor": "Database king turned AI-cloud and media dealmaker; owns most of a Hawaiian island",
+   "source": "Forbes Real-Time Billionaires, 2026-07-01 | median: Oracle FY2025 proxy (188:1 ratio, ~$159,574)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "fraud",
+     "quip": "Owns most of an island, but the real estate he truly loves is your license renewal. Eternal audit energy."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "aight",
+     "quip": "Database king turned island mogul; big brain, big boats, and maybe bigger closets than necessary."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "jensen-huang",
+   "name": "Jensen Huang",
+   "title": "Co-founder & CEO, Nvidia",
+   "category": "billionaire",
+   "netWorthUSD": 173000000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": 301000,
+   "knownFor": "The leather-jacketed chip chief whose GPUs power the entire AI boom",
+   "source": "Forbes Real-Time Billionaires, 2026-07-01 | median: Nvidia FY2025 proxy ($301,233)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "gaming",
+     "quip": "One leather jacket powering the whole AI economy. Sells shovels in a gold rush he personally started. GAMING."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "gaming",
+     "quip": "Leather jacket legend. If an AI startup can run, thank Nvidia chips and one relentless man in a jacket."
+    }
+   ],
+   "finalVerdict": "gaming"
+  },
+  {
+   "id": "bernard-arnault",
+   "name": "Bernard Arnault",
+   "title": "Chairman & CEO, LVMH",
+   "category": "billionaire",
+   "netWorthUSD": 147900000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": null,
+   "knownFor": "Europe's luxury emperor: Louis Vuitton, Dior, and roughly 75 brands you can't afford",
+   "source": "Forbes Real-Time Billionaires, 2026-07-01 | median: n/a (LVMH foreign issuer, no SEC pay-ratio disclosure)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "fraud",
+     "quip": "Sells the same canvas bag through 75 brands at 75 prices. Luxury is a vibe tax and he is the collector."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "aight",
+     "quip": "Luxury CEO of 75 aspirational brands. Real business muscle, but with more logos than sleep."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "warren-buffett",
+   "name": "Warren Buffett",
+   "title": "Chairman, Berkshire Hathaway",
+   "category": "billionaire",
+   "netWorthUSD": 147800000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": 82000,
+   "knownFor": "The Oracle of Omaha; handed the CEO keys to Greg Abel but kept the chairman's chair and the Cherry Coke",
+   "source": "Forbes Real-Time Billionaires, 2026-07-01 | median: Berkshire FY2024 proxy ($82,106)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "gaming",
+     "quip": "Handed Greg the keys, kept the Cherry Coke and the aura. Compound interest in a cardigan. GAMING."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "gaming",
+     "quip": "Oracle of Omaha energy: compound value, keep it simple, and still keep the Cherry Coke throne."
+    }
+   ],
+   "finalVerdict": "gaming"
+  },
+  {
+   "id": "amancio-ortega",
+   "name": "Amancio Ortega",
+   "title": "Founder, Inditex (Zara)",
+   "category": "billionaire",
+   "netWorthUSD": 144300000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": null,
+   "knownFor": "Reclusive Spanish fast-fashion pioneer who turned Zara into a retail empire",
+   "source": "Forbes Real-Time Billionaires, 2026-07-03 | median: n/a (Inditex foreign issuer, no SEC pay-ratio disclosure)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "aight",
+     "quip": "$144B on clothes engineered to survive exactly five washes. Efficient? Yes. Vibes? Machine-washable."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "gaming",
+     "quip": "Built Zara by making style move faster than everyone else. Efficient, ruthless, and very anti-casual."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "rob-walton",
+   "name": "Rob Walton",
+   "title": "Walmart heir; former Chairman, Walmart",
+   "category": "billionaire",
+   "netWorthUSD": 132000000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": 29500,
+   "knownFor": "Eldest Walmart heir; also bought the Denver Broncos, because why not",
+   "source": "Forbes Real-Time Billionaires, 2026-07-02 | median: Walmart FY2025 proxy ($29,469)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "fraud",
+     "quip": "Speedran a $132B fortune by being born, then impulse-bought the Broncos. Inheritance is not a grindset. FRAUD!"
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "aight",
+     "quip": "Inherited a grocery dynasty and bought a football team too. Solid legacy energy, not exactly garage grind."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "jim-walton",
+   "name": "Jim Walton",
+   "title": "Walmart heir; Arvest Bank",
+   "category": "billionaire",
+   "netWorthUSD": 129000000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": 29500,
+   "knownFor": "The banking Walton; runs the family's Arvest Bank empire in Arkansas",
+   "source": "Forbes Real-Time Billionaires, 2026-07-02 | median: Walmart FY2025 proxy ($29,469)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "aight",
+     "quip": "The Walton who actually clocks in \u2014 running a bank in Arkansas is the most modest $129B flex imaginable."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "aight",
+     "quip": "Family wealth, banking branch, and Arkansas-level calm. Not a startup, but not a joke either."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "steve-ballmer",
+   "name": "Steve Ballmer",
+   "title": "Former CEO, Microsoft; owner, LA Clippers",
+   "category": "billionaire",
+   "netWorthUSD": 125800000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": 201000,
+   "knownFor": "Yelled 'developers!' at Microsoft, now yells courtside at his own NBA team",
+   "source": "Forbes Real-Time Billionaires, 2026-07-03 | median: Microsoft FY2025 proxy ($200,972)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "gaming",
+     "quip": "Screamed DEVELOPERS into $126B and now cheers courtside like he won the Clippers in a raffle. Joy is GAMING."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "aight",
+     "quip": "Yelled 'developers!' into the void, now yells courtside. Built a giant, bought a bigger one, still loud."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "carlos-slim-helu",
+   "name": "Carlos Slim Hel\u00fa",
+   "title": "Honorary Chairman, Am\u00e9rica M\u00f3vil; Grupo Carso",
+   "category": "billionaire",
+   "netWorthUSD": 122000000000,
+   "annualCompUSD": null,
+   "compYear": null,
+   "medianWorkerPayUSD": null,
+   "knownFor": "Mexico's telecom titan; was the world's richest person before it was cool",
+   "source": "Forbes Real-Time Billionaires, 2026-07-02 | median: n/a (America Movil foreign private issuer, no SEC pay-ratio disclosure)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "aight",
+     "quip": "Was the world's richest off phone bills before it was cool. Now 'honorary' everything \u2014 legacy mode activated."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "gaming",
+     "quip": "Telecom czar before it was cool: bought connectivity at national scale and kept it profitable."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "niraj-shah",
+   "name": "Niraj Shah",
+   "title": "Co-founder & CEO, Wayfair",
+   "category": "ceo",
+   "netWorthUSD": 1300000000,
+   "annualCompUSD": 280847068,
+   "compYear": 2025,
+   "medianWorkerPayUSD": 49500,
+   "knownFor": "2025's highest-paid CEO \u2014 a $280.8M package (mostly a one-time multi-year stock grant) for selling you couches",
+   "source": "Equilar 100 (FY2025, publ. 2026-04-23); net worth Forbes 2026 est. | median: Wayfair FY2025 proxy ($49,254; 5,702:1 ratio)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "fraud",
+     "quip": "$280M in one year for selling couches \u2014 the sectional isn't the only thing overstuffed. FRAUD!"
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "fraud",
+     "quip": "A $280.8M couch royalty. Nice furniture, but this paystub reads like an upscale tax on your dining room."
+    }
+   ],
+   "finalVerdict": "fraud"
+  },
+  {
+   "id": "hock-tan",
+   "name": "Hock Tan",
+   "title": "President & CEO, Broadcom",
+   "category": "ceo",
+   "netWorthUSD": null,
+   "annualCompUSD": 205278006,
+   "compYear": 2025,
+   "medianWorkerPayUSD": 378500,
+   "knownFor": "Semiconductor dealmaker-in-chief; serial acquirer whose chips quietly run the internet",
+   "source": "Equilar 100 (FY2025, publ. 2026-04-23) | median: Broadcom FY2025 proxy ($378,281; 543:1 ratio)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "fraud",
+     "quip": "Collects companies like infinity stones and pays himself like the snap. $205M of pure acquisition aura."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "fraud",
+     "quip": "Chip whisperer and deal avalanche creator. If the internet is connected, he likely got a memo and a bonus."
+    }
+   ],
+   "finalVerdict": "fraud"
+  },
+  {
+   "id": "peter-gassner",
+   "name": "Peter Gassner",
+   "title": "Founder & CEO, Veeva Systems",
+   "category": "ceo",
+   "netWorthUSD": 2900000000,
+   "annualCompUSD": 172436133,
+   "compYear": 2025,
+   "medianWorkerPayUSD": 138000,
+   "knownFor": "Built the cloud software big pharma runs on; the biggest paycheck you've never heard of",
+   "source": "Equilar 100 (FY2025, publ. 2026-04-23); net worth Forbes real-time est. 2026 | median: Veeva FY2025 proxy (1,250:1 ratio, ~$137,949)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "gaming",
+     "quip": "Built the boring software pharma can't quit and quietly banked $172M. Anonymous kings stay GAMING."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "aight",
+     "quip": "Built software for pharma factories and gets a paycheck so normal it barely fits a headline."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "david-solomon",
+   "name": "David Solomon",
+   "title": "Chairman & CEO, Goldman Sachs",
+   "category": "ceo",
+   "netWorthUSD": null,
+   "annualCompUSD": 118891594,
+   "compYear": 2025,
+   "medianWorkerPayUSD": 160500,
+   "knownFor": "Wall Street's top banker and part-time DJ (D-Sol), now with a nine-figure paycheck",
+   "source": "Equilar 100 (FY2025, publ. 2026-04-23) | median: Goldman Sachs FY2025 proxy ($160,667; ~740:1 ratio)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "fraud",
+     "quip": "Nine figures a year AND a DJ alias. D-Sol's biggest drop is the fee schedule. Read the room, then invoice it."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "fraud",
+     "quip": "Part-time DJ, full-time banker; if the playlist improves, so does the payout. Wall Street meets nightclub."
+    }
+   ],
+   "finalVerdict": "fraud"
+  },
+  {
+   "id": "sridhar-ramaswamy",
+   "name": "Sridhar Ramaswamy",
+   "title": "CEO, Snowflake",
+   "category": "ceo",
+   "netWorthUSD": null,
+   "annualCompUSD": 101325375,
+   "compYear": 2025,
+   "medianWorkerPayUSD": 287000,
+   "knownFor": "Ex-Google ads boss now paid $100M+ to run the data cloud everyone's AI drinks from",
+   "source": "Equilar 100 (FY2025, publ. 2026-04-23) | median: Snowflake FY2026 proxy (~$287,200)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "aight",
+     "quip": "$100M to keep the data cloud hydrated for everyone else's AI. Solid gig, but he's the water boy, not the game."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "aight",
+     "quip": "Runs a data kingdom everyone drinks from and takes a nine-figure tab for it. Respect with a high invoice."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "nikesh-arora",
+   "name": "Nikesh Arora",
+   "title": "Chairman & CEO, Palo Alto Networks",
+   "category": "ceo",
+   "netWorthUSD": null,
+   "annualCompUSD": 99736336,
+   "compYear": 2025,
+   "medianWorkerPayUSD": 225500,
+   "knownFor": "Cybersecurity's best-paid bodyguard; perennial fixture on highest-paid CEO lists",
+   "source": "Equilar 100 (FY2025, publ. 2026-04-23) | median: Palo Alto Networks FY2025 proxy (442:1 ratio, ~$225,648)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "fraud",
+     "quip": "Cybersecurity's priciest bodyguard: $99.7M a year to stand by the door. The comp committee needs a firewall."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "aight",
+     "quip": "Cybersecurity bodyguard for the corporate world, paid like he personally wrestled every breach solo."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "satya-nadella",
+   "name": "Satya Nadella",
+   "title": "Chairman & CEO, Microsoft",
+   "category": "ceo",
+   "netWorthUSD": 1300000000,
+   "annualCompUSD": 96496790,
+   "compYear": 2025,
+   "medianWorkerPayUSD": 201000,
+   "knownFor": "Turned Microsoft into a $3T+ AI juggernaut; owns just 0.01% of it and is a billionaire anyway",
+   "source": "Equilar 100 (FY2025, publ. 2026-04-23); net worth Forbes 2026 est. | median: Microsoft FY2025 proxy ($200,972; 480:1 ratio)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "gaming",
+     "quip": "Owns 0.01% of Microsoft, made it worth $3T, billionaire anyway. Minority stake, majority aura. GAMING."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "gaming",
+     "quip": "Turned a legacy titan into an AI juggernaut. Built real execution and still keeps low-key billionaire vibes."
+    }
+   ],
+   "finalVerdict": "gaming"
+  },
+  {
+   "id": "charles-scharf",
+   "name": "Charles Scharf",
+   "title": "CEO, Wells Fargo",
+   "category": "ceo",
+   "netWorthUSD": null,
+   "annualCompUSD": 94522642,
+   "compYear": 2025,
+   "medianWorkerPayUSD": 82000,
+   "knownFor": "Got Wells Fargo out of the Fed's penalty box, then got paid like it",
+   "source": "Equilar 100 (FY2025, publ. 2026-04-23) | median: Wells Fargo FY2025 proxy ($82,044; 1,152:1 ratio)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "aight",
+     "quip": "Got Wells Fargo out of the penalty box, then billed like a playoff lawyer. Fair work, but $94M is a victory lap."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "fraud",
+     "quip": "Steered a scandal-warmed bank back to center and then collected a 'thank you' big enough to notice."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "lip-bu-tan",
+   "name": "Lip-Bu Tan",
+   "title": "CEO, Intel",
+   "category": "ceo",
+   "netWorthUSD": 1100000000,
+   "annualCompUSD": 92990900,
+   "compYear": 2025,
+   "medianWorkerPayUSD": 115000,
+   "knownFor": "Chip-industry legend hired to rescue Intel; a billionaire before he even took the job",
+   "source": "Equilar 100 (FY2025, publ. 2026-04-23); net worth Bloomberg Billionaires Index | median: Intel FY2025 proxy ($114,900; 812:1 ratio)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "aight",
+     "quip": "$93M to rescue Intel, billionaire before day one. Verdict pending until the chips actually ship. Aight, for now."
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "aight",
+     "quip": "Came to Intel as rescue crew with billionaire backup and a 100-dollar bill-sized salary demand."
+    }
+   ],
+   "finalVerdict": "aight"
+  },
+  {
+   "id": "robin-vince",
+   "name": "Robin Vince",
+   "title": "President & CEO, BNY (Bank of New York Mellon)",
+   "category": "ceo",
+   "netWorthUSD": null,
+   "annualCompUSD": 83472970,
+   "compYear": 2025,
+   "medianWorkerPayUSD": 82000,
+   "knownFor": "Runs America's oldest bank (founded 1784); Alexander Hamilton's startup now pays $83M a year",
+   "source": "Equilar 100 (FY2025, publ. 2026-04-23) | median: BNY FY2025 proxy ($81,987; ~1,018:1 ratio)",
+   "council": [
+    {
+     "councilor": "Claude",
+     "model": "claude-cli (Max)",
+     "verdict": "fraud",
+     "quip": "$83M to run history's fanciest coat check \u2014 Hamilton's bank just holds other people's stuff. Custody vibes!"
+    },
+    {
+     "councilor": "Codex",
+     "model": "codex-cli",
+     "verdict": "aight",
+     "quip": "Runs one of America\u2019s oldest banks and gets Hamilton-grade pay for keeping the old books alive."
+    }
+   ],
+   "finalVerdict": "aight"
+  }
+ ]
+}

@@ -135,3 +135,12 @@ one canonical feature identity to the current iOS/macOS legacy IDs.
   workshop chrome), Gomoku goban look, per-game skin pickers, Home category
   regroup (macOS FacetRegistry), and the Spider/Crazy 8/Sea Battle games
   themselves (models not yet ported — pre-existing Codex debt row above).
+
+- 2026-07-04 (Agent-Design/Fable) — **The Moguls board** (Debt Clock lens top-bar switcher:
+  THE DEBT / THE MOGULS; billionaire/CEO ledger with Council-of-Bots satire verdicts +
+  boss-vs-median-worker pay ratios; new files `Sources/Core/Stats/MogulModel.swift`,
+  `Sources/Backend/MogulSource.swift`, `Sources/Features/Stats/MogulsView.swift`,
+  `Resources/moguls.json`; gist-served like decrees). **macOS decision: NOT mirrored this
+  pass — parity debt.** Owner: design lane. Blocker: none technical; the macOS Debt Clock
+  view needs the same switcher + board port (models are UI-independent and copy verbatim).
+  Next action: port alongside the outstanding v10/v11 macOS mirror batch.
