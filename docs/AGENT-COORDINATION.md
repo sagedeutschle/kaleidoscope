@@ -1808,3 +1808,20 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   $0→$3,651, rarest unlock —→1.3%, all accurate. Key lives at `~/Library/Application Support/SteamRewind/config.json`
   (detected on normal launch). Also added a guarded `STEAMREWIND_TEST_QUERY` env hook for headless verification. Sale-
   savings stays honest full-price-value only (Sage's pick). No claims held.
+
+---
+
+## Log — monorepo era
+
+- `PRISM: CLAIM Agent-Design/Fable (Sage), 2026-07-04 ~10:05 ET (Debt Clock "Moguls" board)` —
+  Building the Moguls feature per Sage: a top-bar board switcher on the Debt Clock lens
+  (THE DEBT / THE MOGULS, Oracle-style), a list of top billionaires + highest-paid CEOs
+  (public net worth/comp data), each vibe-checked by a **Council of Bots** (Claude + Codex
+  + DeepSeek) with comedic verdicts FRAUD! / Aight... / GAMING!!!!. Files I will touch:
+  NEW `ios/Sources/Core/Stats/MogulModel.swift`, NEW `ios/Sources/Backend/MogulSource.swift`,
+  NEW `ios/Sources/Features/Stats/MogulsView.swift`, NEW `ios/Resources/moguls.json`,
+  NEW `ios/Tests/MogulModelTests.swift`, EDIT `ios/Sources/Features/Stats/DebtClockStatsView.swift`
+  (adds the switcher; the stats/data lane in DebtClockStats.swift is untouched).
+  Data pipeline: research agents + council audit run offline this session; output bundled +
+  published to a public gist (same serve pattern as decrees). Deploying to iPad when green.
+  macOS parity: NOT mirrored this pass — logged as parity debt in ios/docs/MAC-IOS-GAME-PARITY.md.
