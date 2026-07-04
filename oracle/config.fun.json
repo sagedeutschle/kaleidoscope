@@ -1,0 +1,17 @@
+{
+  "_comment": "The 'fun' low-stakes predictions instance — Claude Max subscription (claude-cli). Self-grades via the daily wkd-fun.timer on archbox: each run resolves any due decrees (Sonnet Historian + WebSearch), weekly-checkpoints standing ones, and republishes chronicle-fun. Batch of 15 forged 2026-06-26.",
+  "db_path": "fun.db",
+  "chronicle_out_dir": "chronicle-fun",
+  "chronicle_port": 8789,
+  "models": {
+    "mage_a": {"provider": "claude-cli", "model": "haiku"},
+    "mage_b": {"provider": "claude-cli", "model": "haiku"},
+    "king": {"provider": "claude-cli", "model": "haiku"},
+    "historian": {"provider": "claude-cli", "model": "sonnet"}
+  },
+  "domains": ["politics", "econ", "current-events", "crypto", "world-news"],
+  "daily_decree_cap": 5,
+  "deliberation_max_rounds": 2,
+  "checkpoint_interval_days": 7,
+  "free_pick_max": 8
+}

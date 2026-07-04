@@ -1,0 +1,83 @@
+name: Kaleidoscope
+options:
+  bundleIdPrefix: com.gtrktscrb
+  createIntermediateGroups: true
+  deploymentTarget:
+    macOS: "14.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_IDENTITY: "-"
+    CODE_SIGN_STYLE: Manual
+    ENABLE_HARDENED_RUNTIME: NO
+
+packages:
+  KaleidoscopeShared:
+    path: ../shared/KaleidoscopeShared
+  Supabase:
+    url: https://github.com/supabase/supabase-swift
+    from: "2.0.0"
+
+targets:
+  Kaleidoscope:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Sources
+    dependencies:
+      - package: KaleidoscopeShared
+        product: KaleidoscopeShared
+      - package: Supabase
+        product: Supabase
+    info:
+      path: Info.plist
+      properties:
+        # Allow the plaintext-HTTP fetch of the live decree chronicle from the
+        # tailnet/local Court Historian endpoint (macOS App Transport Security
+        # would otherwise block it).
+        NSLocalNetworkUsageDescription: "Kaleidoscope fetches the live Wizard King's Decree chronicle from the Court Historian on your local network or tailnet."
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoadsInLocalNetworking: true
+          NSExceptionDomains:
+            archbox.lan:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            "100.108.54.108":
+              NSExceptionAllowsInsecureHTTPLoads: true
+    settings:
+      base:
+        PRODUCT_NAME: Kaleidoscope
+        PRODUCT_BUNDLE_IDENTIFIER: com.gtrktscrb.kaleidoscope
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "11"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: "Kaleidoscope"
+        INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.board-games"
+        INFOPLIST_KEY_NSMainStoryboardFile: ""
+        INFOPLIST_KEY_NSPrincipalClass: "NSApplication"
+        CODE_SIGN_ENTITLEMENTS: Kaleidoscope.entitlements
+        COMBINE_HIDPI_IMAGES: YES
+        ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS: NO
+        # Game Center requires a real signed build tied to the paid Apple Developer
+        # team (YJR3ABV3H4). Automatic signing lets Xcode register the App ID, add the
+        # Game Center capability, and manage the provisioning profile. The base ad-hoc
+        # ("-"/Manual) settings still apply to the test target, so the green
+        # CODE_SIGNING_ALLOWED=NO test flow is unchanged.
+        DEVELOPMENT_TEAM: YJR3ABV3H4
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "Apple Development"
+
+  KaleidoscopeTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Tests
+    dependencies:
+      - target: Kaleidoscope
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.gtrktscrb.kaleidoscope.tests

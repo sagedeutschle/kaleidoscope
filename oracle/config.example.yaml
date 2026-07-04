@@ -1,0 +1,41 @@
+# The Wizard King's Decree — example configuration.
+#
+# Copy to config.yaml (or config.json) and pass with `--config`. Every key is
+# OPTIONAL; omitted keys fall back to the built-in defaults in wkd/config.py.
+# API keys are NEVER read from this file — they come from the environment only
+# (see .env.example). Structural settings can also be overridden at runtime via
+# WKD_* environment variables (these win over the file).
+#
+# NOTE: reading a .yaml config requires PyYAML; a .json config needs nothing.
+
+# --- Storage & serving ---
+db_path: wkd.db                 # SQLite file (single source of truth)
+chronicle_out_dir: chronicle    # static-site output directory
+chronicle_port: 8787            # `wkd serve` port (tailnet)
+
+# --- The Cast (SPEC §3). Bump model ids here as preferred models change. ---
+# provider is one of: anthropic | openai | gemini | mock
+models:
+  mage_a:    { provider: anthropic, model: claude-opus-4-8 }   # Claude Opus 4.8
+  mage_b:    { provider: openai,    model: gpt-4.1 }           # current GPT
+  king:      { provider: anthropic, model: claude-opus-4-8 }   # regal styling pass
+  historian: { provider: gemini,    model: gemini-2.5-pro }    # independent, search-grounded
+
+# --- Pipeline knobs ---
+domains:                         # reasoning-favored; sports/pure-chance excluded
+  - politics
+  - econ
+  - current-events
+  - crypto
+  - world-news
+daily_decree_cap: 6              # SPEC §17.4: start ~3-8 decrees/day
+deliberation_max_rounds: 3       # SPEC §5
+checkpoint_interval_days: 7      # SPEC §8 (weekly re-affirmation)
+free_pick_max: 3                 # SPEC §7 free-pick leg (0 disables); the King
+                                 # surveys live headlines via his styling-pass model
+
+# --- Harvest sources are configured via environment variables, NOT this file ---
+#   WKD_NEWS_FEEDS=https://feedA,https://feedB   (comma-separated RSS/Atom)
+#   WKD_MARKET_ENDPOINT=https://.../questions    (questions JSON endpoint)
+# With neither set, harvesting is a clean no-op (you can still `deliberate` on
+# any pending events you inserted by other means).

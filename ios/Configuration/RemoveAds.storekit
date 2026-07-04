@@ -1,0 +1,28 @@
+{
+  "identifier": "RemoveAds",
+  "nonConsumables": [
+    {
+      "displayPrice": "4.99",
+      "familyShareable": true,
+      "internalID": "removeads",
+      "localizations": [
+        {
+          "description": "Turns off advertising in Kaleidoscope.",
+          "displayName": "Remove Ads",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "com.spocksclub.kaleidoscope.removeads",
+      "referenceName": "Remove Ads"
+    }
+  ],
+  "products": [],
+  "settings": {
+    "_applicationInternalID": "com.spocksclub.kaleidoscope",
+    "_developerTeamID": "ZW9HBTRLRT"
+  },
+  "version": {
+    "major": 4,
+    "minor": 0
+  }
+}

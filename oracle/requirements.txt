@@ -1,0 +1,20 @@
+# Live (production) dependencies for The Wizard King's Decree.
+#
+# NONE of these are needed to run the offline test-suite, which uses only the
+# Python standard library + the in-tree MockProvider / fake fetchers:
+#
+#     python3 -m unittest discover -s tests -t . -v
+#
+# Install these only when running the LIVE pipeline (real API keys set).
+
+# --- Model SDKs (lazy-imported inside wkd/providers.py) ---
+anthropic>=0.40        # Council mage A (Claude) + the King's styling pass
+openai>=1.50           # Council mage B (GPT)
+google-genai>=0.3      # Court Historian (Gemini, Google Search grounding)
+
+# --- Harvest sources (lazy-imported inside wkd/harvester.py) ---
+feedparser>=6.0        # FeedparserNewsFetcher (RSS/Atom events calendars)
+httpx>=0.27            # HttpxMarketQuestionClient (Polymarket/Metaculus-style)
+
+# --- Optional ---
+# PyYAML>=6.0          # only if you use a .yaml config file (JSON needs nothing)

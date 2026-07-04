@@ -1,0 +1,4 @@
+{
+  "images" : [ { "idiom" : "universal", "filename" : "snake_body_topleft.png" } ],
+  "info" : { "author" : "xcode", "version" : 1 }
+}

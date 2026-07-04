@@ -1,0 +1,17 @@
+{
+  "_comment": "Light World Cup test on the Claude Max SUBSCRIPTION (no API keys, no Gemini). The council + King run on Haiku (cheap), the Court Historian on Sonnet (a different Claude model, so the independence guard warns rather than blocks — the SPEC §17.1 fallback). The Historian grounds verdicts via Claude's own WebSearch. Override db_path/chronicle dir with WKD_DB_PATH / WKD_CHRONICLE_DIR env vars.",
+  "db_path": "worldcup.db",
+  "chronicle_out_dir": "chronicle-worldcup",
+  "chronicle_port": 8788,
+  "models": {
+    "mage_a": {"provider": "claude-cli", "model": "haiku"},
+    "mage_b": {"provider": "claude-cli", "model": "haiku"},
+    "king": {"provider": "claude-cli", "model": "haiku"},
+    "historian": {"provider": "claude-cli", "model": "sonnet"}
+  },
+  "domains": ["world-news"],
+  "daily_decree_cap": 2,
+  "deliberation_max_rounds": 2,
+  "checkpoint_interval_days": 7,
+  "free_pick_max": 3
+}

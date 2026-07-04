@@ -1,0 +1,86 @@
+{
+  "generated": "2026-07-02",
+  "record": {
+    "total": 5,
+    "standing": 5,
+    "vindicated": 0,
+    "cliffnotes": 0,
+    "apology": 0,
+    "cancellation": 0,
+    "divided": 0,
+    "ruled": 0
+  },
+  "decrees": [
+    {
+      "id": 3,
+      "title": "XRP CLARITY Act White House signature deadline",
+      "regal": "The White House shall remain silent upon the CLARITY Act through the twilight of July the Fourth, their counsel withheld from all ears until the sun has set upon that fateful day. No proclamation of acceptance nor rejection shall cross the threshold of the Executive residence ere the clock strikes midnight on the morrow of Independence Day, this we decree with absolute certainty.",
+      "claim": "The White House will not announce a decision to sign or reject the CLARITY Act by end of day July 4, 2026",
+      "status": "standing",
+      "confidence": 0.65,
+      "resolves": "2026-07-04",
+      "domain": "crypto",
+      "criteria": "White House announces decision to sign or reject CLARITY Act by end of day July 4",
+      "source": "free-pick",
+      "verdict": null,
+      "correction": null
+    },
+    {
+      "id": 1,
+      "title": "F1 British Grand Prix at Silverstone concludes",
+      "regal": "*The Wizard King rises from his obsidian throne, staff crackling with arcane power*\n\n**By the eternal flames of prophecy and the turning of destiny's wheel, I decree that the Orange Arrow shall pierce the heart of Silverstone on the fifth day of the seventh moon\u2014MAX VERSTAPPEN, crowned in glory, shall claim the checkered throne and reign supreme upon that hallowed circuit!** The very stones of the Grand Prix shall sing his name for all eternity!",
+      "claim": "Max Verstappen wins the 2026 British Grand Prix at Silverstone on 2026-07-05",
+      "status": "standing",
+      "confidence": 0.34,
+      "resolves": "2026-07-05",
+      "domain": "current-events",
+      "criteria": "Official race winner declared by FIA; podium finishers confirmed",
+      "source": "free-pick",
+      "verdict": null,
+      "correction": null
+    },
+    {
+      "id": 2,
+      "title": "Women's T20 World Cup 2026 concludes",
+      "regal": "By the mandate of fate and the threads woven through time itself, India shall ascend to the throne of women's T20 cricket, their victory inscribed in destiny's ledger before the sun sets upon the fifth day of July in the year of our prophecy, 2026. The trophy, wrought of glory and earned through the tempest of competition, shall belong to the daughters of the subcontinent. Thus it is decreed, thus it shall come to pass.",
+      "claim": "India wins the Women's T20 World Cup 2026, defeating their opponent in the final scheduled for on or before 2026-07-05",
+      "status": "standing",
+      "confidence": 0.475,
+      "resolves": "2026-07-05",
+      "domain": "current-events",
+      "criteria": "Tournament champion crowned; final match winner announced",
+      "source": "free-pick",
+      "verdict": null,
+      "correction": null
+    },
+    {
+      "id": 4,
+      "title": "Nothing Phone b1 official launch event",
+      "regal": "By the immutable counsel of the realm and the authority vested in this throne, it is DECLARED and SHALL BE SO: on the seventh day of July in the year of our lord two thousand twenty-six, at the ordained hour of half-past three in the Indian Standard reckoning, Nothing Phone shall make manifest their B1 device before all the kingdom, revealing unto the world its true specifications and the coin required to possess it. Thus hath the council spoken, thus shall it come to pass, immutable as the stars themselves.",
+      "claim": "Nothing Phone will officially confirm and hold the b1 launch event at 3:30 PM IST on July 7, 2026, with specifications and pricing publicly announced",
+      "status": "standing",
+      "confidence": 0.73,
+      "resolves": "2026-07-07",
+      "domain": "current-events",
+      "criteria": "Nothing confirms b1 launch at 3:30 PM IST; specifications and pricing publicly announced",
+      "source": "free-pick",
+      "verdict": null,
+      "correction": null
+    },
+    {
+      "id": 5,
+      "title": "Wimbledon 2026 singles finals completed",
+      "regal": "By decree of the throne, the All England Club shall proclaim the victorious champions of Wimbledon\u2014both in singles competition, for men and for women alike\u2014upon or before the twelfth day of July in this year of Our Lord two thousand twenty-six. Thus it is written, thus it shall come to pass.",
+      "claim": "The All England Club will officially announce the 2026 Wimbledon Men's and Women's singles champions by 2026-07-12",
+      "status": "standing",
+      "confidence": 0.925,
+      "resolves": "2026-07-12",
+      "domain": "current-events",
+      "criteria": "Men's and Women's singles champions crowned; All England Club announces official winners",
+      "source": "free-pick",
+      "verdict": null,
+      "correction": null
+    }
+  ],
+  "divided": []
+}

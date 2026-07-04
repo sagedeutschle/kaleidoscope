@@ -1,0 +1,120 @@
+{
+  "achievements" : [
+    {
+      "appid" : 620,
+      "rarestUnlockedPercent" : 8.4,
+      "total" : 15,
+      "unlocked" : 15
+    },
+    {
+      "appid" : 730,
+      "rarestUnlockedPercent" : 22.1,
+      "total" : 167,
+      "unlocked" : 88
+    },
+    {
+      "appid" : 489830,
+      "total" : 75,
+      "unlocked" : 0
+    }
+  ],
+  "ownedGames" : [
+    {
+      "appid" : 620,
+      "img_icon_url" : "portal2icon",
+      "last_played_at" : 1772323200,
+      "name" : "Portal 2",
+      "playtime_2weeks" : 240,
+      "playtime_forever" : 15900
+    },
+    {
+      "appid" : 730,
+      "img_icon_url" : "cs2icon",
+      "last_played_at" : 1772236800,
+      "name" : "Counter-Strike 2",
+      "playtime_2weeks" : 360,
+      "playtime_forever" : 12600
+    },
+    {
+      "appid" : 1174180,
+      "img_icon_url" : "rdr2icon",
+      "last_played_at" : 1769644800,
+      "name" : "Red Dead Redemption 2",
+      "playtime_2weeks" : 120,
+      "playtime_forever" : 7200
+    },
+    {
+      "appid" : 489830,
+      "img_icon_url" : "skyrimicon",
+      "name" : "The Elder Scrolls V: Skyrim Special Edition",
+      "playtime_2weeks" : 0,
+      "playtime_forever" : 0
+    },
+    {
+      "appid" : 413150,
+      "img_icon_url" : "stardewicon",
+      "last_played_at" : 1767052800,
+      "name" : "Stardew Valley",
+      "playtime_2weeks" : 90,
+      "playtime_forever" : 4800
+    },
+    {
+      "appid" : 286160,
+      "img_icon_url" : "ttsicon",
+      "last_played_at" : 1756684800,
+      "name" : "Tabletop Simulator",
+      "playtime_2weeks" : 0,
+      "playtime_forever" : 705
+    }
+  ],
+  "playerSummary" : {
+    "avatarFullURL" : "https:\/\/avatars.steamstatic.com\/fixture_full.jpg",
+    "countryCode" : "US",
+    "createdAt" : 1293840000,
+    "lastLogoffAt" : 1772409600,
+    "personaName" : "FixtureFox",
+    "profileURL" : "https:\/\/steamcommunity.com\/id\/fixturefox\/",
+    "steamID64" : "76561198000000001"
+  },
+  "resolvedID" : {
+    "inputKind" : "vanity",
+    "originalInput" : "fixturefox",
+    "profileURL" : "https:\/\/steamcommunity.com\/id\/fixturefox\/",
+    "steamID64" : "76561198000000001",
+    "vanityName" : "fixturefox"
+  },
+  "snapshotGeneratedAt" : 1772413200,
+  "steamLevel" : 42,
+  "storeMetadata" : {
+    "620" : {
+      "genres" : [
+        "Action",
+        "Adventure"
+      ],
+      "header" : "https:\/\/cdn.akamai.steamstatic.com\/steam\/apps\/620\/header.jpg",
+      "name" : "Portal 2",
+      "price" : "$9.99",
+      "releaseDate" : "2011-04-18",
+      "tags" : [
+        "Puzzle",
+        "Co-op",
+        "Comedy"
+      ]
+    },
+    "730" : {
+      "genres" : [
+        "Action",
+        "Free to Play"
+      ],
+      "header" : "https:\/\/cdn.akamai.steamstatic.com\/steam\/apps\/730\/header.jpg",
+      "name" : "Counter-Strike 2",
+      "releaseDate" : "2012-08-21",
+      "tags" : [
+        "FPS",
+        "Competitive",
+        "Multiplayer"
+      ]
+    }
+  },
+  "visibility" : "public"
+}
