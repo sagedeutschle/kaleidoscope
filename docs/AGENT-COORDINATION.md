@@ -1845,3 +1845,15 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   GOTCHA: inline ForEach-with-conditional-hue segmented control hit swift type-checker
   timeout → extracted BoardSegment subview. Sim build green, screenshot-verified; deploying
   to iPad. macOS parity: tracked debt (see ios/docs/MAC-IOS-GAME-PARITY.md 2026-07-04 entry).
+
+- `PRISM: CLAIM Agent-Design/Fable (Sage), 2026-07-04 ~11:15 ET (SteamRewind folds into iOS as a Lens)` —
+  Per the standing plan in SteamRewind's PRISM notes ("folds into Kaleidoscope as a tab"),
+  porting apps/steam-rewind into the iOS app as Home ▸ Lenses ▸ "Steam Rewind".
+  NEW files: ios/Sources/Core/Steam/* (engine copied from steam-rewind Sources/Core;
+  Foundation-only, verified no AppKit), ios/Sources/Features/Stats/SteamRewindView.swift
+  (fresh touch-first lens UI informed by the Mac Explorer), ios/Tests/SteamMetricsTests.swift.
+  EDIT: HomeView.swift (one GameCard in Lenses + navigationDestination). Credentials note:
+  BYO Steam Web API key (user-entered, stored on-device only, never bundled/committed) —
+  Codex's key-holding proxy remains HIS slice per the original PRISM split; engine
+  convergence onto SteamKit also stays Codex's lane. The standalone mac app at
+  apps/steam-rewind is NOT moved — it keeps living there until SteamKit convergence.
