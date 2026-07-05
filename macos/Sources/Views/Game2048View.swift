@@ -2,17 +2,74 @@ import SwiftUI
 
 // PRISM: RELEASE Agent-B 2026-06-27 — persisted session controls and undo.
 // PRISM: RELEASE Agent-Mac 2026-07-03 — mirrored iOS v10 "Wooden Tray" (walnut) material (visual layer only; layout/session/logic untouched). Build green.
+// PRISM: RELEASE sonnet-1 2026-07-04 — v10/v11 walnut-tray parity pass: warm tile ramp
+// (retired the blue high-tile colors), turned-wood hero Shuffle button, tray/well rim +
+// highlight chrome. Visual identity only; session API, keyboard, power-ups untouched.
 
-// MARK: - Walnut tray material (mirrored from iOS v10 Game2048Theme.walnut)
+// MARK: - Walnut tray material (mirrored from iOS v10/v11 Game2048Theme.walnut)
 
-/// Game-local material palette for the 2048 tray. Tile faces keep their existing
-/// value colors; only the tray slab + empty wells become turned walnut.
+/// Game-local material palette for the 2048 tray: warm walnut wood tray + carved
+/// wells, turned-wood hero button, and a WCAG-legible warm tile ramp — the same
+/// "wooden tray" identity as iOS, translated to desktop chrome (mouse/keyboard).
 private enum Game2048Material {
+    // Tray slab
     static let tray = Color(red: 0.42, green: 0.35, blue: 0.28)      // tray surface (top)
     static let trayDeep = Color(red: 0.35, green: 0.28, blue: 0.22) // tray surface (bottom)
     static let trayRim = Color(red: 0.25, green: 0.19, blue: 0.14)  // outer rim stroke
+
+    // Recessed wells (empty cells carved into the tray)
     static let well = Color(red: 0.315, green: 0.255, blue: 0.198)  // recessed well floor
     static let wellDeep = Color(red: 0.270, green: 0.214, blue: 0.163)
+    static let wellShade = Color(red: 0.13, green: 0.09, blue: 0.06) // top-inner shadow line
+
+    // Turned-wood hero button (Shuffle)
+    static let woodTop = Color(red: 0.55, green: 0.44, blue: 0.33)
+    static let woodBottom = Color(red: 0.43, green: 0.33, blue: 0.24)
+    static let woodRim = Color(red: 0.28, green: 0.21, blue: 0.15)
+    static let woodInk = Color(red: 0.97, green: 0.92, blue: 0.83)
+
+    // Tile ink (shared across the warm value ramp)
+    static let darkInk = Color(red: 0.16, green: 0.11, blue: 0.07)
+    static let lightInk = Color.white
+}
+
+/// The hero: a turned-wood button that visibly presses into the tray — mirrors the
+/// iOS "wood" button used for the Shuffle power-up. Desktop idiom: hover/press
+/// feedback via `isPressed`/`isEnabled`, same as the app's other custom button styles.
+private struct Wood2048ButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.callout.weight(.semibold))
+            .foregroundStyle(Game2048Material.woodInk)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 9)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(LinearGradient(colors: [Game2048Material.woodTop, Game2048Material.woodBottom],
+                                         startPoint: .top, endPoint: .bottom))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .strokeBorder(Game2048Material.woodRim, lineWidth: 1)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .inset(by: 1)
+                            .strokeBorder(
+                                LinearGradient(colors: [Color.white.opacity(0.20), .clear],
+                                               startPoint: .top, endPoint: .bottom),
+                                lineWidth: 1
+                            )
+                    )
+                    .shadow(color: .black.opacity(configuration.isPressed ? 0.12 : 0.28),
+                            radius: configuration.isPressed ? 1 : 3,
+                            y: configuration.isPressed ? 1 : 2.5)
+            )
+            .opacity(isEnabled ? 1 : 0.45)
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
+            .offset(y: configuration.isPressed ? 1 : 0)
+    }
 }
 
 private enum Game2048Modal: Identifiable {
@@ -105,23 +162,23 @@ struct Game2048View: View {
         }
         .frame(width: boardSide, height: boardSide, alignment: .topLeading)
         .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(LinearGradient(colors: [Game2048Material.tray, Game2048Material.trayDeep],
                                      startPoint: .top, endPoint: .bottom))
         )
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .strokeBorder(Game2048Material.trayRim, lineWidth: 1.5)
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .inset(by: 1.5)
                 .strokeBorder(LinearGradient(colors: [Color.white.opacity(0.10), .clear],
                                              startPoint: .top, endPoint: .bottom),
                               lineWidth: 1)
         )
-        .shadow(color: .black.opacity(0.30), radius: 14, y: 8)
+        .shadow(color: .black.opacity(Kaleido.isDark ? 0.45 : 0.22), radius: 14, y: 8)
         .frame(width: cardSide, height: cardSide, alignment: .center)
         .frame(maxWidth: .infinity, alignment: .center)
     }
@@ -178,7 +235,7 @@ struct Game2048View: View {
                 } label: {
                     Label("Shuffle \(session.shufflePowerUps.remainingUses)", systemImage: "sparkles")
                 }
-                    .buttonStyle(GlassButtonStyle())
+                    .buttonStyle(Wood2048ButtonStyle())
                     .disabled(session.game.isGameOver || session.activeMovePlan != nil || session.visualShuffle != nil || session.shufflePowerUps.remainingUses == 0)
                 Toggle("Shuffle animation", isOn: $session.shuffleAnimationEnabled)
                     .toggleStyle(.switch)
@@ -236,6 +293,7 @@ struct Game2048View: View {
 
     private func tile(_ value: Int, index: Int) -> some View {
         let effect = session.visualShuffle?.effect(forTileIndex: index)
+        let filled = value != 0
         return Text(value == 0 ? "" : "\(value)")
             .font(.system(
                 size: value >= 1024 ? boardLayout.largeTileFontSize : boardLayout.regularTileFontSize,
@@ -243,7 +301,7 @@ struct Game2048View: View {
                 design: .rounded
             ))
             .monospacedDigit()
-            .foregroundStyle(value <= 4 ? Color(red: 0.45, green: 0.40, blue: 0.34) : .white)
+            .foregroundStyle(tileInk(value))
             .frame(width: boardLayout.tileSize, height: boardLayout.tileSize)
             .background(
                 ZStack {
@@ -252,17 +310,35 @@ struct Game2048View: View {
                         // Recessed well: darker floor toward the bottom, shaded lip up top.
                         LinearGradient(colors: [Game2048Material.wellDeep, Game2048Material.well],
                                        startPoint: .top, endPoint: .bottom)
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .strokeBorder(LinearGradient(colors: [Color.black.opacity(0.28), .clear],
-                                                         startPoint: .top, endPoint: .center),
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .strokeBorder(LinearGradient(colors: [Game2048Material.wellShade.opacity(0.9),
+                                                                   Game2048Material.wellShade.opacity(0)],
+                                                         startPoint: .top, endPoint: .bottom),
                                           lineWidth: 1.2)
                     }
                 }
             )
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay(
+                // Turned-tile rim highlight: a faint top-lit stroke on filled tiles only.
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .strokeBorder(
+                        LinearGradient(colors: [Color.white.opacity(filled ? 0.16 : 0),
+                                                 Color.white.opacity(filled ? 0.02 : 0)],
+                                       startPoint: .top, endPoint: .bottom),
+                        lineWidth: 1
+                    )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .shadow(color: .black.opacity(filled ? 0.30 : 0), radius: 1, y: 1.5)
             .scaleEffect(effect?.scale ?? 1)
             .rotationEffect(.degrees(effect?.rotationDegrees ?? 0))
             .offset(x: effect?.xOffset ?? 0, y: effect?.yOffset ?? 0)
+    }
+
+    /// Ink for a tile face: bright low/mid tiles carry dark ink, deep high tiles
+    /// carry light ink — mirrors the WCAG-tuned split from the iOS tile ramp.
+    private func tileInk(_ value: Int) -> Color {
+        value == 0 ? .clear : (value <= 256 ? Game2048Material.darkInk : Game2048Material.lightInk)
     }
 
     private func movingTile(_ slide: Game2048TileSlide) -> some View {
@@ -276,20 +352,24 @@ struct Game2048View: View {
             .zIndex(2)
     }
 
+    /// Classic warm 2048 ramp, retuned so every tile's number is clearly legible
+    /// against the walnut tray — mirrors iOS `Game2048TilePalette`. Bright low/mid
+    /// tiles (2…256) read with dark ink; deep high tiles (512+) read with light ink.
     private func tileColor(_ value: Int) -> Color {
         switch value {
         case 0: return Game2048Material.well
-        case 2: return Color(red: 0.93, green: 0.89, blue: 0.82)
-        case 4: return Color(red: 0.92, green: 0.86, blue: 0.74)
-        case 8: return Color(red: 0.90, green: 0.54, blue: 0.31)
-        case 16: return Color(red: 0.85, green: 0.36, blue: 0.24)
-        case 32: return Color(red: 0.78, green: 0.24, blue: 0.24)
-        case 64: return Color(red: 0.68, green: 0.16, blue: 0.20)
-        case 128: return Color(red: 0.39, green: 0.61, blue: 0.78)
-        case 256: return Color(red: 0.28, green: 0.49, blue: 0.71)
-        case 512: return Color(red: 0.22, green: 0.38, blue: 0.62)
-        case 1024: return Color(red: 0.16, green: 0.29, blue: 0.51)
-        default: return Color(red: 0.11, green: 0.20, blue: 0.37)
+        case 2: return Color(red: 0.93, green: 0.89, blue: 0.80)
+        case 4: return Color(red: 0.94, green: 0.86, blue: 0.67)
+        case 8: return Color(red: 0.98, green: 0.80, blue: 0.52)
+        case 16: return Color(red: 0.99, green: 0.72, blue: 0.42)
+        case 32: return Color(red: 0.99, green: 0.63, blue: 0.36)
+        case 64: return Color(red: 0.99, green: 0.55, blue: 0.31)
+        case 128: return Color(red: 0.97, green: 0.84, blue: 0.42)
+        case 256: return Color(red: 0.96, green: 0.77, blue: 0.28)
+        case 512: return Color(red: 0.76, green: 0.30, blue: 0.11)
+        case 1024: return Color(red: 0.68, green: 0.20, blue: 0.13)
+        case 2048: return Color(red: 0.46, green: 0.24, blue: 0.62)
+        default: return Color(red: 0.20, green: 0.22, blue: 0.30)
         }
     }
 
