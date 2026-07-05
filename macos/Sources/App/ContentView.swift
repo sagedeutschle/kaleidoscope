@@ -19,6 +19,10 @@ struct ContentView: View {
     @StateObject private var reversiSession = ReversiSession()
     @StateObject private var connectFourSession = ConnectFourSession()
     @StateObject private var checkersSession = CheckersSession()
+    @StateObject private var gomokuSession = GomokuSession()
+    @StateObject private var seaBattleSession = SeaBattleSession()
+    @StateObject private var crazyEightSession = CrazyEightSession()
+    @StateObject private var spiderSession = SpiderSession()
     @StateObject private var gameCenter = GameCenterAuthenticationController()
     @StateObject private var auth = AuthManager()
     @StateObject private var profiles = ProfileStore()
@@ -211,6 +215,10 @@ struct ContentView: View {
             case "connect-four": ConnectFourView(session: connectFourSession)
             case "checkers": CheckersView(session: checkersSession)
             case "solitaire": SolitaireView()
+            case "gomoku": GomokuView(session: gomokuSession)
+            case "sea-battle": SeaBattleView(session: seaBattleSession)
+            case "crazy-8": CrazyEightView(session: crazyEightSession)
+            case "spider": SpiderView(session: spiderSession)
             default: welcomeDetail
             }
         }
@@ -507,6 +515,10 @@ struct ContentView: View {
         reversiSession.configurePersistence(windowSessionID: windowSessionID)
         connectFourSession.configurePersistence(windowSessionID: windowSessionID)
         checkersSession.configurePersistence(windowSessionID: windowSessionID)
+        gomokuSession.configurePersistence(windowSessionID: windowSessionID)
+        seaBattleSession.configurePersistence(windowSessionID: windowSessionID)
+        crazyEightSession.configurePersistence(windowSessionID: windowSessionID)
+        spiderSession.configurePersistence(windowSessionID: windowSessionID)
     }
 
     private func persistWindowState() {
@@ -541,6 +553,10 @@ struct ContentView: View {
         case "reversi": reversiSession.saveNow()
         case "connect-four": connectFourSession.saveNow()
         case "checkers": checkersSession.saveNow()
+        case "gomoku": gomokuSession.saveNow()
+        case "sea-battle": seaBattleSession.saveNow()
+        case "crazy-8": crazyEightSession.saveNow()
+        case "spider": spiderSession.saveNow()
         default: break
         }
     }
@@ -560,6 +576,10 @@ struct ContentView: View {
         case "reversi": reversiSession.reloadSavedState()
         case "connect-four": connectFourSession.reloadSavedState()
         case "checkers": checkersSession.reloadSavedState()
+        case "gomoku": gomokuSession.reloadSavedState()
+        case "sea-battle": seaBattleSession.reloadSavedState()
+        case "crazy-8": crazyEightSession.reloadSavedState()
+        case "spider": spiderSession.reloadSavedState()
         default: break
         }
     }
