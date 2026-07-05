@@ -244,6 +244,15 @@ extension Theme {
     var studyFrameHi: Color { studyTone(boardEdge, scale: 1.0, lift: 0.10) }
     /// Wood board-frame gradient bottom.
     var studyFrameLo: Color { studyTone(boardEdge, scale: 0.80, lift: 0.0) }
+
+    /// Player-plaque panel fill (mirrors iOS `ChessStudyTheme.rail`).
+    var studyRail: Color { studyTone(darkSquare, scale: 0.40, lift: 0.085) }
+    /// Ivory engraving ink — a fixed "room fitting", not theme-derived.
+    var studyIvory: Color { Color(red: 0.94, green: 0.92, blue: 0.85) }
+    /// Dimmed ivory for secondary plaque text.
+    var studyIvoryDim: Color { Color(red: 0.94, green: 0.92, blue: 0.85).opacity(0.62) }
+    /// Brass fitting — turn dot, active-plaque stroke, material advantage.
+    var studyBrass: Color { Color(red: 0.83, green: 0.68, blue: 0.38) }
 }
 
 /// The felt table ground: a soft radial pool of felt fading to a darker edge,
@@ -284,4 +293,224 @@ struct ChessStudyFrame<Content: View>: View {
             )
             .shadow(color: .black.opacity(0.40), radius: 18, y: 10)
     }
+}
+
+// MARK: - Engraved player plaque (mirrored from iOS v10/v11 ChessView.plaque)
+
+/// An engraved player plaque — the signature of the iOS "study table". Renders
+/// the seat's king, name, captured-piece tray, material advantage, a turn
+/// indicator, and the seat's live state, all read from the shared `GameState`
+/// so both seats stay in lockstep with the board.
+///
+/// Designed to sit ON the felt above/below the wood-framed board (i.e. OUTSIDE
+/// `ChessStudyFrame`), exactly like iOS. The composing view (ContentView's
+/// `boardArea`) stacks a top plaque, the framed board, and a bottom plaque.
+struct ChessPlaque: View {
+    @ObservedObject var game: GameState
+    let theme: Theme
+    let side: PieceColor
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private var position: Position { game.position }
+    private var status: GameStatus { game.status }
+
+    /// This seat is to move (and the game is live).
+    private var active: Bool { position.sideToMove == side && !status.isTerminal }
+    /// The engine occupies the side opposite the human in a vs-computer game.
+    private var botPlaysThisSide: Bool { game.vsComputer && side == game.humanColor.opposite }
+    private var isThinkingHere: Bool { game.isThinking && botPlaysThisSide }
+    /// Drives "Your move" vs "To move" phrasing (local two-player: both shared).
+    private var isUserSide: Bool { game.vsComputer ? side == game.humanColor : false }
+
+    var body: some View {
+        HStack(spacing: 12) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    .fill(Color.black.opacity(0.22))
+                Image((side == .white ? "w" : "b") + "K")
+                    .resizable()
+                    .interpolation(.high)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 25, height: 25)
+                    .shadow(color: .black.opacity(0.35), radius: 1, y: 1)
+            }
+            .frame(width: 36, height: 36)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(plaqueName)
+                    .font(.system(size: 16, weight: .semibold, design: .serif))
+                    .foregroundStyle(theme.studyIvory)
+                    .lineLimit(1)
+                capturedRow
+            }
+
+            Spacer(minLength: 8)
+
+            VStack(alignment: .trailing, spacing: 4) {
+                HStack(spacing: 6) {
+                    if active { turnDot }
+                    Text(side == .white ? "WHITE" : "BLACK")
+                        .font(.caption2.weight(.bold))
+                        .tracking(1.1)
+                        .foregroundStyle(theme.studyIvoryDim)
+                }
+                let state = stateText
+                if !state.isEmpty {
+                    Text(state)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(stateColor)
+                }
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 9)
+        .background(
+            RoundedRectangle(cornerRadius: 13, style: .continuous)
+                .fill(theme.studyRail)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13, style: .continuous)
+                        .strokeBorder(
+                            active ? theme.studyBrass.opacity(0.55) : Color.white.opacity(0.08),
+                            lineWidth: active ? 1.5 : 1
+                        )
+                )
+        )
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityText)
+    }
+
+    /// Captured-piece tray + material advantage, using the same wK..bP art as
+    /// the board at mini size. Fixed height so an empty tray doesn't jiggle.
+    private var capturedRow: some View {
+        let captured = capturedPieces
+        let adv = advantage
+        let prefix = side == .white ? "b" : "w"   // you capture the other color
+        return HStack(spacing: 5) {
+            HStack(spacing: -7) {
+                ForEach(Array(captured.enumerated()), id: \.offset) { _, type in
+                    Image(prefix + type.letter)
+                        .resizable()
+                        .interpolation(.high)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 16, height: 16)
+                        .shadow(
+                            color: prefix == "b" ? Color.white.opacity(0.35) : Color.black.opacity(0.45),
+                            radius: 1,
+                            y: prefix == "b" ? 0 : 0.6
+                        )
+                }
+            }
+            if adv > 0 {
+                Text("+\(adv)")
+                    .font(.caption.weight(.bold))
+                    .monospacedDigit()
+                    .foregroundStyle(theme.studyBrass)
+            }
+        }
+        .frame(height: 16, alignment: .leading)
+        .allowsHitTesting(false)
+    }
+
+    @ViewBuilder private var turnDot: some View {
+        let dot = Circle()
+            .fill(theme.studyBrass)
+            .frame(width: 7, height: 7)
+            .shadow(color: theme.studyBrass.opacity(0.8), radius: 3)
+        if isThinkingHere && !reduceMotion {
+            dot.phaseAnimator([1.0, 0.3]) { view, phase in
+                view.opacity(phase)
+            } animation: { _ in
+                .easeInOut(duration: 0.7)
+            }
+        } else {
+            dot
+        }
+    }
+
+    private var plaqueName: String {
+        if game.vsComputer { return side == game.humanColor ? "You" : "Computer" }
+        return side == .white ? "White" : "Black"
+    }
+
+    private var stateText: String {
+        if case .checkmate(let winner) = status { return winner == side ? "Winner" : "" }
+        if status.isTerminal { return "Draw" }
+        if case .check(let checked) = status, checked == side { return "Check!" }
+        if isThinkingHere { return "Thinking…" }
+        if position.sideToMove == side { return isUserSide ? "Your move" : "To move" }
+        return ""
+    }
+
+    private var stateColor: Color {
+        if case .checkmate(let winner) = status, winner == side { return theme.studyBrass }
+        if case .check(let checked) = status, checked == side {
+            return Color(red: 0.95, green: 0.47, blue: 0.40)
+        }
+        if isThinkingHere { return theme.studyIvoryDim }
+        if position.sideToMove == side, !status.isTerminal { return theme.studyBrass }
+        return theme.studyIvoryDim
+    }
+
+    // MARK: Captured / material (mirrors iOS)
+
+    private static let fullSideCounts: [PieceType: Int] = [
+        .pawn: 8, .knight: 2, .bishop: 2, .rook: 2, .queen: 1
+    ]
+
+    /// Opponent pieces missing from the board, queen-first. Promotion overshoot
+    /// is clamped so the tray never goes negative.
+    private var capturedPieces: [PieceType] {
+        var missing = Self.fullSideCounts
+        for piece in position.board.compactMap({ $0 }) where piece.color == side.opposite {
+            if let left = missing[piece.type] { missing[piece.type] = left - 1 }
+        }
+        let order: [PieceType] = [.queen, .rook, .bishop, .knight, .pawn]
+        var result: [PieceType] = []
+        for type in order {
+            let count = max(0, missing[type] ?? 0)
+            if count > 0 { result.append(contentsOf: Array(repeating: type, count: count)) }
+        }
+        return result
+    }
+
+    private var materialScore: Int {
+        position.board.compactMap { $0 }.reduce(0) { total, piece in
+            total + (piece.color == .white ? piece.type.value : -piece.type.value)
+        }
+    }
+
+    /// Material advantage in pawns for this side (0 when behind or level).
+    private var advantage: Int {
+        let pawns = materialScore / 100
+        return side == .white ? max(0, pawns) : max(0, -pawns)
+    }
+
+    private var accessibilityText: String {
+        var parts = ["\(plaqueName), \(side == .white ? "White" : "Black")"]
+        let captured = capturedPieces
+        if !captured.isEmpty {
+            parts.append("captured \(captured.count) piece\(captured.count == 1 ? "" : "s")")
+        }
+        if advantage > 0 { parts.append("up \(advantage) point\(advantage == 1 ? "" : "s") of material") }
+        let state = stateText
+        if !state.isEmpty { parts.append(state) }
+        return parts.joined(separator: ", ")
+    }
+}
+
+#Preview("Study Table + plaques") {
+    let game = GameState()
+    return ChessStudyGround(theme: .green)
+        .overlay(
+            VStack(spacing: 12) {
+                ChessPlaque(game: game, theme: .green, side: .black)
+                ChessStudyFrame(theme: .green) {
+                    Board2DView(game: game, theme: .green)
+                }
+                ChessPlaque(game: game, theme: .green, side: .white)
+            }
+            .padding(24)
+        )
+        .frame(width: 520, height: 660)
 }

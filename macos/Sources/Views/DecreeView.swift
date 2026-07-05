@@ -19,6 +19,22 @@ struct DecreeView: View {
     private let ink = Color(red: 0.20, green: 0.16, blue: 0.12)
     private let gold = Color(red: 0.72, green: 0.56, blue: 0.20)
 
+    // Illuminated-ledger palette for the decree cards (mirrors iOS OracleTheme).
+    // The parchment stock is deliberately fixed/light — the ledger glows on the page.
+    private let paper = Color(red: 0.968, green: 0.940, blue: 0.872)
+    private let paperAged = Color(red: 0.934, green: 0.896, blue: 0.792)
+    private let paperEdge = Color(red: 0.72, green: 0.63, blue: 0.46)
+    private let ink2 = Color(red: 0.16, green: 0.11, blue: 0.05).opacity(0.78)
+    private let ink3 = Color(red: 0.16, green: 0.11, blue: 0.05).opacity(0.55)
+    // Verdict inks on parchment.
+    private let laurel = Color(red: 0.23, green: 0.38, blue: 0.19)
+    private let ochre = Color(red: 0.60, green: 0.24, blue: 0.11)
+    // Wax seal.
+    private let sealCrimson = Color(red: 0.55, green: 0.11, blue: 0.13)
+    private let sealDeep = Color(red: 0.34, green: 0.05, blue: 0.08)
+    private let sealHighlight = Color(red: 0.78, green: 0.30, blue: 0.28)
+    private let sealEmboss = Color(red: 0.80, green: 0.42, blue: 0.40)
+
     /// The Oracle's three ledgers. Kept congruent with the iOS app.
     private enum OracleTab: String, CaseIterable, Identifiable {
         case standing = "Standing"
@@ -301,64 +317,185 @@ struct DecreeView: View {
         .frame(minWidth: 62)
     }
 
-    // MARK: - Decree card
+    // MARK: - Decree card (the illuminated ledger — mirrors iOS Oracle proclamation)
 
+    /// The signature: a wax-sealed parchment proclamation. Own-world light paper
+    /// framed by a double gilt rule, with the Court Historian's ruling in the
+    /// appropriate ink and a rubber-stamp verdict.
     private func decreeCard(_ d: Decree) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                tierBadge(d.tier)
-                Spacer()
-                Text(domainLabel(d.domain))
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(ink.opacity(0.55))
-            }
+        VStack(alignment: .leading, spacing: 12) {
+            // Scribe's reference line — trailing padding leaves room for the seal.
+            Text(d.title.uppercased())
+                .font(.system(size: 11, weight: .semibold, design: .serif))
+                .tracking(1.6)
+                .foregroundStyle(ink3)
+                .lineLimit(1)
+                .padding(.trailing, 48)
+
+            // The proclamation itself.
             Text(d.regal.isEmpty ? d.claim : d.regal)
-                .font(.system(.body, design: .serif).italic())
+                .font(.system(.title3, design: .serif).weight(.semibold))
                 .foregroundStyle(ink)
+                .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
+                .padding(.trailing, 40)
+
+            ornamentalRule
+
+            // The falsifiable claim — plain language beneath the regal decree.
+            if !d.claim.isEmpty, d.regal != d.claim {
+                Text(d.claim)
+                    .font(.system(.callout, design: .serif))
+                    .lineSpacing(3)
+                    .foregroundStyle(ink2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            // The Court Historian's ruling copy, in the appropriate ink.
             if let correction = d.correction, !correction.isEmpty {
                 Text(correction)
-                    .font(.callout)
-                    .foregroundStyle(.red)
-                    .padding(10)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(RoundedRectangle(cornerRadius: 8).fill(Color.red.opacity(0.08)))
+                    .font(.system(.footnote, design: .serif).italic())
+                    .foregroundStyle(d.isVindicated ? laurel : d.isCorrected ? ochre : gold)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            HStack(spacing: 14) {
-                Label("Resolves \(d.resolves)", systemImage: "calendar")
-                if d.isAwaitingRuling() {
-                    Label("awaiting ruling", systemImage: "hourglass")
-                        .foregroundStyle(.orange)
-                        .help("The resolution date has passed; the Court Historian hasn't graded it yet.")
-                } else {
-                    Label(String(format: "privately %.0f%%", d.confidence * 100), systemImage: "lock")
-                        .help("The council's true private probability — the public decree is absolute regardless.")
-                }
-                Spacer()
+
+            // Rubber-stamp verdict.
+            if d.isVindicated {
+                stamp("Vindicated", ink: laurel)
+            } else if d.isCorrected {
+                stamp(stampTierLabel(d.tier), ink: ochre)
+            } else if d.isAwaitingRuling() {
+                stamp("Awaiting Ruling", ink: gold)
+            }
+
+            // Meta row: domain · resolves-by · confidence sigil.
+            HStack(spacing: 7) {
+                metaLabel(domainLabel(d.domain))
+                metaDot
+                metaLabel("Resolves \(d.resolves)")
+                metaDot
+                confidenceSigil(d.confidence)
+                Spacer(minLength: 0)
                 Image(systemName: "chevron.right")
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(ink.opacity(0.4))
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(ink3)
             }
-            .font(.caption)
-            .foregroundStyle(ink.opacity(0.55))
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
         }
-        .padding(16)
+        .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(LinearGradient(colors: [Color.white.opacity(0.60),
-                                              parchment.opacity(0.55)],
-                                     startPoint: .top, endPoint: .bottom))
-                .overlay(RoundedRectangle(cornerRadius: 14)
-                    .strokeBorder(tierColor(d.tier).opacity(0.35), lineWidth: 1))
-                // Illuminated-manuscript double rule: a gilt hairline inset inside
-                // the tier border (mirrors the iOS Oracle proclamation frame).
-                .overlay(RoundedRectangle(cornerRadius: 11)
-                    .inset(by: 4)
-                    .strokeBorder(gold.opacity(0.45), lineWidth: 0.75))
-        )
+        .background(cardParchment)
+        .overlay(alignment: .topTrailing) {
+            waxSeal(diameter: 40)
+                .padding(.top, 12)
+                .padding(.trailing, 14)
+        }
         .contentShape(Rectangle())
         .onTapGesture { selectedDecree = d }
+    }
+
+    /// Aged-paper card stock with a paper edge and the illuminated double rule.
+    private var cardParchment: some View {
+        RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .fill(LinearGradient(colors: [paper, paperAged], startPoint: .top, endPoint: .bottom))
+            .overlay(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .strokeBorder(paperEdge, lineWidth: 1)
+            )
+            .overlay(
+                // Inner hairline frame — the illuminated-manuscript double rule.
+                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    .strokeBorder(ink.opacity(0.10), lineWidth: 1)
+                    .padding(5)
+            )
+            .shadow(color: .black.opacity(0.22), radius: 5, y: 3)
+    }
+
+    /// Deep-crimson wax seal with an embossed crown — the card's signature mark.
+    private func waxSeal(diameter: CGFloat) -> some View {
+        ZStack {
+            Circle()
+                .fill(RadialGradient(colors: [sealHighlight, sealCrimson, sealDeep],
+                                     center: UnitPoint(x: 0.38, y: 0.34),
+                                     startRadius: 1, endRadius: diameter * 0.62))
+            Circle().strokeBorder(sealDeep.opacity(0.8), lineWidth: 1)
+            Circle().strokeBorder(sealHighlight.opacity(0.35), lineWidth: 1.2)
+                .padding(diameter * 0.14)
+            Image(systemName: "crown.fill")
+                .font(.system(size: diameter * 0.32, weight: .bold))
+                .foregroundStyle(sealEmboss)
+                .shadow(color: sealDeep.opacity(0.9), radius: 0.5, y: 0.8)
+        }
+        .frame(width: diameter, height: diameter)
+        .shadow(color: .black.opacity(0.30), radius: 3, y: 2)
+        .accessibilityHidden(true)
+    }
+
+    /// Gilt hairline rule with a small diamond at center.
+    private var ornamentalRule: some View {
+        HStack(spacing: 8) {
+            LinearGradient(colors: [gold.opacity(0.05), gold.opacity(0.75)],
+                           startPoint: .leading, endPoint: .trailing)
+                .frame(height: 1)
+            Image(systemName: "diamond.fill")
+                .font(.system(size: 5, weight: .bold))
+                .foregroundStyle(gold)
+            LinearGradient(colors: [gold.opacity(0.75), gold.opacity(0.05)],
+                           startPoint: .leading, endPoint: .trailing)
+                .frame(height: 1)
+        }
+        .accessibilityHidden(true)
+    }
+
+    /// Rubber-stamp verdict treatment — bordered small caps, faintly askew.
+    private func stamp(_ text: String, ink stampInk: Color) -> some View {
+        Text(text.uppercased())
+            .font(.system(size: 10.5, weight: .bold, design: .serif))
+            .tracking(2)
+            .foregroundStyle(stampInk)
+            .padding(.horizontal, 8).padding(.vertical, 3)
+            .overlay(
+                RoundedRectangle(cornerRadius: 3, style: .continuous)
+                    .strokeBorder(stampInk.opacity(0.65), lineWidth: 1.2)
+            )
+            .rotationEffect(.degrees(-1.5))
+    }
+
+    private func metaLabel(_ text: String) -> some View {
+        Text(text.uppercased())
+            .font(.system(size: 10.5, weight: .semibold, design: .serif))
+            .tracking(1.1)
+            .foregroundStyle(ink3)
+    }
+
+    private var metaDot: some View {
+        Circle().fill(gold.opacity(0.8)).frame(width: 3, height: 3)
+            .accessibilityHidden(true)
+    }
+
+    /// The council's private confidence as one-to-three gilt diamonds.
+    private func confidenceSigil(_ confidence: Double) -> some View {
+        let pips = confidence >= 0.85 ? 3 : (confidence >= 0.65 ? 2 : 1)
+        return HStack(spacing: 2.5) {
+            ForEach(0..<3, id: \.self) { i in
+                Image(systemName: i < pips ? "diamond.fill" : "diamond")
+                    .font(.system(size: 6.5, weight: .bold))
+            }
+        }
+        .foregroundStyle(gold)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Council confidence \(Int((confidence * 100).rounded())) percent")
+    }
+
+    /// Friendly stamp wording for a corrected tier.
+    private func stampTierLabel(_ tier: String) -> String {
+        switch tier {
+        case "apology": return "Apology"
+        case "cliffnotes": return "Cliffnotes"
+        case "cancellation", "cancelled": return "Cancelled"
+        default: return tier.capitalized
+        }
     }
 
     // MARK: - Divided ledger
