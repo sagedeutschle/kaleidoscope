@@ -13,6 +13,14 @@ struct DecreeDetailView: View {
     private let ink = Color(red: 0.20, green: 0.16, blue: 0.12)
     private let gold = Color(red: 0.72, green: 0.56, blue: 0.20)
 
+    // Illuminated-ledger stock + wax seal (mirrors iOS OracleTheme / DecreeView).
+    private let paper = Color(red: 0.968, green: 0.940, blue: 0.872)
+    private let paperAged = Color(red: 0.934, green: 0.896, blue: 0.792)
+    private let sealCrimson = Color(red: 0.55, green: 0.11, blue: 0.13)
+    private let sealDeep = Color(red: 0.34, green: 0.05, blue: 0.08)
+    private let sealHighlight = Color(red: 0.78, green: 0.30, blue: 0.28)
+    private let sealEmboss = Color(red: 0.80, green: 0.42, blue: 0.40)
+
     var body: some View {
         VStack(spacing: 0) {
             HStack {
@@ -27,10 +35,15 @@ struct DecreeDetailView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
-                    Text(decree.title)
-                        .font(.system(.title3, design: .serif).weight(.bold))
-                        .foregroundStyle(ink)
-                        .fixedSize(horizontal: false, vertical: true)
+                    HStack(alignment: .top, spacing: 12) {
+                        waxSeal(diameter: 34)
+                        Text(decree.title)
+                            .font(.system(.title3, design: .serif).weight(.bold))
+                            .foregroundStyle(ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    ornamentalRule
 
                     section("👑 The royal decree", "as published") {
                         Text(decree.regal.isEmpty ? decree.claim : decree.regal)
@@ -71,7 +84,47 @@ struct DecreeDetailView: View {
             }
         }
         .frame(minWidth: 460, idealWidth: 540, minHeight: 420, idealHeight: 600)
-        .background(parchment.opacity(0.5))
+        .background(
+            LinearGradient(colors: [paper, paperAged], startPoint: .top, endPoint: .bottom)
+        )
+    }
+
+    // MARK: - Ledger ornament (mirrors the iOS Oracle proclamation)
+
+    /// Deep-crimson wax seal with an embossed crown.
+    private func waxSeal(diameter: CGFloat) -> some View {
+        ZStack {
+            Circle()
+                .fill(RadialGradient(colors: [sealHighlight, sealCrimson, sealDeep],
+                                     center: UnitPoint(x: 0.38, y: 0.34),
+                                     startRadius: 1, endRadius: diameter * 0.62))
+            Circle().strokeBorder(sealDeep.opacity(0.8), lineWidth: 1)
+            Circle().strokeBorder(sealHighlight.opacity(0.35), lineWidth: 1.2)
+                .padding(diameter * 0.14)
+            Image(systemName: "crown.fill")
+                .font(.system(size: diameter * 0.32, weight: .bold))
+                .foregroundStyle(sealEmboss)
+                .shadow(color: sealDeep.opacity(0.9), radius: 0.5, y: 0.8)
+        }
+        .frame(width: diameter, height: diameter)
+        .shadow(color: .black.opacity(0.30), radius: 3, y: 2)
+        .accessibilityHidden(true)
+    }
+
+    /// Gilt hairline rule with a small diamond at center.
+    private var ornamentalRule: some View {
+        HStack(spacing: 8) {
+            LinearGradient(colors: [gold.opacity(0.05), gold.opacity(0.75)],
+                           startPoint: .leading, endPoint: .trailing)
+                .frame(height: 1)
+            Image(systemName: "diamond.fill")
+                .font(.system(size: 5, weight: .bold))
+                .foregroundStyle(gold)
+            LinearGradient(colors: [gold.opacity(0.75), gold.opacity(0.05)],
+                           startPoint: .leading, endPoint: .trailing)
+                .frame(height: 1)
+        }
+        .accessibilityHidden(true)
     }
 
     // MARK: - Sections
