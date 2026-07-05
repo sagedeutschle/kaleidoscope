@@ -1,4 +1,4 @@
-// PRISM: RELEASE Agent-Design(shell) 2026-07-03 — v10 design pass
+// PRISM: RELEASE Agent-Design/Fable 2026-07-04 — Prismet section (prismet.xyz link)
 import SwiftUI
 
 /// Presented as a sheet from Home's gear button. No-arg init by contract:
@@ -29,6 +29,7 @@ struct SettingsView: View {
                     appearanceSection
                     soundHapticsSection
                     gameThemesSection
+                    prismetSection
                     creditsSection
                 }
                 .padding(16)
@@ -246,6 +247,40 @@ struct SettingsView: View {
             .padding(.vertical, 4)
             .frame(maxWidth: .infinity, alignment: .leading)
             .kaleidoCard()
+        }
+    }
+
+    // MARK: - Prismet
+
+    /// Link out to the prismet.xyz web tools (Steam Rewind explorer + Debt Clock).
+    private var prismetSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionHeader("Prismet", systemImage: "globe")
+
+            Link(destination: URL(string: "https://prismet.xyz")!) {
+                HStack(spacing: 12) {
+                    Image(systemName: "safari")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(Kaleido.gold)
+                        .frame(width: 24)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("prismet.xyz")
+                            .font(Kaleido.title(17))
+                            .foregroundStyle(Kaleido.ink)
+                        Text("Steam Rewind and the Debt Clock, on the web.")
+                            .font(.caption)
+                            .foregroundStyle(Kaleido.ink3)
+                    }
+                    Spacer(minLength: 8)
+                    Image(systemName: "arrow.up.right")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(Kaleido.ink3)
+                }
+                .padding(.vertical, 4)
+                .contentShape(Rectangle())
+            }
+            .kaleidoCard()
+            .accessibilityLabel("Open prismet.xyz in your browser")
         }
     }
 
