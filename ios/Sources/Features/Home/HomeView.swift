@@ -179,6 +179,9 @@ struct HomeView: View {
             configureLeaderboard()
             await adEntitlement.refreshPurchasedEntitlement()
         }
+        .onChange(of: auth.state) { _, _ in
+            configureLeaderboard()
+        }
         .onChange(of: profiles.me) { _, _ in configureLeaderboard() }
         .onChange(of: auth.gcAccountID) { _, _ in configureLeaderboard() }
     }

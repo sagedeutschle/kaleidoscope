@@ -1923,6 +1923,21 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   pre-monorepo ledger at `GtrktscrB/apps/chess-hotswap/docs/AGENT-COORDINATION.md` (has a MOVED.md) — using
   THIS canonical ledger from here on. No code touched this pass; no claims held.
 
+- `PRISM: Agent-A/Claude 2026-07-04 16:00 EDT (Game Center identity + leaderboard bug sweep)` —
+  Follow-up identity/backend pass to stabilize leaderboards and remove leftover dead code after the earlier note
+  review loop. Files changed: `ios/Sources/Backend/AuthManager.swift` (sign-out now clears `gcAccountID` + `displayName`),
+  `ios/Sources/Backend/LeaderboardStore.swift` (pending upload key + remote query + local dedupe now keyed on
+  canonical account identity via `gc_account_id`), `ios/Sources/Core/Games/LeaderboardCoordinator.swift` (`configure`
+  always sets `gcAccountID` from session), `ios/Sources/Features/Home/HomeView.swift` (auth changes now trigger
+  coordinator reconfiguration), `ios/Sources/Features/Home/GameGlyphRegistry.swift` (removed unused helper,
+  image-asset path kept as source of truth).
+
+- `PRISM: Agent-A/Claude 2026-07-04 16:10 EDT (leaderboard self-highlight identity bug)` —
+  Fixed a new identity edge-case: leaderboard self-highlighting relied on `user_id` only, so cross-device
+  Game Center rows could fail to mark "you" while `gc_account_id` matched. Updated
+  `ios/Sources/Features/Leaderboard/LeaderboardView.swift` to compare `row.canonicalPlayerID` against local
+  account identifiers (`accountID` + `gcAccountID`).
+
 - `PRISM: RELEASE Agent-A/Claude 2026-07-04 ~14:50 EDT (macOS SteamRewind lens + model convergence — Sage-authorized)` —
   Sage OK'd me crossing into the convergence lane, so DONE: (1) retired the canonical staging model +
   fixture + test at `macos/Sources/Model/SteamProfileSnapshot.swift` / `Sources/Resources/
@@ -1937,3 +1952,42 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   engine's `SteamProfileSnapshot` (resolvedId:String + PlayerSummary + OwnedGame) is now the ONE model on
   both platforms; your SteamKit package can align to it. Next: Sage pivoted to a prismet.xyz WEBSITE folding
   Steam + Debt Clock (separate web build — will need the key-holding proxy, your lane, for the web Steam path).
+
+- `PRISM: CLAIM Agent-Design/Fable (Sage, prismet org) 2026-07-04 ~16:20 EDT (Parity pass: 4 macOS game ports via codex spark worktrees)` —
+  Executing docs/superpowers/plans/2026-07-04-prismet-parity-pass.md (spec in docs/superpowers/specs/).
+  4 codex sparks in isolated worktrees (~/Desktop/kscope-spark-{gomoku,seabattle,crazy8,spider}, branches
+  spark/<g>-macos) each port ONE game: model+AI+session+view+tests ONLY — new files
+  `macos/Sources/Model/<Game>{Game,AI,Session}.swift`, `macos/Sources/Views/<Game>View.swift`,
+  `macos/Tests/<Game>GameTests.swift`. Orchestrator (this agent) EXCLUSIVELY owns the shared hotspots this
+  pass: `macos/Sources/Model/FacetRegistry.swift`, `macos/Sources/App/ContentView.swift`,
+  `macos/Sources/Model/GamePersistence.swift` (prep commit adds 4 persistence kinds + generic
+  save/loadSnapshot), both ledgers, parity matrix. Solo AI + local play this pass; online-friend wiring on
+  macOS = tracked handoff to Codex. NOTE: Agent-A's 16:00 EDT iOS leaderboard sweep has uncommitted files in
+  the main clone — not touched by this pass (macOS-only until Stage 4 iPad sweep).
+
+- `PRISM: CLAIM+RELEASE Agent-Design/Fable (Sage, prismet org) 2026-07-04 ~21:05→21:25 EDT (Settings link → prismet.xyz, iOS + macOS)` —
+  DONE: both builds green (iOS sim Debug — only pre-existing errors are Agent-A's uncommitted LeaderboardStore.swift, untouched;
+  macOS Debug CODE_SIGNING_ALLOWED=NO → BUILD SUCCEEDED). Committing the two source files only; device deploys from a clean
+  worktree at the commit so Agent-A's in-flight iOS files stay out of the installed build.
+  Small design slice, two files only: `ios/Sources/Features/Settings/SettingsView.swift` gains a "Prismet"
+  section (Link to https://prismet.xyz, kaleidoCard style, between Game Themes and Credits);
+  `macos/Sources/App/KaleidoscopeApp.swift` gains the app's first `Settings` scene (Cmd+, pane with the same
+  link, inline view — no new source files, no xcodegen churn). NOT touching the parity-pass orchestrator's
+  hotspots (ContentView/FacetRegistry/GamePersistence) nor Agent-A's uncommitted iOS leaderboard files.
+  Context: prismet.xyz is live on Fly tonight (app prismet-site-restless-horizon-217; DNS cutover in
+  progress). Will build both platforms, commit only my two files, flip to RELEASE here.
+
+- `PRISM: CLAIM Agent-Design/Fable (Sage, prismet org) 2026-07-05 ~00:20 EDT (v13 consolidation + rename pass — orchestrator)` —
+  Executing docs/superpowers/plans/2026-07-04-prismet-v13-consolidation.md (spec + cold-start handoff in
+  docs/superpowers/). Orchestrator EXCLUSIVELY owns: FacetRegistry.swift, ContentView.swift,
+  GamePersistence.swift, both project.yml, both ledgers, parity matrix, ALL merges, the Kaleidoscope→Prismet
+  rename (Task 8), build-13 bump, deploys. Fan-out: codex×3 (spark-port verify gomoku+seabattle / iOS
+  leaderboard fix [Agent-A handoff, EXACT 7 files only] / spark-port verify crazy8+spider then deploys),
+  sonnet×4 (material mirrors in worktrees mirror/{2048,checkers,solitaire,brickbench}-macos), opus×2 (iPad
+  audit read-only; chess/oracle mirrors in worktree mirror/chess-oracle). NOTE: recovered tonight's
+  iCloud-eviction incident (disk pressure → mass eviction; caches purged ~120GB, tree fully rehydrated,
+  unique files backed up to session scratchpad). ⚠️ UNCLAIMED LIVE SLICE observed mtime ~21:48: Wordle
+  (ios DailyWordProvider/WordleSession/+tests, macos DailyWordProvider/+tests) + macOS Account
+  (AuthManager/ProfileStore/SupabaseClient + NEW AppSecurity.swift untracked) — NOT in any ledger claim.
+  Whichever session owns it: please claim here. This pass will NOT touch or commit those files; the Task-8
+  rename needs a quiet tree, so please land or park that slice tonight.

@@ -26,6 +26,13 @@ struct LeaderboardView: View {
     }
 
     private var myGCID: UUID? { gcAccountID ?? resolvedGCID }
+    private var myCanonicalIDs: Set<UUID>? {
+        var ids = [UUID]()
+        if let accountID { ids.append(accountID) }
+        if let myGCID { ids.append(myGCID) }
+        let set = Set(ids)
+        return set.isEmpty ? nil : set
+    }
 
     var body: some View {
         NavigationStack {
@@ -104,8 +111,7 @@ struct LeaderboardView: View {
     }
 
     private func rowView(rank: Int, row: LeaderboardRow) -> some View {
-        let isMe = (accountID != nil && row.userID == accountID)
-            || (row.gcAccountID != nil && row.gcAccountID == myGCID)
+        let isMe = myCanonicalIDs?.contains(row.canonicalPlayerID) == true
         let unit = LeaderboardCatalog.metric(for: selected)?.unit ?? ""
         return HStack(spacing: 12) {
             Text("#\(rank)")

@@ -31,8 +31,8 @@ enum GameCenterFriends {
     }
 
     /// Friend identities for matching Game Center friends against leaderboard rows.
-    /// Rows are keyed by Supabase auth uid today, so display name is a compatibility
-    /// fallback until the backend has a durable Game Center -> auth uid map.
+    /// Rows are primarily keyed by `gc_account_id` when available, with `user_id` as
+    /// a compatibility fallback until both identities are stable for all players.
     @MainActor
     static func loadFriendReferences() async -> [FriendReference] {
         guard GKLocalPlayer.local.isAuthenticated else { return [] }

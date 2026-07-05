@@ -1200,3 +1200,26 @@ Probed ASC (openssl-ES256 JWT helper in scratchpad/asc.py, key FLXPLSRBU8). Stat
 - **Build 11 = VALID** (processed, uploaded 2026-07-03 20:27) but UNATTACHED (can't attach to an in-review version).
 - To ship build 11 + fresh screenshots/metadata now = must REMOVE 1.0 from review (forfeits queue position) then resubmit. Else let build 8 ride → build 11 as 1.0.1 fast-follow once approved. **Sage's call — did NOT cancel review autonomously.**
 - STAGED (ready either path): polished metadata in docs/APP-STORE-LISTING.md ("POLISHED FOR BUILD 11" section — accurate ~18-game list, new games, sound, online, what's-new, ≤100 keywords); fresh 6.9" (1320×2868) screenshots in scratchpad/appstore/ (checkers/seabattle/chess/2048/snake/sudoku/solitaire; oracle dropped).
+
+## PRISM UPDATE — Codex (backend sweep) — 2026-07-04 — Leaderboard identity hardening follow-up
+Follow-up from the same code-path: kept leaderboard identity sync tighter and deterministic after the prior sweep.
+- `ios/Sources/Backend/LeaderboardStore.swift`
+  - `myRow` now exits with local row fallback when game metric is unavailable, otherwise sorts remote identity matches by score direction and limits remote fetch to 1 row.
+  - `upload` still compares against existing remote best via `remoteRow(accountID:gcAccountID:game:)`; `remoteRow` now fetches one score-sorted candidate (metric-aware `order + limit(1)`), so "best remote score" selection is stable and not dependent on unsorted result windows.
+- Existing files retained from earlier pass and unchanged in behavior: `ios/Sources/Backend/AuthManager.swift` (sign-out GC reset), `ios/Sources/Core/Games/LeaderboardCoordinator.swift`, `ios/Sources/Features/Home/HomeView.swift`, `ios/Sources/Features/Home/GameGlyphRegistry.swift`.
+- Verification status: no test run in this pass (logic pass only; user requested another review). Status handed to Fable.
+
+## PRISM UPDATE — Codex (backend cleanup) — 2026-07-04 — stale pending key cleanup
+Follow-up micro-hardening (same leaderboard slice):
+- `ios/Sources/Backend/LeaderboardStore.swift`
+  - `myRow` now uses direct `.eq("user_id", ...)` for single-identity lookups, same metric-aware `order + limit(1)` path as remote fetch.
+  - `LocalLeaderboardStore.markUploaded` now removes both canonical and legacy pending keys (`gameID|canonical`, `gameID|userID`) so earlier `uploadKey` shape does not leave dead retry entries.
+
+## PRISM UPDATE — Codex (backend follow-through) — 2026-07-04 — remote compatibility + scope fix
+Follow-up from the same leaderboard lane:
+- `ios/Sources/Backend/LeaderboardStore.swift`
+  - `upload` now scopes rate limiting by `canonicalPlayerID` so one human account cannot bypass submit throttles by switching devices.
+  - `upload` now writes with `gc_account_id,game_id` when available and falls back to legacy `user_id,game_id` on GC-column/constraint incompatibility.
+  - `remoteRow` now first queries by combined identity filter and falls back to `user_id` only when GC identity querying fails on backend compatibility reasons.
+  - Added `identityFilter`, `fetchRows`, and `stripGCIdentity` helpers to keep this identity/query logic explicit and testable.
+- Also synced `ios/Sources/Backend/GameCenterFriends.swift` comments to the new canonical identity model (`gc_account_id` primary, `user_id` fallback), so lane notes and source behavior stay aligned.

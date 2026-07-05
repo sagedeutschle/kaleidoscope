@@ -22,7 +22,7 @@ final class LeaderboardCoordinator: ObservableObject {
     /// and carry the durable Game Center id for cross-device/friend matching.
     func configure(accountID: UUID?, gcAccountID: UUID? = nil, displayName: String?, avatarEmoji: String?, avatarColor: String?) {
         self.accountID = accountID
-        if let gcAccountID { self.gcAccountID = gcAccountID }
+        self.gcAccountID = gcAccountID
         if let displayName, !displayName.isEmpty { self.displayName = displayName }
         if let avatarEmoji, !avatarEmoji.isEmpty { self.avatarEmoji = avatarEmoji }
         if let avatarColor, !avatarColor.isEmpty { self.avatarColor = avatarColor }

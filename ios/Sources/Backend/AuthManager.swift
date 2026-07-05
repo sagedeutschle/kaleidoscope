@@ -67,6 +67,8 @@ final class AuthManager: ObservableObject {
     func signOut() async {
         try? await client?.auth.signOut()
         state = .signedIn(Self.localGuestID())
+        gcAccountID = nil
+        displayName = nil
         isCloudBacked = false
     }
 

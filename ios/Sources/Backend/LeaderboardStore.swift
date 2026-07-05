@@ -191,16 +191,13 @@ final class LeaderboardStore {
         guard let client else {
             return Self.bestRows(localRows, game: game, storageID: storageID, limit: limit)
         }
-        let base = client
+        var scoped = client
             .from("leaderboard_scores")
             .select()
             .eq("game_id", value: storageID)
-        let scoped: PostgrestTransformBuilder
         if let friendSet {
             let idList = friendSet.map(\.uuidString).joined(separator: ",")
-            scoped = base.or("user_id.in.(\(idList)),gc_account_id.in.(\(idList))")
-        } else {
-            scoped = base
+            scoped = scoped.or("user_id.in.(\(idList)),gc_account_id.in.(\(idList))")
         }
         // Over-fetch so client-side canonical dedupe (one row per human across
         // devices) still fills the board.
@@ -216,16 +213,19 @@ final class LeaderboardStore {
         let storageID = LeaderboardCatalog.storageID(for: game)
         let localRow = try? await localStore.myRow(accountID: accountID, gcAccountID: gcAccountID, game: game)
         guard let client else { return localRow }
-        var identityFilters = ["user_id.eq.\(accountID.uuidString)"]
-        if let gcAccountID {
-            identityFilters.append("gc_account_id.eq.\(gcAccountID.uuidString)")
-        }
-        let rows: [LeaderboardRow] = try await client
+        guard let metric = LeaderboardCatalog.metric(for: game) else { return localRow }
+        var query = client
             .from("leaderboard_scores")
             .select()
             .eq("game_id", value: storageID)
-            .or(identityFilters.joined(separator: ","))
-            .limit(10)
+        if let gcAccountID {
+            query = query.or("user_id.eq.\(accountID.uuidString),gc_account_id.eq.\(gcAccountID.uuidString)")
+        } else {
+            query = query.eq("user_id", value: accountID.uuidString)
+        }
+        let rows: [LeaderboardRow] = try await query
+            .order("score", ascending: !metric.higherIsBetter)
+            .limit(1)
             .execute()
             .value
         let candidates = rows + (localRow.map { [$0] } ?? [])
@@ -260,7 +260,7 @@ final class LeaderboardStore {
     private func upload(_ row: LeaderboardRow, game: CanonicalGameID) async throws {
         guard await AppSecurity.allowClientAction(
             .leaderboardSubmit,
-            scope: "\(row.userID.uuidString):\(row.gameID)",
+            scope: "\(row.canonicalPlayerID.uuidString):\(row.gameID)",
             rateLimiter: rateLimiter
         ) else { throw AppSecurityError.rateLimited }
         if let remoteSubmitter {
@@ -268,28 +268,79 @@ final class LeaderboardStore {
             return
         }
         guard let client else { return }
-        if let existing = try? await remoteRow(accountID: row.userID, game: game),
+        if let existing = try? await remoteRow(accountID: row.userID, gcAccountID: row.gcAccountID, game: game),
            !Self.isBetter(row.score, than: existing.score, game: game) {
             return
         }
-        try await client
-            .from("leaderboard_scores")
-            .upsert(row, onConflict: "user_id,game_id")
-            .execute()
+        let conflict = row.gcAccountID == nil ? "user_id,game_id" : "gc_account_id,game_id"
+        do {
+            try await client
+                .from("leaderboard_scores")
+                .upsert(row, onConflict: conflict)
+                .execute()
+        } catch {
+            guard row.gcAccountID != nil else { throw error }
+            let legacyRow = Self.stripGCIdentity(from: row)
+            try await client
+                .from("leaderboard_scores")
+                .upsert(legacyRow, onConflict: "user_id,game_id")
+                .execute()
+        }
     }
 
-    private func remoteRow(accountID: UUID, game: CanonicalGameID) async throws -> LeaderboardRow? {
+    private func remoteRow(accountID: UUID, gcAccountID: UUID?, game: CanonicalGameID) async throws -> LeaderboardRow? {
         guard let client else { return nil }
+        guard let metric = LeaderboardCatalog.metric(for: game) else { return nil }
         let storageID = LeaderboardCatalog.storageID(for: game)
+        let primaryFilter = Self.identityFilter(accountID: accountID, gcAccountID: gcAccountID)
+        do {
+            return try await fetchRows(
+                from: client,
+                storageID: storageID,
+                metric: metric,
+                identityFilter: primaryFilter
+            )
+        } catch {
+            guard gcAccountID != nil else { throw error }
+            return try await fetchRows(
+                from: client,
+                storageID: storageID,
+                metric: metric,
+                identityFilter: "user_id.eq.\(accountID.uuidString)"
+            )
+        }
+    }
+
+    private func fetchRows(
+        from client: SupabaseClient,
+        storageID: String,
+        metric: LeaderboardMetric,
+        identityFilter: String
+    ) async throws -> LeaderboardRow? {
         let rows: [LeaderboardRow] = try await client
             .from("leaderboard_scores")
             .select()
-            .eq("user_id", value: accountID.uuidString)
             .eq("game_id", value: storageID)
+            .or(identityFilter)
+            .order("score", ascending: !metric.higherIsBetter)
             .limit(1)
             .execute()
             .value
         return rows.first
+    }
+
+    private static func identityFilter(accountID: UUID, gcAccountID: UUID?) -> String {
+        var filters = ["user_id.eq.\(accountID.uuidString)"]
+        if let gcAccountID {
+            filters.append("gc_account_id.eq.\(gcAccountID.uuidString)")
+        }
+        return filters.joined(separator: ",")
+    }
+
+    private static func stripGCIdentity(from row: LeaderboardRow) -> LeaderboardRow {
+        var legacyRow = row
+        legacyRow.gcAccountID = nil
+        return legacyRow
     }
 
     fileprivate static func bestRows(
@@ -365,9 +416,17 @@ actor LocalLeaderboardStore {
     }
 
     func myRow(accountID: UUID, gcAccountID: UUID? = nil, game: CanonicalGameID) throws -> LeaderboardRow? {
-        try top(game: game, limit: Int.max).first {
-            $0.userID == accountID || ($0.gcAccountID != nil && $0.gcAccountID == gcAccountID)
+        let rows = try top(game: game, limit: Int.max)
+        if let gcAccountID {
+            return rows.first { $0.canonicalPlayerID == accountID || $0.canonicalPlayerID == gcAccountID }
         }
+        return rows.first { $0.userID == accountID }
+    }
+
+    private static func stripGCIdentity(from row: LeaderboardRow) -> LeaderboardRow {
+        var legacyRow = row
+        legacyRow.gcAccountID = nil
+        return legacyRow
     }
 
     func submitBest(_ row: LeaderboardRow, game: CanonicalGameID) throws {
@@ -376,7 +435,9 @@ actor LocalLeaderboardStore {
         var storedRow = row
         storedRow.gameID = storageID
         var rows = try loadRows()
-        if let index = rows.firstIndex(where: { $0.userID == storedRow.userID && $0.gameID == storageID }) {
+        if let index = rows.firstIndex(where: {
+            $0.canonicalPlayerID == storedRow.canonicalPlayerID && $0.gameID == storageID
+        }) {
             guard LeaderboardStore.isBetter(storedRow.score, than: rows[index].score, game: game) else { return }
             rows[index] = storedRow
         } else {
@@ -400,6 +461,7 @@ actor LocalLeaderboardStore {
     func markUploaded(_ row: LeaderboardRow) throws {
         var pendingKeys = try loadPendingKeys()
         pendingKeys.remove(Self.uploadKey(row))
+        pendingKeys.remove("\(row.gameID)|\(row.userID.uuidString)")
         try savePendingKeys(pendingKeys)
     }
 
@@ -436,6 +498,6 @@ actor LocalLeaderboardStore {
     }
 
     private static func uploadKey(_ row: LeaderboardRow) -> String {
-        "\(row.gameID)|\(row.userID.uuidString)"
+        "\(row.gameID)|\(row.canonicalPlayerID.uuidString)"
     }
 }
