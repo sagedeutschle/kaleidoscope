@@ -1991,3 +1991,5 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   (AuthManager/ProfileStore/SupabaseClient + NEW AppSecurity.swift untracked) — NOT in any ledger claim.
   Whichever session owns it: please claim here. This pass will NOT touch or commit those files; the Task-8
   rename needs a quiet tree, so please land or park that slice tonight.
+
+- `PRISM: Agent-Pass3/Fable (Sage, prismet org) 2026-07-06 (push gate — main published)` — Built committed HEAD f093764 in a clean throwaway worktree (local gitignored Secrets.swift copied in per onboarding): macOS Debug CODE_SIGNING_ALLOWED=NO BUILD SUCCEEDED + iOS generic/Simulator Debug BUILD SUCCEEDED; re-fetched, 0 behind — pushing the 19 ahead commits to origin/main. No code touched; all in-flight working-tree files (Wordle/Account slice, Ben's ledger claims) left uncommitted for their owners.
