@@ -69,6 +69,9 @@ struct RemoteDailyWordPayload: Decodable {
 }
 
 struct DailyWordProvider {
+    private static let requestTimeout: TimeInterval = 8
+    private static let maxPayloadBytes = 32 * 1024
+
     let localWords: [String]
     var calendar: Calendar
     var remoteCache: DailyWordCache?
@@ -106,7 +109,15 @@ struct DailyWordProvider {
         if let remoteLoader {
             word = try await remoteLoader(url)
         } else {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            var req = URLRequest(url: url)
+            req.timeoutInterval = Self.requestTimeout
+            let (data, response) = try await URLSession.shared.data(for: req)
+            if let response = response as? HTTPURLResponse, !(200..<300).contains(response.statusCode) {
+                throw DailyWordProviderError.network
+            }
+            guard data.count <= Self.maxPayloadBytes else {
+                throw DailyWordProviderError.network
+            }
             word = try Self.decodeRemotePayload(data)
         }
 
@@ -149,4 +160,5 @@ struct DailyWordProvider {
 
 enum DailyWordProviderError: Error {
     case invalidRemoteAnswer
+    case network
 }

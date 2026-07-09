@@ -33,7 +33,7 @@ final class DailyWordProviderTests: XCTestCase {
 
     func testBrokerDailyURLUsesPublicStorageEndpoint() {
         XCTAssertEqual(DailyWordProvider.brokerDailyURL.absoluteString,
-                       "https://cmufcjysgbiqhohozkrf.supabase.co/storage/v1/object/public/kaleidoscope-public/wordle/daily.json")
+                       "https://prismet.xyz/api/wordle")
     }
 
     func testRandomWordIsFiveLettersFromBank() {

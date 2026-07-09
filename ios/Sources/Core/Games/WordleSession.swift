@@ -3,7 +3,7 @@ import Foundation
 enum WordleLaunchConfiguration {
     static let isEnabledForLaunchReview = true
     static let isRemoteDailyEnabled = true
-    static let remoteDailyURL = URL(string: "https://cmufcjysgbiqhohozkrf.supabase.co/storage/v1/object/public/kaleidoscope-public/wordle/daily.json")
+    static let remoteDailyURL = URL(string: "https://prismet.xyz/api/wordle")
 }
 
 @MainActor

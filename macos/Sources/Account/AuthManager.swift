@@ -45,6 +45,7 @@ final class AuthManager: ObservableObject {
         try? await client?.auth.signOut()
         state = .signedIn(Self.localAccountID())
         isCloudBacked = false
+        displayName = nil
     }
 
     private static func authenticateGameCenter() async -> String? {
@@ -58,7 +59,7 @@ final class AuthManager: ObservableObject {
                     cont.resume(returning: nil)
                     return
                 }
-                let name = local.displayName.isEmpty ? local.alias : local.displayName
+                let name = AppSecurity.sanitizedDisplayName(local.displayName.isEmpty ? local.alias : local.displayName)
                 cont.resume(returning: name.isEmpty ? nil : name)
             }
         }

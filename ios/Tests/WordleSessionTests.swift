@@ -12,8 +12,8 @@ final class WordleSessionTests: XCTestCase {
     func testBrokerDailyIsEnabledByDefaultForV8Build() {
         XCTAssertTrue(WordleLaunchConfiguration.isEnabledForLaunchReview)
         XCTAssertTrue(WordleLaunchConfiguration.isRemoteDailyEnabled)
-        XCTAssertEqual(WordleLaunchConfiguration.remoteDailyURL?.host, "cmufcjysgbiqhohozkrf.supabase.co")
-        XCTAssertEqual(WordleLaunchConfiguration.remoteDailyURL?.path, "/storage/v1/object/public/kaleidoscope-public/wordle/daily.json")
+        XCTAssertEqual(WordleLaunchConfiguration.remoteDailyURL?.host, "prismet.xyz")
+        XCTAssertEqual(WordleLaunchConfiguration.remoteDailyURL?.path, "/api/wordle")
     }
 
     @MainActor

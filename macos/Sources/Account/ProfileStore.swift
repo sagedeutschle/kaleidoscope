@@ -29,9 +29,14 @@ final class ProfileStore: ObservableObject {
     @discardableResult
     func upsert(_ profile: Profile) async -> Bool {
         guard let client else { lastError = "Account backend is not configured."; return false }
+        let sanitized = profile.sanitizedForClientUpload()
+        guard await AppSecurity.allowClientAction(.profileWrite, scope: sanitized.id.uuidString) else {
+            lastError = AppSecurityError.rateLimited.localizedDescription
+            return false
+        }
         do {
-            try await client.from("profiles").upsert(profile).execute()
-            me = profile
+            try await client.from("profiles").upsert(sanitized).execute()
+            me = sanitized
             lastError = nil
             loaded = true
             return true

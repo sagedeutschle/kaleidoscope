@@ -30,7 +30,10 @@ struct RemoteDailyWordPayload: Decodable {
 }
 
 struct DailyWordProvider {
-    static let brokerDailyURL = URL(string: "https://cmufcjysgbiqhohozkrf.supabase.co/storage/v1/object/public/kaleidoscope-public/wordle/daily.json")!
+    private static let requestTimeout: TimeInterval = 8
+    private static let maxPayloadBytes = 32 * 1024
+
+    static let brokerDailyURL = URL(string: "https://prismet.xyz/api/wordle")!
 
     let localWords: [String]
     var calendar: Calendar
@@ -53,7 +56,19 @@ struct DailyWordProvider {
     }
 
     func remoteWord(from url: URL) async throws -> DailyWord {
-        let (data, _) = try await URLSession.shared.data(from: url)
+        guard await AppSecurity.allowClientAction(.remoteContentFetch, scope: url.absoluteString) else {
+            throw AppSecurityError.rateLimited
+        }
+
+        var req = URLRequest(url: url)
+        req.timeoutInterval = Self.requestTimeout
+        let (data, response) = try await URLSession.shared.data(for: req)
+        if let response = response as? HTTPURLResponse, !(200..<300).contains(response.statusCode) {
+            throw DailyWordProviderError.network
+        }
+        guard data.count <= Self.maxPayloadBytes else {
+            throw DailyWordProviderError.network
+        }
         return try Self.decodeRemotePayload(data)
     }
 
@@ -92,4 +107,5 @@ struct DailyWordProvider {
 
 enum DailyWordProviderError: Error {
     case invalidRemoteAnswer
+    case network
 }
