@@ -1,0 +1,7 @@
+{
+  "images" : [
+    { "filename" : "tile_debtclock@2x.png", "idiom" : "universal", "scale" : "2x" },
+    { "filename" : "tile_debtclock@3x.png", "idiom" : "universal", "scale" : "3x" }
+  ],
+  "info" : { "author" : "xcode", "version" : 1 }
+}

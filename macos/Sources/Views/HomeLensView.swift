@@ -90,14 +90,28 @@ private struct FacetTile: View {
         Button(action: onSelect) {
             VStack(alignment: .leading, spacing: 14) {
                 ZStack {
-                    Circle().fill(facet.accent.opacity(ready ? 0.20 : 0.08))
-                    Circle().strokeBorder(
-                        AngularGradient(gradient: Gradient(colors: irisColors(facet.accent)), center: .center),
-                        lineWidth: ready ? 2 : 1)
-                        .opacity(ready ? 1 : 0.35)
-                    Image(systemName: facet.systemImage)
-                        .font(.system(size: 23, weight: .bold))
-                        .foregroundStyle(ready ? facet.accent : Kaleido.ink3)
+                    if let tile = facet.tileImage, ready {
+                        Image(tile)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 50, height: 50)
+                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .strokeBorder(
+                                        AngularGradient(gradient: Gradient(colors: irisColors(facet.accent)), center: .center),
+                                        lineWidth: 2)
+                            )
+                    } else {
+                        Circle().fill(facet.accent.opacity(ready ? 0.20 : 0.08))
+                        Circle().strokeBorder(
+                            AngularGradient(gradient: Gradient(colors: irisColors(facet.accent)), center: .center),
+                            lineWidth: ready ? 2 : 1)
+                            .opacity(ready ? 1 : 0.35)
+                        Image(systemName: facet.systemImage)
+                            .font(.system(size: 23, weight: .bold))
+                            .foregroundStyle(ready ? facet.accent : Kaleido.ink3)
+                    }
                 }
                 .frame(width: 50, height: 50)
 

@@ -5,7 +5,8 @@ enum FacetCategory: String, CaseIterable, Identifiable {
     case puzzles = "Puzzles"
     case board = "Board"
     case cards = "Cards"
-    case oracle = "Oracle"
+    case workshop = "Workshop"
+    case lenses = "Lenses"
 
     var id: String { rawValue }
 }
@@ -25,6 +26,9 @@ struct FacetDescriptor: Identifiable, Equatable {
     /// Optional one-line footer shown by the shell. Facets that render their own
     /// live status bar (e.g. Chess) leave this nil.
     var caption: String? = nil
+    /// Full-color Home tile art (asset catalog name), when the catalog has it.
+    /// Falls back to `systemImage` in the launcher when nil.
+    var tileImage: String? { FacetRegistry.tileArt[id] }
 }
 
 enum FacetRegistry {
@@ -39,7 +43,7 @@ enum FacetRegistry {
                         title: "Brick Bench",
                         systemImage: "shippingbox",
                         accent: Color(red: 0.86, green: 0.35, blue: 0.22),
-                        category: .oracle,
+                        category: .workshop,
                         status: .ready),
         FacetDescriptor(id: "wordle",
                         title: "Wordgame",
@@ -51,19 +55,19 @@ enum FacetRegistry {
                         title: "Oracle",
                         systemImage: "crown",
                         accent: Color(red: 0.62, green: 0.36, blue: 0.72),
-                        category: .oracle,
+                        category: .lenses,
                         status: .ready),
         FacetDescriptor(id: "debt-clock",
                         title: "Debt Clock",
                         systemImage: "chart.line.uptrend.xyaxis",
                         accent: Color(red: 1.00, green: 0.42, blue: 0.33),
-                        category: .oracle,
+                        category: .lenses,
                         status: .ready),
         FacetDescriptor(id: "steam-rewind",
                         title: "Steam Rewind",
                         systemImage: "gamecontroller",
                         accent: Color(red: 0.36, green: 0.60, blue: 0.92),
-                        category: .oracle,
+                        category: .lenses,
                         status: .ready),
         FacetDescriptor(id: "rubiks-cube",
                         title: "Rubik's Cube",
@@ -161,6 +165,32 @@ enum FacetRegistry {
                         accent: Color(red: 0.25, green: 0.42, blue: 0.30),
                         category: .cards,
                         status: .ready)
+    ]
+
+    /// Facet id → full-color Home tile asset (mirrored from the iOS GameIcons catalog).
+    static let tileArt: [String: String] = [
+        "chess": "tile_chess",
+        "brick-bench": "tile_brickbench",
+        "wordle": "tile_wordle",
+        "oracle": "tile_oracle",
+        "debt-clock": "tile_debtclock",
+        "steam-rewind": "tile_steamrewind",
+        "2048": "tile_2048",
+        "lights-out": "tile_lightsout",
+        "rubiks-cube": "tile_rubiks",
+        "minesweeper": "tile_minesweeper",
+        "snake": "tile_snake",
+        "sudoku": "tile_sudoku",
+        "sliding-15": "tile_sliding",
+        "nonogram": "tile_nonogram",
+        "reversi": "tile_reversi",
+        "connect-four": "tile_connectfour",
+        "checkers": "tile_checkers",
+        "solitaire": "tile_solitaire",
+        "gomoku": "tile_gomoku",
+        "sea-battle": "tile_seabattle",
+        "crazy-8": "tile_crazyeight",
+        "spider": "tile_spider",
     ]
 
     static var ready: [FacetDescriptor] {

@@ -141,3 +141,21 @@ one canonical feature identity to the current iOS/macOS legacy IDs.
   boss-vs-median-worker pay ratios; new files `Sources/Core/Stats/MogulModel.swift`,
   `Sources/Backend/MogulSource.swift`, `Sources/Features/Stats/MogulsView.swift`,
   `Resources/moguls.json`; gist-served like decrees). **macOS decision: MIRRORED same-day (2026-07-04)** — model/source/view ported to macos/Sources/{Model,Views}, bundled moguls.json added, switcher wired into the macOS DebtClockStatsView; macOS build green (CODE_SIGNING_ALLOWED=NO path).
+
+- 2026-07-05 (Agent-Design/Fable, v13 consolidation pass) — **The v10/v11 tracked-debt rows above are CLOSED.**
+  **MIRRORED:** the four missing games are now macOS-native facets — Gomoku (goban), Sea Battle
+  (5-ship deployment, naval skin), Crazy 8, Spider (one-suit) — each model+session+view+tests,
+  registered in FacetRegistry/ContentView with per-window save/reload; walnut 2048 tray; club
+  Checkers board (incl. board-style skins, captured-piece trays); Solitaire baize + real card
+  faces + rosette backs; Brick Bench workshop chrome (plastic buttons, stud tiles, tool shelf);
+  Chess plaques (engraved player plaques framing the flat board); Oracle ledger card (wax seal,
+  ornamental rule, verdict stamps); full-color `tile_<game>` Home art (22 imagesets mirrored to
+  the macOS catalog, launcher renders art with glyph fallback); Home category regroup
+  (FacetCategory now Daily/Puzzles/Board/Cards/Workshop/Lenses, matching iOS).
+  **TRACKED DEBT (owner: Codex, backend lane):** online-friend multiplayer wiring for
+  Gomoku/Sea Battle/Crazy 8 on macOS (solo AI + local play shipped this pass).
+  **TRACKED DEBT (owner: Agent-Design, follow-up):** per-game skin pickers on macOS (2048
+  walnut/slate/cream, chess in-world swatch chips); Brick Bench per-brick EditBar (needs
+  LegoBuilderModel duplicate/delete APIs); felt-styled Checkers result sheet (shared
+  ResultSlipView reskin); macOS Checkers AI opponent (model gap — pass-and-play only today).
+  All builds green on main (CODE_SIGNING_ALLOWED=NO path).
