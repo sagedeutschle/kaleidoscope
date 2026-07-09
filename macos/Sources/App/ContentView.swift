@@ -287,11 +287,17 @@ struct ContentView: View {
     private var boardArea: some View {
         switch style {
         case .flat:
-            // The flat board sits in a turned-wood frame on the felt table.
-            ChessStudyFrame(theme: theme) {
-                Board2DView(game: game, theme: theme)
+            // The flat board sits in a turned-wood frame on the felt table,
+            // framed by engraved player plaques (mirrors iOS v10/v11 study table).
+            VStack(spacing: 12) {
+                ChessPlaque(game: game, theme: theme, side: .black)
+                ChessStudyFrame(theme: theme) {
+                    Board2DView(game: game, theme: theme)
+                }
+                ChessPlaque(game: game, theme: theme, side: .white)
             }
             .padding(24)
+            .frame(maxWidth: 620)
             .transition(.opacity)
         case .iso:
             Board3DView(game: game, theme: theme, dragPlacement: dragPlacement)
