@@ -2106,3 +2106,16 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   remains anchored at commit `136fe49` and ASC `WAITING_FOR_REVIEW`. Initial v14 scope: clean stale parity
   docs against actual source, verify macOS mirrored-game build/tests, then move into device smoke and
   high-confidence parity/UX fixes. Avoiding ads/IAP and bundle/store identity changes.
+
+- `PRISM: RELEASE Codex 2026-07-09 (v14 start + device smoke)` —
+  DONE: began v14 on main as v1.2/build 14 (iOS + macOS project.yml), regenerated XcodeGen projects,
+  and pushed checkpoint `67bf4cb`. Cleaned stale parity docs: macOS already has Gomoku, Sea Battle,
+  Crazy 8, Spider, full-color tile art, and Home category regroup; remaining parity debt is now limited
+  to skin pickers, online-friend room flow on newly mirrored games, Snake polish, and a few result/AI
+  gaps. Verification: `git diff --check` clean; iOS Debug generic build GREEN; macOS Debug build GREEN;
+  focused macOS tests for Gomoku/SeaBattle/CrazyEight/Spider GREEN. Device smoke: `macos/scripts/deploy-mac.sh`
+  installed/launched `~/Applications/Prismet.app`; `ios/scripts/deploy.sh` now defaults to Poopoohead's
+  hardware UDID to avoid duplicate-name Xcode destination failures; Poopoohead install+launch succeeded.
+  `deploy-testers.sh` now includes MommaPhone. Benjamin's iPhone and MommaPhone installed but launch was
+  denied because both devices were locked; iPad Air was listed unavailable/asleep. ASC probe still shows
+  public v1.0 READY_FOR_SALE and v1.1/build 13 WAITING_FOR_REVIEW.

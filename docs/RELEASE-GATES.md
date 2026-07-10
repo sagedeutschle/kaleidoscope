@@ -134,10 +134,11 @@ started.**
 - **[~] iOS test suite.** Per-game model tests + `AppSecurityTests` +
   `AdEntitlementStoreTests` exist; run the full suite green on the build that
   ships.
-- **[ ] Clean-device install verification.** Confirm the Oracle consult path is
-  non-empty on a fresh install, and smoke-test online head-to-head, on both
-  registered devices (iPhone 15 Plus "Poopoohead", iPad Air 13" M3) via the codex
-  build path.
+- **[~] Device install verification.** v14 Debug installed and launched on macOS
+  and Poopoohead. Benjamin's iPhone and MommaPhone installed but launch was
+  blocked by lock state. iPad Air was unavailable/asleep. Remaining: unlock
+  family devices, confirm launch, Oracle non-empty UI, and online friend room
+  smoke.
 - **[x] Build rules documented** (derived-data location, incremental archive,
   `project.yml`-owned Info.plist, `xcodegen generate` after pull, codex-delegated
   device deploy) — see `docs/HANDOFF.md` §5. Follow them or builds fail.

@@ -9,7 +9,9 @@ PROJECT_NAME="Prismet"
 SCHEME="$PROJECT_NAME"
 CONFIG="${CONFIG:-Debug}"
 BUNDLE_ID="com.spocksclub.kaleidoscope"
-DEVICE_ID="${DEVICE_ID:-}"
+# Default to Poopoohead's hardware UDID so duplicate CoreDevice name records do
+# not make xcodebuild's destination resolver fail. Set DEVICE_ID= to use name.
+DEVICE_ID="${DEVICE_ID-00008120-001278982192201E}"
 DEVICE_NAME="${DEVICE_NAME:-Poopoohead}"
 if [ -n "$DEVICE_ID" ]; then DESTINATION="platform=iOS,id=$DEVICE_ID"; else DESTINATION="platform=iOS,name=$DEVICE_NAME"; fi
 BUILD_DIR="${BUILD_DIR:-$HOME/Library/Caches/Prismet-build}"
