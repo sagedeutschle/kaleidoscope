@@ -77,12 +77,16 @@ final class SteamMetricsTests: XCTestCase {
         // Env var takes precedence over storage — skip if the runner has one set.
         try XCTSkipIf(ProcessInfo.processInfo.environment["STEAM_WEB_API_KEY"] != nil,
                       "env key present; storage path not observable")
-        let original = UserDefaults.standard.string(forKey: SteamCredentials.defaultsKey)
+        let originalData = try? Data(contentsOf: SteamCredentials.configURL)
         addTeardownBlock {
-            if let original {
-                UserDefaults.standard.set(original, forKey: SteamCredentials.defaultsKey)
+            if let originalData {
+                try? FileManager.default.createDirectory(
+                    at: SteamCredentials.configURL.deletingLastPathComponent(),
+                    withIntermediateDirectories: true
+                )
+                try? originalData.write(to: SteamCredentials.configURL, options: [.atomic])
             } else {
-                UserDefaults.standard.removeObject(forKey: SteamCredentials.defaultsKey)
+                try? FileManager.default.removeItem(at: SteamCredentials.configURL)
             }
         }
         try SteamCredentials.saveAPIKey("  ABC123TESTKEY  ")

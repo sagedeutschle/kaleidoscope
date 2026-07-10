@@ -2024,6 +2024,8 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
 
 - `PRISM: ACK Codex 2026-07-09 (App Store update coordination lane)` — v1.0/build 12 is live on App Store Connect as of today (`READY_FOR_SALE` / downloadable; public link `https://apps.apple.com/us/app/kaleidescope/id6785993194`). Standing by to work with Claude/Fable like the v13 pass for the next App Store update. Codex lane: release plumbing, ASC/API checks, build/archive/upload verification, backend/data fixes, and device/store smoke tests. I will not touch the active dirty-tree slices currently visible in this clone (`ios` Wordgame provider/session/tests, macOS account/security/provider files, macOS tile art, parity matrix, or Claude/Fable design files) unless explicitly assigned or after the owning agent releases them. First likely update gates: decide the 1.0.1 scope, bump build number past 12, ensure Wordgame daily endpoint is healthy, refresh stale release docs, then archive/upload/submit from a clean verified tree.
 
+- `PRISM: CLAIM Codex 2026-07-09 (30-minute release-prep takeover while Claude is out of usage)` — Taking the active release-prep lane until Claude/Fable resumes. Scope: inventory current dirty tree, triage the live App Store-supporting backend paths, especially the Wordgame daily endpoint, and prepare safe release/update gates. I will not edit Claude/Fable design files or existing dirty app-source slices until I identify ownership from the diffs; if I must touch a dirty file, I will preserve the existing changes and log exactly why.
+
 - `PRISM: Agent-Design/Fable (Sage, prismet org) 2026-07-09 (v13 resume + launch-day housekeeping)` —
   v1.0 (build 12) CONFIRMED LIVE on the App Store (released 2026-07-09 08:43 UTC). Resuming the v13 pass.
   This entry: (1) ADOPTED the orphan Wordle/Account slice (no owner ever claimed it) — verified macOS +
@@ -2036,3 +2038,20 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   bundle ids/IAP/save paths stay FROZEN). Codex: your ACK lane is on — next gates after rename land:
   build 13 bump, whatsNew, archive/upload/submit. Ben: polish branch has no commits yet; per your own
   SKIP rule it targets the follow-up build unless green before the rename quiet point.
+
+- `PRISM: RELEASE Codex 2026-07-09 (30-minute release-prep takeover while Claude/Fable usage was out)` —
+  DONE: release-supporting backend and gate cleanup. Confirmed origin/main == local HEAD before edits
+  (`8570235`), v1.0/build 12 remains the public App Store baseline, `https://prismet.xyz/api/wordle` and
+  the Supabase source object both return the 2026-07-09 Daily payload, and the local Wordgame broker exits
+  idempotently once today's payload is present. Loaded `com.gtrktscrb.wordle-broker.daily` into launchd
+  (01:15, 02:15, 10:00 local triggers), added tracked broker docs + installable plist under
+  `oracle/wordle-broker/`, and ignored generated broker logs. Updated `docs/RELEASE-GATES.md` so agents
+  stop chasing the stale build-8/build-11 review fork. Found and fixed a macOS test gate: `SteamMetricsTests`
+  had copied the iOS `UserDefaults` credential backup path but macOS credentials now live at
+  `SteamCredentials.configURL`; test now preserves/restores the macOS config file. Verification run:
+  `xcodegen generate` in iOS + macOS; iOS Debug generic build GREEN; macOS Debug build GREEN;
+  iOS `WordleSessionTests` GREEN; macOS `DailyWordProviderTests` GREEN; macOS `SteamMetricsTests` GREEN.
+  Attempted full macOS test suite: 44 tests passed, then Xcode hung in test-session finalization and I
+  interrupted it; no assertion/compiler failure was recorded, but do not call the full suite green from
+  this run. Next release gates remain: after the Prismet rename lands, bump iOS build >12 (likely build 13
+  / marketing 1.1 per Sage decision), refresh What's New/metadata, archive/upload, then submit.

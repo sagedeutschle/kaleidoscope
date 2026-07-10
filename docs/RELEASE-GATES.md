@@ -1,5 +1,26 @@
 # Kaleidoscope — Release Gates
 
+## Launch-Day Update: 2026-07-09
+
+v1.0 build 12 is live on the App Store and downloadable from
+`https://apps.apple.com/us/app/kaleidescope/id6785993194`. The old build-8 vs
+build-11 review fork below is historical, not the current release state.
+
+Current next-update gates:
+
+- **[x] v1.0 public launch:** App Store Connect is `READY_FOR_SALE`, build 12
+  attached and downloadable.
+- **[x] Wordgame daily endpoint:** app code points at `https://prismet.xyz/api/wordle`;
+  proxy and Supabase source both returned the 2026-07-09 payload during the
+  launch-day smoke check.
+- **[x] Wordgame broker schedule restored:** local LaunchAgent
+  `com.gtrktscrb.wordle-broker.daily` is loaded with 01:15, 02:15, and 10:00
+  local runs. Broker source lives in `oracle/wordle-broker/`.
+- **[ ] Next App Store update:** bump iOS past build 12 before upload. If the
+  Prismet rename proceeds, use the current v13/1.1 coordination notes in
+  `docs/AGENT-COORDINATION.md`; otherwise ship the next patch as a normal
+  Kaleidescope/Kaleidoscope metadata update.
+
 **As of 2026-07-04.** The remaining blockers to (A) a public iOS launch and
 (B) macOS parity. Grouped by area; each item has a status. Companion:
 `docs/HANDOFF.md` (full current-state).
