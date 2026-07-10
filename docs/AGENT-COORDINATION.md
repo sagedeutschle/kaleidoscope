@@ -2119,3 +2119,11 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   `deploy-testers.sh` now includes MommaPhone. Benjamin's iPhone and MommaPhone installed but launch was
   denied because both devices were locked; iPad Air was listed unavailable/asleep. ASC probe still shows
   public v1.0 READY_FOR_SALE and v1.1/build 13 WAITING_FOR_REVIEW.
+
+- `PRISM: RELEASE Codex 2026-07-09 (v14 iOS warning cleanup)` —
+  DONE: removed recurring iOS build warnings from `BannerAdView` and `SudokuView`. `BannerAdBar` no
+  longer reads the main-actor `AdEntitlementStore.shared` from a default argument; Sudoku animation
+  mutation closures now return `Void`. Verification: iOS Debug generic build GREEN with no
+  `BannerAdView`/`SudokuView` warning scan hits; focused `AdEntitlementStoreTests` + `AdConfigTests`
+  GREEN; focused `SudokuGameTests` GREEN when rerun alone. Note: first Sudoku test attempt was run in
+  parallel with another simulator test job and hit a test-runner bootstrap race, not an assertion failure.

@@ -513,7 +513,7 @@ struct SudokuView: View {
     private func toggleNote(_ n: Int) {
         guard let r = selectedRow, let c = selectedCol else { return }
         withAnimation(reduceMotion ? nil : .snappy(duration: 0.16)) {
-            game.toggleNote(n, row: r, col: c)
+            _ = game.toggleNote(n, row: r, col: c)
         }
         moveCounter += 1
         save()
@@ -524,7 +524,7 @@ struct SudokuView: View {
         guard !game.isGiven(row: r, col: c) else { return }
 
         withAnimation(reduceMotion ? nil : .snappy(duration: 0.16)) {
-            game.setValue(n, row: r, col: c)
+            _ = game.setValue(n, row: r, col: c)
         }
 
         // Light tap for every entry / clear.

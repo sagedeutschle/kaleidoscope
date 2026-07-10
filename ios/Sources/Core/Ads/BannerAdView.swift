@@ -24,10 +24,15 @@ struct BannerAdView: UIViewRepresentable {
 
 /// Bottom bar that reserves the banner's height so layout stays stable before the
 /// ad fills. Drop this into a `safeAreaInset(edge: .bottom)`.
+@MainActor
 struct BannerAdBar: View {
     @ObservedObject private var entitlement: AdEntitlementStore
 
-    init(entitlement: AdEntitlementStore = .shared) {
+    init() {
+        self.entitlement = .shared
+    }
+
+    init(entitlement: AdEntitlementStore) {
         self.entitlement = entitlement
     }
 
