@@ -65,17 +65,19 @@ one canonical feature identity to the current iOS/macOS legacy IDs.
 | Reversi | Core play, save/restore, account-scoped sync. | Add desktop-style result slip/local score entry if desired. |
 | Checkers | Core play, save/restore, account-scoped sync; Human vs AI toggle, undo, result slip, saved result state, and human-vs-AI win leaderboard submit. | Optional: richer local score history if we want exact desktop score-sheet behavior. |
 | Connect Four | Core play, save/restore, account-scoped sync. | Add desktop-style result slip/local score entry if desired. |
-| Gomoku | Core play, bot/local/online friend, save/restore, account-scoped sync. | Mirror the new iOS Gomoku model/view to macOS or mark macOS intentionally deferred. |
-| Sea Battle | Core play, Solo AI/Online Friend, standard 5-ship deployment phase, difficulty picker, save/restore. | New iOS-only slice for now; mirror model/view/tests to macOS in the next game-parity pass. |
+| Gomoku | Core play, bot/local/online friend, save/restore, account-scoped sync. | Mirrored to macOS with goban view, save/reload, bot toggle, AI ELO, model tests. Remaining: online friend room flow is still phone-first/tracked. |
+| Sea Battle | Core play, Solo AI/Online Friend, standard 5-ship deployment phase, difficulty picker, save/restore. | Mirrored to macOS with five-ship deployment, drag/move fleet setup, AI difficulty, save/reload, model tests. Remaining: online friend room flow is still phone-first/tracked. |
 | Solitaire | Core play, save/restore, account-scoped sync. | Audit desktop `SolitaireSession` behavior for scoring/undo differences. |
-| Spider | Core one-suit Spider Solitaire, save/restore. | New iOS-only slice for now; mirror model/view/tests to macOS in the next card-game parity pass. |
-| Crazy 8 | Core local/online friend card play, save/restore. | New iOS-only slice for now; mirror model/view/tests to macOS in the next card-game parity pass. |
+| Spider | Core one-suit Spider Solitaire, save/restore. | Mirrored to macOS with one-suit Spider, save/reload, model tests. Remaining: optional skin picker polish. |
+| Crazy 8 | Core local/online friend card play, save/restore. | Mirrored to macOS with local/friend table mode, AI opponent/ELO, save/reload, model tests. Remaining: online friend room flow is still phone-first/tracked. |
 | Brick Bench | BrickLink import/export, layered top-down builder, save/restore, account-scoped sync; phone-native 3D preview added. | Desktop still has SceneKit build view, gizmo/keyboard controls, richer 3D placement and undo/redo. |
 
 ## Next Order
 
-1. Snake: port the desktop sprite/tile presentation assets for a fast visible polish win.
-2. Board games: repeat the Checkers result-slip/undo pattern for Reversi and Connect Four where ranking is fair.
+1. Clean-device smoke: install the current v14 Debug build on iPhone + iPad, verify Oracle non-empty and online friend room flow.
+2. macOS parity polish: add the remaining per-game skin pickers and close the tracked online-friend gaps where practical.
+3. Snake: port the desktop sprite/tile presentation assets for a fast visible polish win.
+4. Board games: repeat the Checkers result-slip/undo pattern for Reversi and Connect Four where ranking is fair.
 3. Brick Bench: defer full SceneKit/gizmo unless launch review says the Canvas 3D preview is not enough.
 4. Oracle: run a clean install/device verification after the resource bundling fix.
 

@@ -27,6 +27,8 @@ Current next-update gates:
   `4e231958-05cc-4cc2-87d1-6d5123ccf093`; review submission id
   `ba52e847-a300-415f-a111-e0e983ddc443`. State:
   `WAITING_FOR_REVIEW` as of 2026-07-10T01:57:16Z.
+- **[~] v14 started:** source now targets v1.2/build 14 for the next post-review
+  update. v1.1 remains the submitted App Store artifact.
 
 **As of 2026-07-04.** The remaining blockers to (A) a public iOS launch and
 (B) macOS parity. Grouped by area; each item has a status. Companion:
@@ -110,13 +112,14 @@ started.**
 
 ## E. Parity (macOS ↔ iOS — hard release gate)
 
-- **[ ] Port new games to macOS: Spider, Crazy 8, Sea Battle** (iOS-only slices).
-- **[ ] Mirror Gomoku** model/view to macOS (or mark intentionally deferred).
-- **[ ] Mirror the v10/v11 material-identity redesign to macOS:** walnut 2048 tray,
-  club Checkers board, Chess plaques/swatches, Oracle ledger card, Solitaire baize
-  + real card faces, Brick Bench workshop chrome, Gomoku goban; per-game skin
-  pickers; Home category regroup (`FacetRegistry`).
-- **[ ] Mirror full-color `tile_<game>` Home art** to the macOS launcher.
+- **[x] Port new games to macOS:** Gomoku, Sea Battle, Crazy 8, and Spider are
+  native ready facets with sessions, save/reload wiring, and focused model tests.
+- **[~] Mirror the v10/v11 material-identity redesign to macOS:** major surfaces
+  are mirrored (walnut 2048, club Checkers, Chess plaques/swatches, Oracle ledger,
+  Solitaire baize/cards, Brick Bench workshop chrome, Gomoku goban, Home category
+  regroup). Remaining v14 polish: per-game skin pickers and a few result-slip/AI
+  parity gaps.
+- **[x] Mirror full-color `tile_<game>` Home art** to the macOS launcher.
 - **[x] Already mirrored (v10 pass):** DARK default paper, Debt Clock trend banner,
   Brick Bench green-baseplate stud fix.
 - **[x] Parity gate enforced in process:** every user-visible iOS change carries a
@@ -125,7 +128,9 @@ started.**
 
 ## F. Testing / build hygiene
 
-- **[x] macOS test suite green** (~180 model tests, 0 failures at last full run).
+- **[x] macOS build green** under the Prismet scheme after the rename/version bump.
+- **[x] Focused macOS parity tests green** for Gomoku, Sea Battle, Crazy 8, and
+  Spider.
 - **[~] iOS test suite.** Per-game model tests + `AppSecurityTests` +
   `AdEntitlementStoreTests` exist; run the full suite green on the build that
   ships.

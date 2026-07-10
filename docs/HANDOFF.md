@@ -117,20 +117,15 @@ docs               APP-STORE-LISTING, MAC-IOS-GAME-PARITY, ADMOB-LIVE-ADS, REMOV
   `~/Applications/Prismet.app`.
 - **State:** stable and playable. Chess, Brick Bench (with BrickLink
   import/export), Wordle, Oracle, Rubik's, 2048, Lights Out, Minesweeper, Snake,
-  Sliding-15, Sudoku, Nonogram, Reversi and more are ready facets. ~180 model
-  tests passing at last full run.
-- **Parity debt (tracked):** macOS **lags iOS on the v10/v11 design pass.** Open
-  gaps, per `ios/docs/MAC-IOS-GAME-PARITY.md`:
-  - **New games not yet ported to macOS:** **Spider, Crazy 8, Sea Battle** (and
-    the new **Gomoku** model/view mirror).
-  - **Material-identity redesigns not yet mirrored:** walnut 2048 tray, club
-    Checkers board, Chess plaques/swatches, Oracle ledger card, Solitaire baize +
-    real card faces, Brick Bench workshop chrome, Gomoku goban.
-  - **Full-color `tile_<game>` Home art:** iOS uses it; macOS launcher still uses
-    its old icon treatment (tracked debt).
-  - Per-game skin pickers, Home category regroup (macOS `FacetRegistry`).
-  - Already mirrored in the v10 pass: DARK default paper, Debt Clock trend
-    banner, and the Brick Bench green-baseplate stud fix.
+  Sliding-15, Sudoku, Nonogram, Reversi, Gomoku, Sea Battle, Crazy 8, Spider and
+  more are ready facets.
+- **Parity state:** the v13 macOS mirror landed. Gomoku, Sea Battle, Crazy 8, and
+  Spider are native ready facets with session/save wiring and focused tests; the
+  Home launcher uses the mirrored full-color `tile_<game>` art and the iOS-style
+  Daily/Puzzles/Board/Cards/Workshop/Lenses grouping.
+- **Remaining parity debt (tracked):** per-game skin pickers on macOS, online
+  friend room flow for the newly mirrored games, Snake sprite/tile polish, and
+  result-slip/AI parity gaps for some board games.
 
 **Parity is a hard gate.** Every user-visible iOS change must carry a macOS
 decision in the same turn: **mirrored**, **not applicable (with reason)**, or
@@ -212,12 +207,10 @@ These apply to the iOS target especially and have each cost a debugging session:
 
 ## 7. Top open threads
 
-1. **App Store fork decision A/B/C (Sage's call).** Build 11 is the app people
-   should get; build 8 is what's in review. Decide ride-8-then-1.0.1 vs.
-   pull-and-reattach vs. reject/replace. Runbook for the 1.0.1 path is staged.
-2. **macOS parity debt.** Port Spider / Crazy 8 / Sea Battle / Gomoku to macOS and
-   mirror the six-game material-identity redesign + tile art. This gates "macOS
-   parity," which itself gates release.
+1. **v1.1 review watch.** v1.1/build 13 is submitted and `WAITING_FOR_REVIEW`;
+   public v1.0/build 12 remains live until Apple approves the update.
+2. **v14 app work.** Source now targets v1.2/build 14. Focus areas: device smoke,
+   remaining parity polish, and small high-confidence UX fixes while v1.1 waits.
 3. **Repoint + verify the Oracle daily launchd job** at `oracle/` in the canonical
    clone after the monorepo move.
 4. **Ads/IAP still parked for later:** live AdMob IDs blocked on a working Google

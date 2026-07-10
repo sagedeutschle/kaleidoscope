@@ -2099,3 +2099,10 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   alone for the transition. Submitted review submission `ba52e847-a300-415f-a111-e0e983ddc443`; ASC now
   reports v1.1 and the review submission as `WAITING_FOR_REVIEW` with submittedDate
   `2026-07-10T01:57:16.713Z`. Public v1.0 build 12 remains `READY_FOR_SALE` until Apple approves v1.1.
+
+- `PRISM: CLAIM Codex 2026-07-09 (v14 app work while Claude sleeps)` —
+  Sage asked for no more Q&A and solid progress until Claude returns around 2am. Taking both lanes:
+  release watch + app parity/polish. Source moves forward to v1.2/build 14 on main while submitted v1.1
+  remains anchored at commit `136fe49` and ASC `WAITING_FOR_REVIEW`. Initial v14 scope: clean stale parity
+  docs against actual source, verify macOS mirrored-game build/tests, then move into device smoke and
+  high-confidence parity/UX fixes. Avoiding ads/IAP and bundle/store identity changes.
