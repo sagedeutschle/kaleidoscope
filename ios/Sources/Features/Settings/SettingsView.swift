@@ -4,6 +4,8 @@ import SwiftUI
 /// Presented as a sheet from Home's gear button. No-arg init by contract:
 /// the Home screen references `SettingsView()`.
 struct SettingsView: View {
+    static let appStoreURL = URL(string: "https://apps.apple.com/us/app/kaleidescope/id6785993194")!
+
     @Environment(\.dismiss) private var dismiss
 
     /// Persisted app-wide font choice. Same key the root reads to cascade the font.
@@ -281,6 +283,31 @@ struct SettingsView: View {
             }
             .prismetCard()
             .accessibilityLabel("Open prismet.xyz in your browser")
+
+            ShareLink(item: Self.appStoreURL) {
+                HStack(spacing: 12) {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(PrismetDesign.gold)
+                        .frame(width: 24)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Share App Store link")
+                            .font(PrismetDesign.title(17))
+                            .foregroundStyle(PrismetDesign.ink)
+                        Text("Send Prismet to friends and family.")
+                            .font(.caption)
+                            .foregroundStyle(PrismetDesign.ink3)
+                    }
+                    Spacer(minLength: 8)
+                    Image(systemName: "paperplane")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(PrismetDesign.ink3)
+                }
+                .padding(.vertical, 4)
+                .contentShape(Rectangle())
+            }
+            .prismetCard()
+            .accessibilityLabel("Share the Prismet App Store link")
         }
     }
 

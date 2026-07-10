@@ -2127,3 +2127,11 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   `BannerAdView`/`SudokuView` warning scan hits; focused `AdEntitlementStoreTests` + `AdConfigTests`
   GREEN; focused `SudokuGameTests` GREEN when rerun alone. Note: first Sudoku test attempt was run in
   parallel with another simulator test job and hit a test-runner bootstrap race, not an assertion failure.
+
+- `PRISM: RELEASE Codex 2026-07-09 (v14 sharing + realtime cleanup)` —
+  DONE: added a Settings `Share App Store link` action pointing at the live public listing
+  `https://apps.apple.com/us/app/kaleidescope/id6785993194`, with `SettingsViewTests` pinning the URL.
+  Also moved `OnlineMatchSession` from deprecated `channel.subscribe()` to `try await
+  channel.subscribeWithError()`, preserving the fail-soft behavior so the polling loop remains the safety
+  net when realtime cannot subscribe. Verification: iOS Debug generic build GREEN with warning scan clean;
+  focused `SettingsViewTests` GREEN; focused `GamePlayModeTests` + `OnlineMatchTests` GREEN.

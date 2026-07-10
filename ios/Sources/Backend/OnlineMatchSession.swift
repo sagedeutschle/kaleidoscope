@@ -191,7 +191,12 @@ final class OnlineMatchSession: ObservableObject {
             table: "multiplayer_matches",
             filter: .eq("id", value: id.uuidString)
         )
-        await channel.subscribe()
+        do {
+            try await channel.subscribeWithError()
+        } catch {
+            await channel.unsubscribe()
+            return
+        }
         for await change in updates {
             if Task.isCancelled { break }
             if let updated = try? change.decodeRecord(as: OnlineMatch.self, decoder: JSONDecoder()) {
