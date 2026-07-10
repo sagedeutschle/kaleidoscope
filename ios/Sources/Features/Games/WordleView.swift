@@ -80,16 +80,6 @@ struct WordleView: View {
                 )
             }
 
-            GeometryReader { geo in
-                let side = min(geo.size.width, geo.size.height)
-                board
-                    .frame(width: side, height: side)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            }
-            .prismetCard()
-
-            nativeKeyboardInput
-
             if !session.message.isEmpty {
                 Text(session.message)
                     .font(.caption.weight(.semibold))
@@ -98,15 +88,13 @@ struct WordleView: View {
                     .minimumScaleFactor(0.7)
                     .frame(minHeight: 18)
             }
+
+            gamePanel
+
+            nativeKeyboardInput
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .overlay(alignment: .bottom) {
-            WordleLetterTracker(states: letterStates)
-                .padding(.horizontal, 20)
-                .padding(.bottom, 6)
-                .allowsHitTesting(false)
-        }
         .facetBackground(WordleTheme.accent)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
@@ -173,6 +161,26 @@ struct WordleView: View {
     }
 
     // MARK: - Board
+
+    private var gamePanel: some View {
+        GeometryReader { geo in
+            let spacing: CGFloat = 10
+            let shelfWidth = min(max(56, geo.size.width * 0.18), 72)
+            let boardSide = max(180, min(geo.size.width - shelfWidth - spacing, geo.size.height))
+
+            HStack(alignment: .center, spacing: spacing) {
+                board
+                    .frame(width: boardSide, height: boardSide)
+                    .prismetCard()
+
+                WordleLetterShelf(states: letterStates)
+                    .frame(width: shelfWidth, height: boardSide)
+                    .allowsHitTesting(false)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        }
+        .frame(minHeight: 320)
+    }
 
     private var board: some View {
         GeometryReader { geo in
@@ -380,40 +388,51 @@ final class NativeKeyboardBackspaceTextField: UITextField {
     }
 }
 
-// MARK: - Letter tracker (visual keyboard)
+// MARK: - Letter shelf
 
-/// Sage's v10 feature: a NON-INTERACTIVE QWERTY strip that visualizes which
-/// letters have been used and how they scored. Floats as a bottom overlay so
-/// it can never resize the guess grid or the native keyboard.
-private struct WordleLetterTracker: View {
+/// Letter shelf: a non-interactive side rack that visualizes which letters have
+/// been used and how they scored, without pretending to be a tappable keyboard.
+private struct WordleLetterShelf: View {
     let states: [Character: WordPuzzleLetterScore]
 
-    private static let rows: [[Character]] = [
-        Array("QWERTYUIOP"), Array("ASDFGHJKL"), Array("ZXCVBNM"),
+    private static let columns: [[Character]] = [
+        Array("ABCDEFGHIJKLM"), Array("NOPQRSTUVWXYZ"),
     ]
 
     var body: some View {
-        VStack(spacing: 5) {
-            ForEach(0..<Self.rows.count, id: \.self) { r in
+        VStack(spacing: 4) {
+            Text("Letters")
+                .font(.caption2.weight(.bold))
+                .foregroundStyle(PrismetDesign.ink2)
+                .lineLimit(1)
+                .minimumScaleFactor(0.65)
+
+            Divider()
+                .overlay(PrismetDesign.hairline)
+
+            ForEach(0..<Self.columns[0].count, id: \.self) { row in
                 HStack(spacing: 4) {
-                    ForEach(Self.rows[r], id: \.self) { letter in
-                        key(letter)
+                    key(Self.columns[0][row])
+                    if row < Self.columns[1].count {
+                        key(Self.columns[1][row])
                     }
                 }
             }
+
+            Spacer(minLength: 0)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 7)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 8)
         .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(PrismetDesign.isDark ? Color(white: 0.12).opacity(0.92) : Color.white.opacity(0.92))
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(PrismetDesign.isDark ? Color(white: 0.12).opacity(0.94) : Color.white.opacity(0.94))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .strokeBorder(PrismetDesign.outline.opacity(0.6), lineWidth: 1)
                 )
-                .shadow(color: .black.opacity(0.18), radius: 10, y: 4)
+                .shadow(color: .black.opacity(0.12), radius: 8, y: 3)
         )
-        .frame(maxWidth: 430)
+        .clipped()
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilitySummary)
     }
@@ -421,10 +440,10 @@ private struct WordleLetterTracker: View {
     private func key(_ letter: Character) -> some View {
         let state = states[letter]
         return Text(String(letter))
-            .font(.system(size: 13, weight: .bold, design: .rounded))
+            .font(.system(size: 12, weight: .bold, design: .rounded))
             .foregroundStyle(ink(for: state))
-            .frame(maxWidth: .infinity)
-            .frame(height: 30)
+            .minimumScaleFactor(0.7)
+            .frame(maxWidth: .infinity, minHeight: 18)
             .background(
                 RoundedRectangle(cornerRadius: 5, style: .continuous)
                     .fill(fill(for: state))
@@ -452,7 +471,7 @@ private struct WordleLetterTracker: View {
         if !correct.isEmpty { parts.append("Correct: \(correct)") }
         if !present.isEmpty { parts.append("In the word: \(present)") }
         if !absent.isEmpty { parts.append("Not in the word: \(absent)") }
-        return parts.isEmpty ? "Letter tracker: no guesses yet" : "Letter tracker. " + parts.joined(separator: ". ")
+        return parts.isEmpty ? "Letter shelf: no guesses yet" : "Letter shelf. " + parts.joined(separator: ". ")
     }
 }
 

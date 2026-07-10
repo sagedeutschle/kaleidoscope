@@ -35,7 +35,7 @@ final class WordleSession: ObservableObject {
         self.isRemoteDailyEnabled = isRemoteDailyEnabled
         let word = provider.localWord()
         self.dailyWord = word
-        self.game = WordPuzzleGame(answer: word.answer, allowedWords: WordleWords.all)
+        self.game = WordPuzzleGame(answer: word.answer, allowedWords: WordleWords.approvedGuesses)
         self.mode = .localDaily
     }
 
@@ -97,8 +97,13 @@ final class WordleSession: ObservableObject {
     @discardableResult
     func submitGuess() -> Bool {
         guard !game.isComplete, currentGuess.count == game.answer.count else { return false }
+        guard game.isAllowedGuess(currentGuess) else {
+            message = "Not in word list"
+            return false
+        }
         guard game.submit(currentGuess) else { return false }
         currentGuess = ""
+        message = game.isSolved ? "Got it!" : ""
         save(forceCloud: game.isComplete)
 
         if game.isComplete {
@@ -203,7 +208,7 @@ final class WordleSession: ObservableObject {
 
     private func start(word: DailyWord, mode: WordleMode, message: String) {
         dailyWord = word
-        game = WordPuzzleGame(answer: word.answer, allowedWords: WordleWords.all)
+        game = WordPuzzleGame(answer: word.answer, allowedWords: WordleWords.approvedGuesses)
         currentGuess = ""
         self.mode = mode
         self.message = message
@@ -215,7 +220,7 @@ final class WordleSession: ObservableObject {
 
     private func restore(_ snapshot: WordleSnapshot) {
         dailyWord = snapshot.dailyWord
-        game = snapshot.game
+        game = snapshot.game.replacingAllowedWords(WordleWords.approvedGuesses)
         currentGuess = snapshot.currentGuess
         mode = snapshot.mode
         didSubmitResult = snapshot.didSubmitResult

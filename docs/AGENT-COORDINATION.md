@@ -2166,3 +2166,13 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   path timed out / failed remote install coordination on this pass, and a direct launch by hardware UDID
   also timed out. Remaining device gate: rerun Poopoohead when reachable, unlock Benjamin, then do Oracle
   non-empty UI + online friend room smoke.
+
+- `PRISM: RELEASE Codex 2026-07-09 (v14 iPhone Wordgame approved guesses + side shelf)` —
+  DONE: changed iOS Wordgame guessing to Wordle-style approved-word gating. Invalid full guesses now stay in
+  the row and show `Not in word list`; approved answer/common guesses submit normally, and restored saves are
+  upgraded to the current approved-guess bank. Reworked the iPhone used-letter display from a bottom QWERTY
+  strip into a compact non-interactive side letter shelf beside the guess rows, with the status message moved
+  above the board so the native keyboard does not cover it. Verification: failing tests first for invalid
+  guesses + side shelf; focused `WordleSessionTests` GREEN; iOS Debug generic build GREEN with no `warning:`
+  scan hits; simulator `PRISMET_SHOT=wordle` screenshot verified side shelf layout at
+  `/tmp/prismet-wordle-side-shelf-2.png`.

@@ -122,6 +122,31 @@ final class WordleSessionTests: XCTestCase {
     }
 
     @MainActor
+    func testRejectsFullGuessThatIsNotInApprovedWordList() {
+        let provider = DailyWordProvider(localWords: ["crane", "slate"])
+        let session = WordleSession(provider: provider)
+
+        session.appendTextInput("zzzzz")
+
+        XCTAssertFalse(session.submitGuess())
+        XCTAssertTrue(session.game.rows.isEmpty)
+        XCTAssertEqual(session.currentGuess, "zzzzz")
+        XCTAssertEqual(session.message, "Not in word list")
+    }
+
+    @MainActor
+    func testAllowsApprovedAnswerWordGuess() {
+        let provider = DailyWordProvider(localWords: ["crane", "slate"])
+        let session = WordleSession(provider: provider)
+
+        session.appendTextInput("crane")
+
+        XCTAssertTrue(session.submitGuess())
+        XCTAssertEqual(session.game.rows.count, 1)
+        XCTAssertTrue(session.currentGuess.isEmpty)
+    }
+
+    @MainActor
     func testNativeKeyboardBackspaceReportsDeleteWhenInputFieldIsEmpty() {
         let field = NativeKeyboardBackspaceTextField(frame: .zero)
         var deleteCount = 0
@@ -145,6 +170,20 @@ final class WordleSessionTests: XCTestCase {
         XCTAssertTrue(source.contains("placement: .topBarTrailing"))
         XCTAssertTrue(source.contains("Text(\"Daily\")"))
         XCTAssertTrue(source.contains("Text(\"Practice\")"))
+    }
+
+    func testLetterTrackerIsSideShelfNotBottomKeyboardStrip() throws {
+        let testURL = URL(fileURLWithPath: #filePath)
+        let sourceURL = testURL
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Sources/Features/Games/WordleView.swift")
+        let source = try String(contentsOf: sourceURL)
+
+        XCTAssertTrue(source.contains("WordleLetterShelf"))
+        XCTAssertTrue(source.contains("Letter shelf"))
+        XCTAssertFalse(source.contains("WordleLetterTracker"))
+        XCTAssertFalse(source.contains(".overlay(alignment: .bottom)"))
     }
 
     @MainActor

@@ -46,11 +46,16 @@ struct WordPuzzleGame: Hashable, Codable {
     let maxGuesses: Int
     private(set) var rows: [[WordPuzzleGuessResult]]
 
-    init(answer: String, allowedWords: [String], maxGuesses: Int = 6) {
+    init(
+        answer: String,
+        allowedWords: [String],
+        maxGuesses: Int = 6,
+        rows: [[WordPuzzleGuessResult]] = []
+    ) {
         self.answer = answer.lowercased()
         self.allowedWords = Set(allowedWords.map { $0.lowercased() })
         self.maxGuesses = maxGuesses
-        self.rows = []
+        self.rows = rows
     }
 
     var isSolved: Bool {
@@ -63,17 +68,24 @@ struct WordPuzzleGame: Hashable, Codable {
 
     mutating func submit(_ guess: String) -> Bool {
         let normalized = guess.lowercased()
-        // Discord-style: accept any combination of letters of the right length —
-        // no dictionary check. `allowedWords` is retained for the answer source
-        // but no longer gates guesses.
         guard normalized.count == answer.count,
               normalized.allSatisfy({ $0.isLetter }),
+              isAllowedGuess(normalized),
               !isComplete else {
             return false
         }
 
         rows.append(Self.score(guess: normalized, answer: answer))
         return true
+    }
+
+    func isAllowedGuess(_ guess: String) -> Bool {
+        let normalized = guess.lowercased()
+        return normalized == answer || allowedWords.contains(normalized)
+    }
+
+    func replacingAllowedWords(_ words: [String]) -> WordPuzzleGame {
+        WordPuzzleGame(answer: answer, allowedWords: words, maxGuesses: maxGuesses, rows: rows)
     }
 
     static func score(guess: String, answer: String) -> [WordPuzzleGuessResult] {
