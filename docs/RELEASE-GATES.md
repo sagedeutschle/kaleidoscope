@@ -19,10 +19,10 @@ Current next-update gates:
 - **[x] v13 Task 8 local rename:** app/source/package/project/display names now
   use Prismet; bundle identifiers, IAP product ID, Supabase refs, Game Center IDs,
   and legacy persistence paths remain frozen.
-- **[ ] Next App Store update:** bump iOS past build 12 before upload. If the
-  Prismet rename proceeds, use the current v13/1.1 coordination notes in
-  `docs/AGENT-COORDINATION.md`; otherwise ship the next patch as a normal
-  Kaleidescope/Prismet metadata update.
+- **[x] v13 Task 9 version bump:** iOS and macOS now resolve to marketing version
+  1.1 and build 13 under the `Prismet` schemes.
+- **[ ] Next App Store update:** archive/upload build 13, refresh App Store
+  Connect metadata from `ios/docs/APP-STORE-LISTING.md`, then submit for review.
 
 **As of 2026-07-04.** The remaining blockers to (A) a public iOS launch and
 (B) macOS parity. Grouped by area; each item has a status. Companion:

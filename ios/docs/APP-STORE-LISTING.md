@@ -1,6 +1,15 @@
 # Prismet — App Store Connect listing kit
 
-Everything you paste into App Store Connect for v1. Drafts — tweak voice to taste.
+Everything you paste into App Store Connect for the next iOS update. Drafts —
+tweak voice to taste.
+
+## Current submission target
+
+- **Version:** 1.1
+- **Build:** 13
+- **Public baseline:** v1.0 build 12 is already live on the App Store.
+- **Name strategy:** in-app/project name is Prismet. The public App Store name can
+  remain `Kaleidescope` for the transition if the rename is not ready in ASC.
 
 ## App name (30 char max)
 
@@ -52,10 +61,9 @@ DESIGNED TO FEEL GOOD
 
 Free to play. More games and features on the way.
 
-## What's New (version 0.1.0)
+## What's New (version 1.1)
 
-`First release — fifteen classic games, smooth controls and haptics, three reading
-themes, and Game Center support. More games and online leaderboards coming soon.`
+`Prismet is here. This update refreshes the app identity while preserving existing saves and Game Center continuity, restores the daily Wordgame feed, and brings the latest game polish, sound, haptics, online friend rooms, and launch-day stability fixes.`
 
 ## Category
 
@@ -173,7 +181,7 @@ Free to play. More games and features on the way.
 
 ---
 
-## ★ 1.0.1 SHIP RUNBOOK — do this WHEN build 8 (v1.0) clears review (2026-07-04)
+## ★ HISTORICAL 1.0.1 SHIP RUNBOOK — pre-launch fork, do not use for v1.1
 Chosen path: **ride build 8, ship build 11 as 1.0.1.** Apple blocks creating 1.0.1 until v1.0 is out of `WAITING_FOR_REVIEW` (approved/released or rejected). Assets staged: metadata (the "POLISHED FOR BUILD 11" section above) + 7 screenshots in `docs/appstore-screenshots-1.0.1/` (6.9in 1320x2868). ASC helper: `docs/asc-helper.py` (openssl-ES256 JWT; `import` it and call `api(method,path,body)`). Ids: app 6785993194, build 11 id `82554947-3f20-469b-a8db-7f0b1b44ce54`, en-US loc template.
 
 STEPS (once v1.0 is Ready for Sale / Pending Developer Release, or Rejected):

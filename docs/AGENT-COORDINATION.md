@@ -2077,3 +2077,14 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   resolves `shared/PrismetShared`; iOS focused tests `ShotHarnessTests` + `WordleSessionTests` GREEN;
   macOS focused tests `DailyWordProviderTests` + `SteamMetricsTests` GREEN. Next: Task 9 build/marketing
   version bump to v1.1/build 13, then archive/upload/submit.
+
+- `PRISM: RELEASE Codex 2026-07-09 (v13 Task 9 version bump)` —
+  DONE: bumped both generated-project sources to marketing version 1.1 and build 13 using
+  `macos/scripts/sync-version.sh 1.1 13`, regenerated both XcodeGen projects, and refreshed the
+  App Store listing doc with the current v1.1 submission target and What's New draft. Resolved build
+  settings now show iOS `PRODUCT_NAME=Prismet`, `PRODUCT_BUNDLE_IDENTIFIER=com.spocksclub.kaleidoscope`,
+  `MARKETING_VERSION=1.1`, `CURRENT_PROJECT_VERSION=13`; macOS shows
+  `PRODUCT_NAME=Prismet`, `PRODUCT_BUNDLE_IDENTIFIER=com.gtrktscrb.kaleidoscope`,
+  `MARKETING_VERSION=1.1`, `CURRENT_PROJECT_VERSION=13`. Verification: `git diff --check` clean;
+  iOS Debug generic build GREEN; macOS Debug build GREEN. Next: create/archive/upload the iOS Release
+  build, update App Store Connect metadata, and submit.

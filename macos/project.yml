@@ -51,8 +51,8 @@ targets:
         PRODUCT_NAME: Prismet
         PRODUCT_BUNDLE_IDENTIFIER: com.gtrktscrb.kaleidoscope
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        MARKETING_VERSION: "1.0"
-        CURRENT_PROJECT_VERSION: "11"
+        MARKETING_VERSION: "1.1"
+        CURRENT_PROJECT_VERSION: "13"
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: "Prismet"
         INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.board-games"
