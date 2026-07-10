@@ -2152,3 +2152,9 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   gate non-green until launch is actually confirmed. Added `TesterDeployScriptTests` to pin the behavior
   and the known Poopoohead/Benjamin/MommaPhone device IDs. Verification: `bash -n
   ios/scripts/deploy-testers.sh` clean; `git diff --check` clean; focused `TesterDeployScriptTests` GREEN.
+
+- `PRISM: RELEASE Codex 2026-07-09 (v14 release docs + full iOS suite)` —
+  DONE: refreshed the living release docs to remove stale pre-launch fork language, record v1.0
+  READY_FOR_SALE / v1.1 WAITING_FOR_REVIEW / v1.2-build-14 source-lane state, and add a v1.2 What's New
+  draft. Verification: full iOS `PrismetTests` GREEN against the current v14 tree with no failure lines
+  and no `warning:` scan hits; `git diff --check` clean.

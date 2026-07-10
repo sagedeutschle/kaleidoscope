@@ -1,6 +1,6 @@
 # Prismet — Monorepo Handoff
 
-**Snapshot date: 2026-07-04.** This is the single current-state doc for the whole
+**Snapshot date: 2026-07-09.** This is the single current-state doc for the whole
 project. It supersedes the two per-app handoffs (`ios/docs/HANDOFF.md`,
 `macos/docs/HANDOFF.md`) — read this first; treat those as history.
 
@@ -10,10 +10,10 @@ file is the "what it is / what's shipping"; that file is the "what's left."
 ## Launch-Day Update: 2026-07-09
 
 v1.0 build 12 is live on the App Store at
-`https://apps.apple.com/us/app/kaleidescope/id6785993194`. The older build-8 vs
-build-11 review fork below is historical. Current update lane: ship the first
-post-launch Prismet update as v1.1/build 13 after the rename/build-number gates
-pass. Bundle identifiers, the remove-ads product ID, Supabase refs, Game Center
+`https://apps.apple.com/us/app/kaleidescope/id6785993194`. v1.1/build 13 is
+uploaded, attached, metadata-refreshed, and `WAITING_FOR_REVIEW` in App Store
+Connect. Source on `main` has moved on to v1.2/build 14 for the next update.
+Bundle identifiers, the remove-ads product ID, Supabase refs, Game Center
 leaderboard IDs, and legacy persistence paths stay frozen for continuity.
 
 ---
@@ -30,7 +30,7 @@ explicit, enforced release gate, not a nice-to-have.
 
 ## 1. Repo layout (consolidated monorepo)
 
-Root: `/Users/gtrktscrb/Desktop/Prismet`
+Root: `/Users/gtrktscrb/Desktop/Kaleidoscope`
 
 ```
 ios/      Shipping iOS app (SwiftUI, iOS 17, XcodeGen + SPM). The lead app.
@@ -43,7 +43,7 @@ docs/     THIS doc, RELEASE-GATES.md, AGENT-COORDINATION.md (lane protocol).
 
 ### Sync model — read before you touch anything
 - **Canonical = a private GitHub repo.** The NAS shared folder, Sage's desktop
-  (`/Users/gtrktscrb/Desktop/Prismet`), and Ben's machine are all **clones**
+  (`/Users/gtrktscrb/Desktop/Kaleidoscope`), and Ben's machine are all **clones**
   that sync through GitHub.
 - Workflow: **`git pull --rebase` before work, `git push` after.** Always **build
   on your LOCAL clone**, never on the NAS SMB mount (see build rules).
@@ -74,26 +74,16 @@ docs/     THIS doc, RELEASE-GATES.md, AGENT-COORDINATION.md (lane protocol).
 - **Oracle feature:** reads the public decree gist published by `oracle/` (below).
 
 ### App Store review status (the important part)
-There are two builds in play and one **open decision that is Sage's to make**:
+Current App Store state:
 
-- **Build 8** is **attached** to App Store version **v1.0**, which is currently
-  **`WAITING_FOR_REVIEW`** (Apple's 1–3 day clock).
-- **Build 11** — the current, much-improved app (~18 games, the new titles,
-  online head-to-head, real sound + haptics, the v10/v11 material-identity
-  redesign) — is **uploaded and VALID but UNATTACHED**. Apple locks the
-  in-review version, so build 11 cannot be attached to v1.0 while it sits in
-  `WAITING_FOR_REVIEW`.
-- **The fork decision (A/B/C) is Sage's:**
-  - **A — Ride build 8:** let v1.0 clear review on the older build, then ship
-    build 11 as **1.0.1**. A full runbook for this path (create 1.0.1, attach
-    build 11 id `82554947-3f20-469b-a8db-7f0b1b44ce54`, push the polished
-    metadata + 6.9" screenshots, submit) is staged in
-    `ios/docs/APP-STORE-LISTING.md` under "1.0.1 SHIP RUNBOOK." Apple blocks
-    creating 1.0.1 until v1.0 leaves `WAITING_FOR_REVIEW` (approved or rejected).
-  - **B — Pull v1.0 from review** and re-attach build 11 to v1.0 so the *first*
-    public release is the good build.
-  - **C — Reject/replace** via Apple's flow to swap the build.
-  This is not yet decided. Do not force one; surface it to Sage.
+- **v1.0/build 12** is the public baseline and is `READY_FOR_SALE`.
+- **v1.1/build 13** is the first Prismet update. It is uploaded, attached to ASC
+  version `88c88227-ddc2-4766-a966-cb2d1d703363`, submitted as review submission
+  `ba52e847-a300-415f-a111-e0e983ddc443`, and `WAITING_FOR_REVIEW` as of the
+  latest probe on 2026-07-09.
+- **v1.2/build 14** is the current source lane on `main` for the next post-review
+  update. Do not archive/upload it until v1.1 is approved, rejected, or Sage asks
+  to replace the in-review build.
 
 ### iOS layout
 ```

@@ -28,10 +28,12 @@ Current next-update gates:
   `ba52e847-a300-415f-a111-e0e983ddc443`. State:
   `WAITING_FOR_REVIEW` as of 2026-07-10T01:57:16Z.
 - **[~] v14 started:** source now targets v1.2/build 14 for the next post-review
-  update. v1.1 remains the submitted App Store artifact.
+  update. v1.1 remains the submitted App Store artifact; v14 now has clean iOS
+  full-suite and macOS focused verification on main.
 
-**As of 2026-07-04.** The remaining blockers to (A) a public iOS launch and
-(B) macOS parity. Grouped by area; each item has a status. Companion:
+The detailed checklist below began before the public launch. Treat the
+launch-day summary above as current source of truth, and use the sections below
+for remaining backend, ads/IAP, parity, testing, and next-update gates. Companion:
 `docs/HANDOFF.md` (full current-state).
 
 Status legend: **[x] done · [~] in progress / partial · [ ] blocked or not
@@ -41,32 +43,31 @@ started.**
 
 ## A. App Store (iOS public launch)
 
-- **[~] Resolve the build-8 vs build-11 fork (Sage's decision — A/B/C).**
-  v1.0 is `WAITING_FOR_REVIEW` with **build 8 attached**; **build 11 is VALID but
-  UNATTACHED** (Apple locks the in-review version). Options: **A** ride build 8,
-  ship build 11 as 1.0.1; **B** pull v1.0 from review and re-attach build 11; **C**
-  reject/replace. *No path chosen yet.* App record `6785993194`; build 11 id
-  `82554947-3f20-469b-a8db-7f0b1b44ce54`.
+- **[x] Public app live.** v1.0/build 12 is `READY_FOR_SALE` and downloadable at
+  `https://apps.apple.com/us/app/kaleidescope/id6785993194`.
+- **[x] First post-launch update submitted.** v1.1/build 13 is attached,
+  metadata-refreshed, and `WAITING_FOR_REVIEW`.
+- **[~] Next source lane open.** v1.2/build 14 is on `main`; wait for the v1.1
+  review outcome before archiving/uploading this candidate unless Sage explicitly
+  chooses to replace the in-review update.
 - **[x] App record created** under SpocksClub (team `ZW9HBTRLRT`), Sage = Admin.
-- **[x] Release build archived + uploaded** (both build 8 and build 11 are on App
-  Store Connect; build 11 is VALID).
 - **[ ] Privacy Policy URL + Support URL live and public.** Required by Apple.
   Host `docs/PRIVACY-POLICY.md` as HTML (GitHub Pages or a one-pager). Support
   contact: `artists@deutschleartistry.com`.
-- **[~] Screenshots.** 6.9" 1320×2868 set staged for the build-11 metadata in
-  `ios/docs/appstore-screenshots-1.0.1/`; confirm the required 6.7"/6.5" sets for
-  whichever version actually submits.
+- **[~] Screenshots.** Existing 6.9" screenshots are staged under the older
+  screenshot scratchpads; refresh only if the v1.2 candidate changes visible
+  surfaces materially.
 - **[~] Listing metadata.** Draft copy + the polished build-11 metadata (subtitle,
-  promo text, keywords, description, What's New) are in
-  `ios/docs/APP-STORE-LISTING.md`. Confirm final app **name availability** in ASC
-  (Prismet may be taken; backups listed there).
+  promo text, keywords, description, What's New) plus a v1.2 draft are in
+  `ios/docs/APP-STORE-LISTING.md`. Public app name can remain `Kaleidescope` until
+  the ASC rename is deliberately handled.
 - **[ ] Age rating + App Privacy answered** in ASC. Target 10+ (mild fantasy
   violence lever). **Do not** declare phone-number collection or AdMob/IDFA while
   those features are off in the shipping build.
 - **[x] Game Center capability** present in the app; confirm it's enabled on the
   ASC record.
-- **[ ] Submit for review** (the chosen build). 1.0.1 path requires v1.0 to first
-  leave `WAITING_FOR_REVIEW`; full runbook in `ios/docs/APP-STORE-LISTING.md`.
+- **[~] Submit for review.** v1.1 is already submitted; next action is review
+  watch or v1.2 candidate archive after v1.1 resolves.
 
 ## B. Backend (Supabase + Oracle)
 
@@ -131,14 +132,15 @@ started.**
 - **[x] macOS build green** under the Prismet scheme after the rename/version bump.
 - **[x] Focused macOS parity tests green** for Gomoku, Sea Battle, Crazy 8, and
   Spider.
-- **[~] iOS test suite.** Per-game model tests + `AppSecurityTests` +
-  `AdEntitlementStoreTests` exist; run the full suite green on the build that
-  ships.
+- **[x] iOS test suite.** Full `PrismetTests` passed on the current v14 tree
+  with no failure lines and no `warning:` scan hits
+  (`Prismet-v14-full-ios-tests`, 2026-07-09 23:16 local).
 - **[~] Device install verification.** v14 Debug installed and launched on macOS
   and Poopoohead. Benjamin's iPhone and MommaPhone installed but launch was
-  blocked by lock state. iPad Air was unavailable/asleep. Remaining: unlock
-  family devices, confirm launch, Oracle non-empty UI, and online friend room
-  smoke.
+  blocked by lock state. `deploy-testers.sh` now reports partial launch failures
+  as non-green release-gate results instead of swallowing them. iPad Air was
+  unavailable/asleep. Remaining: unlock family devices, confirm launch, Oracle
+  non-empty UI, and online friend room smoke.
 - **[x] Build rules documented** (derived-data location, incremental archive,
   `project.yml`-owned Info.plist, `xcodegen generate` after pull, codex-delegated
   device deploy) — see `docs/HANDOFF.md` §5. Follow them or builds fail.

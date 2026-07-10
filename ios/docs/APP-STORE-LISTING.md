@@ -69,6 +69,10 @@ Free to play. More games and features on the way.
 
 `Prismet is here. This update refreshes the app identity while preserving existing saves and Game Center continuity, restores the daily Wordgame feed, and brings the latest game polish, sound, haptics, online friend rooms, and launch-day stability fixes.`
 
+## What's New draft (version 1.2 / build 14)
+
+`This update makes Prismet easier to share with friends and family, tightens tester-device deployment, keeps online friend rooms resilient, and rolls in build/test warning cleanup across iPhone, iPad, and Mac.`
+
 ## Category
 
 - **Primary:** Games → Board (or Games → Puzzle)
@@ -186,7 +190,14 @@ Free to play. More games and features on the way.
 ---
 
 ## ★ HISTORICAL 1.0.1 SHIP RUNBOOK — pre-launch fork, do not use for v1.1
-Chosen path: **ride build 8, ship build 11 as 1.0.1.** Apple blocks creating 1.0.1 until v1.0 is out of `WAITING_FOR_REVIEW` (approved/released or rejected). Assets staged: metadata (the "POLISHED FOR BUILD 11" section above) + 7 screenshots in `docs/appstore-screenshots-1.0.1/` (6.9in 1320x2868). ASC helper: `docs/asc-helper.py` (openssl-ES256 JWT; `import` it and call `api(method,path,body)`). Ids: app 6785993194, build 11 id `82554947-3f20-469b-a8db-7f0b1b44ce54`, en-US loc template.
+Chosen historical path: **ride build 8, ship build 11 as 1.0.1.** This is retained
+only as a record of the pre-launch fork; current state is v1.0 live, v1.1
+submitted, and v1.2/build 14 in source. Assets staged at the time: metadata (the
+"POLISHED FOR BUILD 11" section above) + 7 screenshots in
+`docs/appstore-screenshots-1.0.1/` (6.9in 1320x2868). ASC helper:
+`docs/asc-helper.py` (openssl-ES256 JWT; `import` it and call `api(method,path,body)`).
+Ids: app 6785993194, build 11 id `82554947-3f20-469b-a8db-7f0b1b44ce54`, en-US loc
+template.
 
 STEPS (once v1.0 is Ready for Sale / Pending Developer Release, or Rejected):
 1. Create version: `POST /v1/appStoreVersions` {attributes:{platform:IOS, versionString:"1.0.1"}, relationships:{app:6785993194}} → new version id.
