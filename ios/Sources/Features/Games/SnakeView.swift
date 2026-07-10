@@ -9,7 +9,7 @@ import SwiftUI
 // a near-black tube, a faint dotted grid that reads as a board (not a
 // spreadsheet), a vignette + scanlines for CRT depth, and a glossy power-orb
 // for food. Kept private and local per the design-pass convention; do not move
-// to KaleidoDesign.
+// to PrismetDesign.
 private enum SnakeTheme {
     // Recessed cabinet / CRT tube — near-black with a faint cool cast so the
     // neon reads as light emitted, not paint.
@@ -81,7 +81,7 @@ struct SnakeView: View {
                        subtitle: session.game.status == .lost ? "Game over — tap New Game" : "Swipe to steer") {
                 HStack(spacing: 16) {
                     StatBadge(label: "Score", value: "\(session.game.score)", accent: accent)
-                    StatBadge(label: "Best", value: "\(session.best)", accent: Kaleido.ink)
+                    StatBadge(label: "Best", value: "\(session.best)", accent: PrismetDesign.ink)
                 }
             }
             board
@@ -90,7 +90,7 @@ struct SnakeView: View {
             }
             .buttonStyle(AccentButtonStyle(accent: accent))
             Text("Swipe up · down · left · right")
-                .font(.caption).foregroundStyle(Kaleido.ink3)
+                .font(.caption).foregroundStyle(PrismetDesign.ink3)
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)

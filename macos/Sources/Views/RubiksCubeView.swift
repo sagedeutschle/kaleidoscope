@@ -140,7 +140,7 @@ struct RubiksCubeView: View {
                 }
                 Text("middle slices")
                     .font(.caption2)
-                    .foregroundStyle(Kaleido.ink3)
+                    .foregroundStyle(PrismetDesign.ink3)
             }
             .buttonStyle(GlassButtonStyle())
             .font(.title3.monospaced().bold())
@@ -176,7 +176,7 @@ struct RubiksCubeView: View {
 
             Text("Drag a sticker to turn its layer · drag the background to orbit · Arrows + WASD turn faces · M/E/S middle slices · picker sets CW / CCW / 180°")
                 .font(.caption2)
-                .foregroundStyle(Kaleido.ink3)
+                .foregroundStyle(PrismetDesign.ink3)
         }
     }
 

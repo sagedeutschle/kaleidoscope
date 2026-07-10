@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 final class GameCenterLeaderboardTests: XCTestCase {
 
@@ -17,7 +17,7 @@ final class GameCenterLeaderboardTests: XCTestCase {
     func testCompositeServiceSubmitsSupportedResultToLocalAndGameCenter() async throws {
         let local = LocalLeaderboardService(fileURL: tempFileURL())
         let submitter = RecordingGameCenterSubmitter()
-        let service = KaleidoscopeLeaderboardService(localService: local, gameCenterSubmitter: submitter)
+        let service = PrismetLeaderboardService(localService: local, gameCenterSubmitter: submitter)
         let result = gameResult(facetID: "2048", mode: "standard", score: 4096)
 
         try await service.submit(result)
@@ -34,7 +34,7 @@ final class GameCenterLeaderboardTests: XCTestCase {
     func testCompositeServiceKeepsLocalResultWhenGameCenterSubmissionFails() async throws {
         let local = LocalLeaderboardService(fileURL: tempFileURL())
         let submitter = RecordingGameCenterSubmitter(error: TestGameCenterError.offline)
-        let service = KaleidoscopeLeaderboardService(localService: local, gameCenterSubmitter: submitter)
+        let service = PrismetLeaderboardService(localService: local, gameCenterSubmitter: submitter)
         let result = gameResult(facetID: "snake", mode: "standard", score: 12)
 
         try await service.submit(result)
@@ -49,7 +49,7 @@ final class GameCenterLeaderboardTests: XCTestCase {
     func testCompositeServiceDoesNotSubmitUnsupportedResultToGameCenter() async throws {
         let local = LocalLeaderboardService(fileURL: tempFileURL())
         let submitter = RecordingGameCenterSubmitter()
-        let service = KaleidoscopeLeaderboardService(localService: local, gameCenterSubmitter: submitter)
+        let service = PrismetLeaderboardService(localService: local, gameCenterSubmitter: submitter)
         let result = gameResult(facetID: "chess", mode: "standard", score: 1)
 
         try await service.submit(result)

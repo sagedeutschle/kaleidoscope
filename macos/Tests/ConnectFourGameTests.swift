@@ -1,7 +1,7 @@
 // PRISM: RELEASE Agent-B 2026-06-28 — Connect Four model coverage.
 
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 final class ConnectFourGameTests: XCTestCase {
     func testInitialGameExposesStandardBoardAndRedToMove() {

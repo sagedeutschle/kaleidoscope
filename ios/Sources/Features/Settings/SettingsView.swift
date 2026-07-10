@@ -9,9 +9,9 @@ struct SettingsView: View {
     /// Persisted app-wide font choice. Same key the root reads to cascade the font.
     @AppStorage(AppFont.storageKey) private var fontRaw = AppFont.default.rawValue
 
-    /// Persisted reading paper. Same key Kaleido reads statically; default mirrors
-    /// Kaleido.paper's dark fallback so the radio reflects the true paper.
-    @AppStorage(Kaleido.paperKey) private var paperRaw = KaleidoPaper.dark.rawValue
+    /// Persisted reading paper. Same key PrismetDesign reads statically; default mirrors
+    /// PrismetDesign.paper's dark fallback so the radio reflects the true paper.
+    @AppStorage(PrismetDesign.paperKey) private var paperRaw = PrismetPaper.dark.rawValue
 
     /// Feel toggles — read app-wide by FeedbackCoordinator; unset = on.
     @AppStorage(FeedbackSettings.soundKey) private var soundEnabled = true
@@ -20,7 +20,7 @@ struct SettingsView: View {
     init() {}
 
     private var selectedFont: AppFont { AppFont(stored: fontRaw) }
-    private var selectedPaper: KaleidoPaper { KaleidoPaper(rawValue: paperRaw) ?? .dark }
+    private var selectedPaper: PrismetPaper { PrismetPaper(rawValue: paperRaw) ?? .dark }
 
     var body: some View {
         NavigationStack {
@@ -35,15 +35,15 @@ struct SettingsView: View {
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .background(FacetBackdrop(accent: Kaleido.gold))
+            .background(FacetBackdrop(accent: PrismetDesign.gold))
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(Kaleido.ground, for: .navigationBar)
+            .toolbarBackground(PrismetDesign.ground, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") { dismiss() }
-                        .foregroundStyle(Kaleido.gold)
+                        .foregroundStyle(PrismetDesign.gold)
                 }
             }
         }
@@ -61,14 +61,14 @@ struct SettingsView: View {
 
             // Reading paper — the ground every surface sits on.
             VStack(spacing: 0) {
-                ForEach(Array(KaleidoPaper.allCases.enumerated()), id: \.element.id) { index, paper in
+                ForEach(Array(PrismetPaper.allCases.enumerated()), id: \.element.id) { index, paper in
                     paperRow(paper)
-                    if index < KaleidoPaper.allCases.count - 1 {
+                    if index < PrismetPaper.allCases.count - 1 {
                         ledgerRule
                     }
                 }
             }
-            .kaleidoCard()
+            .prismetCard()
 
             preview
 
@@ -80,13 +80,13 @@ struct SettingsView: View {
                     }
                 }
             }
-            .kaleidoCard()
+            .prismetCard()
         }
     }
 
     /// A gilt hairline between ledger rows, inset past the leading ornament.
     private var ledgerRule: some View {
-        Divider().overlay(Kaleido.hairline).padding(.leading, 44)
+        Divider().overlay(PrismetDesign.hairline).padding(.leading, 44)
     }
 
     // MARK: - Sound & Haptics
@@ -97,21 +97,21 @@ struct SettingsView: View {
             VStack(spacing: 0) {
                 Toggle(isOn: $soundEnabled) {
                     Text("Sound Effects")
-                        .font(Kaleido.title(17))
-                        .foregroundStyle(Kaleido.ink)
+                        .font(PrismetDesign.title(17))
+                        .foregroundStyle(PrismetDesign.ink)
                 }
-                .tint(Kaleido.gold)
+                .tint(PrismetDesign.gold)
                 .padding(.vertical, 8)
                 ledgerRule
                 Toggle(isOn: $hapticsEnabled) {
                     Text("Haptics")
-                        .font(Kaleido.title(17))
-                        .foregroundStyle(Kaleido.ink)
+                        .font(PrismetDesign.title(17))
+                        .foregroundStyle(PrismetDesign.ink)
                 }
-                .tint(Kaleido.gold)
+                .tint(PrismetDesign.gold)
                 .padding(.vertical, 8)
             }
-            .kaleidoCard()
+            .prismetCard()
         }
         // Flipping sound on gives an immediate audible confirmation.
         .onChange(of: soundEnabled) { _, isOn in
@@ -123,17 +123,17 @@ struct SettingsView: View {
         HStack(spacing: 8) {
             Image(systemName: systemImage)
                 .font(.system(size: 15, weight: .bold))
-                .foregroundStyle(Kaleido.gold)
+                .foregroundStyle(PrismetDesign.gold)
             Text(title.uppercased())
                 .font(.caption.weight(.bold))
                 .tracking(1.0)
-                .foregroundStyle(Kaleido.ink3)
+                .foregroundStyle(PrismetDesign.ink3)
         }
     }
 
     /// One reading-paper choice: a true-color swatch of that paper, serif title, radio.
-    private func paperRow(_ paper: KaleidoPaper) -> some View {
-        let swatch = Kaleido.palette(for: paper)
+    private func paperRow(_ paper: PrismetPaper) -> some View {
+        let swatch = PrismetDesign.palette(for: paper)
         return Button {
             paperRaw = paper.rawValue
         } label: {
@@ -146,8 +146,8 @@ struct SettingsView: View {
                 .frame(width: 24, height: 24)
 
                 Text(paper.rawValue)
-                    .font(Kaleido.title(17))
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.title(17))
+                    .foregroundStyle(PrismetDesign.ink)
 
                 Spacer(minLength: 8)
 
@@ -164,18 +164,18 @@ struct SettingsView: View {
     /// Live preview of the currently selected font.
     private var preview: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Kaleidoscope")
+            Text("Prismet")
                 .font(.system(size: 30, weight: .bold, design: selectedFont.design))
-                .foregroundStyle(Kaleido.ink)
+                .foregroundStyle(PrismetDesign.ink)
             Text("The quick brown fox jumps over the lazy dog. 0123456789")
                 .font(.system(size: 16, weight: .regular, design: selectedFont.design))
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
             Text(selectedFont.blurb)
                 .font(.footnote)
-                .foregroundStyle(Kaleido.ink3)
+                .foregroundStyle(PrismetDesign.ink3)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .kaleidoCard()
+        .prismetCard()
     }
 
     private func fontRow(_ font: AppFont) -> some View {
@@ -185,16 +185,16 @@ struct SettingsView: View {
             HStack(spacing: 12) {
                 Image(systemName: font.symbol)
                     .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(Kaleido.gold)
+                    .foregroundStyle(PrismetDesign.gold)
                     .frame(width: 24)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(font.displayName)
                         .font(.system(size: 17, weight: .semibold, design: font.design))
-                        .foregroundStyle(Kaleido.ink)
+                        .foregroundStyle(PrismetDesign.ink)
                     Text(font.blurb)
                         .font(.caption)
-                        .foregroundStyle(Kaleido.ink3)
+                        .foregroundStyle(PrismetDesign.ink3)
                 }
 
                 Spacer(minLength: 8)
@@ -214,11 +214,11 @@ struct SettingsView: View {
         if isOn {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(Kaleido.gold)
+                .foregroundStyle(PrismetDesign.gold)
         } else {
             Image(systemName: "circle")
                 .font(.system(size: 20, weight: .regular))
-                .foregroundStyle(Kaleido.ink3)
+                .foregroundStyle(PrismetDesign.ink3)
         }
     }
 
@@ -232,21 +232,21 @@ struct SettingsView: View {
             HStack(spacing: 12) {
                 Image(systemName: "paintbrush.pointed")
                     .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(Kaleido.gold)
+                    .foregroundStyle(PrismetDesign.gold)
                     .frame(width: 24)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Inside each game")
-                        .font(Kaleido.title(17))
-                        .foregroundStyle(Kaleido.ink)
+                        .font(PrismetDesign.title(17))
+                        .foregroundStyle(PrismetDesign.ink)
                     Text("Boards, felts, and card backs have their own looks — find the paintbrush or gear inside a game to restyle it.")
                         .font(.caption)
-                        .foregroundStyle(Kaleido.ink3)
+                        .foregroundStyle(PrismetDesign.ink3)
                 }
                 Spacer(minLength: 0)
             }
             .padding(.vertical, 4)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .kaleidoCard()
+            .prismetCard()
         }
     }
 
@@ -261,25 +261,25 @@ struct SettingsView: View {
                 HStack(spacing: 12) {
                     Image(systemName: "safari")
                         .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(Kaleido.gold)
+                        .foregroundStyle(PrismetDesign.gold)
                         .frame(width: 24)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("prismet.xyz")
-                            .font(Kaleido.title(17))
-                            .foregroundStyle(Kaleido.ink)
+                            .font(PrismetDesign.title(17))
+                            .foregroundStyle(PrismetDesign.ink)
                         Text("Steam Rewind and the Debt Clock, on the web.")
                             .font(.caption)
-                            .foregroundStyle(Kaleido.ink3)
+                            .foregroundStyle(PrismetDesign.ink3)
                     }
                     Spacer(minLength: 8)
                     Image(systemName: "arrow.up.right")
                         .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(Kaleido.ink3)
+                        .foregroundStyle(PrismetDesign.ink3)
                 }
                 .padding(.vertical, 4)
                 .contentShape(Rectangle())
             }
-            .kaleidoCard()
+            .prismetCard()
             .accessibilityLabel("Open prismet.xyz in your browser")
         }
     }
@@ -292,30 +292,30 @@ struct SettingsView: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("Game Tiles")
-                    .font(Kaleido.title(17))
-                    .foregroundStyle(Kaleido.ink)
-                Text("Every game tile is original Kaleidoscope artwork.")
+                    .font(PrismetDesign.title(17))
+                    .foregroundStyle(PrismetDesign.ink)
+                Text("Every game tile is original Prismet artwork.")
                     .font(.footnote)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
 
                 Text("Sound")
-                    .font(Kaleido.title(17))
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.title(17))
+                    .foregroundStyle(PrismetDesign.ink)
                     .padding(.top, 4)
                 Text("Piece & tile sounds by Kenney (kenney.nl) and artisticdude — all CC0 / public domain. Other sounds are synthesized in-app.")
                     .font(.footnote)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
 
                 Text("Chess Set")
-                    .font(Kaleido.title(17))
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.title(17))
+                    .foregroundStyle(PrismetDesign.ink)
                     .padding(.top, 4)
                 Text("2D chess pieces are the “Cburnett” set by Colin M.L. Burnett, used under CC BY-SA 3.0.")
                     .font(.footnote)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .kaleidoCard()
+            .prismetCard()
         }
     }
 }

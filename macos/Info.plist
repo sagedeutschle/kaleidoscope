@@ -37,6 +37,6 @@
 		</dict>
 	</dict>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Kaleidoscope fetches the live Wizard King's Decree chronicle from the Court Historian on your local network or tailnet.</string>
+	<string>Prismet fetches the live Wizard King's Decree chronicle from the Court Historian on your local network or tailnet.</string>
 </dict>
 </plist>

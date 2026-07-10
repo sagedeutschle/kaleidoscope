@@ -45,10 +45,10 @@ struct SudokuView: View {
             }
         }
         .padding(12)
-        .background(Kaleido.panelHi)
+        .background(PrismetDesign.panelHi)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Kaleido.outline, lineWidth: 1))
-        .kaleidoCard()
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(PrismetDesign.outline, lineWidth: 1))
+        .prismetCard()
     }
 
     private var keypad: some View {
@@ -177,17 +177,17 @@ struct SudokuView: View {
 
     private func cellTextColor(given: Bool, conflict: Bool, correct: Bool) -> Color {
         if conflict || !correct { return Color(red: 0.70, green: 0.18, blue: 0.16) }
-        return given ? Kaleido.ink : accent
+        return given ? PrismetDesign.ink : accent
     }
 
     private func cellBackground(selected: Bool, given: Bool, conflict: Bool) -> Color {
         if conflict { return Color(red: 0.96, green: 0.77, blue: 0.70) }
         if selected { return accent.opacity(0.22) }
-        return given ? Kaleido.panel : Color.white.opacity(0.58)
+        return given ? PrismetDesign.panel : Color.white.opacity(0.58)
     }
 
     private func cellBorder(row: Int, col: Int) -> Color {
-        if row == 2 || row == 5 || col == 2 || col == 5 { return Kaleido.ink.opacity(0.35) }
-        return Kaleido.hairline
+        if row == 2 || row == 5 || col == 2 || col == 5 { return PrismetDesign.ink.opacity(0.35) }
+        return PrismetDesign.hairline
     }
 }

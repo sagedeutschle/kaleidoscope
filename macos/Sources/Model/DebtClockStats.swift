@@ -729,7 +729,7 @@ struct DebtClockStatsClient {
 
     func loadTreasuryDebt() async throws -> TreasuryDebtSnapshot {
         var request = URLRequest(url: URL(string: "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny?fields=record_date,tot_pub_debt_out_amt,intragov_hold_amt,debt_held_public_amt&sort=-record_date&page%5Bsize%5D=31")!)
-        request.setValue("Kaleidoscope/1.0 debt-clock-stats", forHTTPHeaderField: "User-Agent")
+        request.setValue("Prismet/1.0 debt-clock-stats", forHTTPHeaderField: "User-Agent")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         let data = try await validatedData(for: request)
         return try TreasuryDebtSnapshot.parse(data)
@@ -767,7 +767,7 @@ struct DebtClockStatsClient {
 
     private func loadTreasuryData(_ urlString: String) async throws -> Data {
         var request = URLRequest(url: URL(string: urlString)!)
-        request.setValue("Kaleidoscope/1.0 debt-clock-stats", forHTTPHeaderField: "User-Agent")
+        request.setValue("Prismet/1.0 debt-clock-stats", forHTTPHeaderField: "User-Agent")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         return try await validatedData(for: request)
     }

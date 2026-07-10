@@ -499,7 +499,7 @@ struct CrazyEightView: View {
     private var difficultySheet: some View {
         VStack(spacing: 14) {
             Text("AI Difficulty")
-                .font(Kaleido.title(24))
+                .font(PrismetDesign.title(24))
             Text("ELO")
                 .font(.title2.weight(.bold))
             Text("\(session.aiELO)")

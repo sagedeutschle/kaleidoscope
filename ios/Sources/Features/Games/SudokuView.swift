@@ -10,7 +10,7 @@ import SwiftUI
 ///
 /// The signature is that printed-vs-penciled type distinction; every other
 /// choice (paper tone, engraved box rules, a warm graphite highlight) stays
-/// quiet so the two hands carry the world. Adapts to the active Kaleido paper:
+/// quiet so the two hands carry the world. Adapts to the active PrismetDesign paper:
 /// on dark stock the newsprint becomes an engraved slate and the ink turns
 /// chalk-white, so the same puzzle reads as "printed vs penciled" either way.
 private struct SudokuTheme {
@@ -30,7 +30,7 @@ private struct SudokuTheme {
     var peerFill: Color        // faintest wash down the row/col/box
 
     static var current: SudokuTheme {
-        Kaleido.isDark ? .slate : .newsprint
+        PrismetDesign.isDark ? .slate : .newsprint
     }
 
     /// Warm off-white newsprint with charcoal ink — the daily-paper default.
@@ -176,7 +176,7 @@ struct SudokuView: View {
                 Text("THE DAILY GRID")
                     .font(.system(size: 11, weight: .heavy, design: .serif))
                     .tracking(2.2)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
                 Spacer()
                 Text(game.isComplete ? "COMPLETE" : "NO. \(filledCount)")
                     .font(.system(size: 11, weight: .bold, design: .serif))
@@ -185,8 +185,8 @@ struct SudokuView: View {
                     .foregroundStyle(accent)
             }
             VStack(spacing: 2) {
-                Rectangle().fill(Kaleido.ink2.opacity(0.55)).frame(height: 1.5)
-                Rectangle().fill(Kaleido.ink2.opacity(0.35)).frame(height: 0.75)
+                Rectangle().fill(PrismetDesign.ink2.opacity(0.55)).frame(height: 1.5)
+                Rectangle().fill(PrismetDesign.ink2.opacity(0.35)).frame(height: 0.75)
             }
         }
         .accessibilityHidden(true)

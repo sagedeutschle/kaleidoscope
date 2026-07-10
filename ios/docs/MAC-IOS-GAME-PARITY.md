@@ -1,10 +1,10 @@
-# Kaleidoscope macOS -> iOS Game Parity
+# Prismet macOS -> iOS Game Parity
 
 PRISM: Agent-Ads/Codex, 2026-06-30 14:13 EDT — working matrix for the user's
 "all mac version features into phone version, per game" request.
 
 Desktop reference: `macos/` (repo-relative). Phone target: `ios/` (repo-relative).
-Shared Swift package: `shared/KaleidoscopeShared/`.
+Shared Swift package: `shared/PrismetShared/`.
 (Both apps + the shared package now live in one monorepo — see the root `AGENTS.md`.)
 
 ## Required Gate for Future Changes
@@ -28,11 +28,11 @@ the lane releases.
 
 Shared code and metadata now belong in:
 
-`/Users/gtrktscrb/Desktop/GtrktscrBAPPDEV/mobile-development/KaleidoscopeShared`
+`/Users/gtrktscrb/Desktop/GtrktscrBAPPDEV/mobile-development/PrismetShared`
 
-Both XcodeGen projects depend on the `KaleidoscopeShared` Swift package. Put new
+Both XcodeGen projects depend on the `PrismetShared` Swift package. Put new
 cross-platform feature contracts there first when they are not UI-framework
-specific. The first shared contract is `KaleidoscopeFeatureManifest`, which maps
+specific. The first shared contract is `PrismetFeatureManifest`, which maps
 one canonical feature identity to the current iOS/macOS legacy IDs.
 
 ### Fast path mapping
@@ -41,7 +41,7 @@ one canonical feature identity to the current iOS/macOS legacy IDs.
 | --- | --- |
 | `Sources/Core/Games/*.swift` | `Sources/Model/<same file>` |
 | `Sources/Features/Games/*View.swift` | `Sources/Views/<same file>` |
-| `Sources/Core/Design/*` | `Sources/Model/KaleidoscopeDesign.swift` |
+| `Sources/Core/Design/*` | `Sources/Model/PrismetDesign.swift` |
 | `Sources/Features/Home/*` | `Sources/App/ContentView.swift`, `Sources/Views/HomeLensView.swift`, `Sources/Model/FacetRegistry.swift` |
 | `Sources/Backend/*`, `Sources/Core/Games/*Leaderboard*` | `Sources/Account/*`, `Sources/Model/GameLeaderboard.swift`, `Sources/Views/LeaderboardViews.swift` |
 | `Sources/Core/Ads/*` | Usually iOS-only; record "not applicable to macOS" unless macOS gains ads/paywall UI. |
@@ -86,9 +86,9 @@ one canonical feature identity to the current iOS/macOS legacy IDs.
   gameplay source changed. macOS counterpart docs updated so both agent lanes see
   the rule.
 - `PRISM: Agent-Ads/Codex, 2026-07-02 (shared package foundation)` — Added
-  `/Users/gtrktscrb/Desktop/GtrktscrBAPPDEV/mobile-development/KaleidoscopeShared`,
+  `/Users/gtrktscrb/Desktop/GtrktscrBAPPDEV/mobile-development/PrismetShared`,
   a SwiftPM package imported by both apps. First shared layer is
-  `KaleidoscopeFeatureManifest`: canonical IDs, existing iOS/macOS ID aliases,
+  `PrismetFeatureManifest`: canonical IDs, existing iOS/macOS ID aliases,
   categories, leaderboard policy, and launch-review visibility. Use this package
   as the landing zone for future non-UI shared logic before copying code into
   either app target.
@@ -119,7 +119,7 @@ one canonical feature identity to the current iOS/macOS legacy IDs.
   Solitaire/Gomoku, GamePigeon-style skins on Spider/Crazy 8/Sea Battle, a Debt
   Clock live trend banner, a Wordgame letter-status tracker, DARK default paper,
   per-game skin pickers, and Home Workshop/Lenses categories. macOS decisions:
-  (1) MIRRORED now: DARK default (`KaleidoscopeDesign.swift` fallback → .dark),
+  (1) MIRRORED now: DARK default (`PrismetDesign.swift` fallback → .dark),
   Debt Clock trend banner + LED loading/error + full-width flowing rows (view +
   stats model re-copied per the established pattern), Brick Bench green-baseplate
   stud fix (same buried-child-node root cause existed in the macOS

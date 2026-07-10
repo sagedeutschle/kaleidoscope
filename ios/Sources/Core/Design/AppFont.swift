@@ -7,7 +7,7 @@ import SwiftUI
 /// and resolve it via `AppFont(stored: raw)`.
 enum AppFont: String, CaseIterable, Identifiable {
     /// Refined serif — the app's default. Reads more editorial/professional than the
-    /// plain system face and matches the existing `Kaleido.title(_:)` serif headings.
+    /// plain system face and matches the existing `PrismetDesign.title(_:)` serif headings.
     case serif
     /// Apple's default UI face (San Francisco).
     case system
@@ -43,7 +43,7 @@ enum AppFont: String, CaseIterable, Identifiable {
     /// One-line description of the vibe, shown under the picker row.
     var blurb: String {
         switch self {
-        case .serif:      return "Refined, editorial — the Kaleidoscope default."
+        case .serif:      return "Refined, editorial — the Prismet default."
         case .system:     return "Clean and familiar (San Francisco)."
         case .rounded:    return "Soft and friendly."
         case .monospaced: return "Fixed-width, technical."

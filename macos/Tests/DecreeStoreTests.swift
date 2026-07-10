@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 @MainActor
 final class DecreeStoreTests: XCTestCase {

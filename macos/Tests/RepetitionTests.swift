@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// The pure repetition-key + threefold-detection logic that `GameState` uses to
 /// declare a draw by repetition.

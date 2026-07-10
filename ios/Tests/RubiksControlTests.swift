@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// Pins the pure move-notation -> face/direction mapping that drives the
 /// Rubik's control pad labels, accessibility labels, and the "How to play"

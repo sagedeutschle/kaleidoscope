@@ -2,7 +2,7 @@
 import SwiftUI
 import Foundation
 
-// MARK: - Sea Battle theme (game-local tokens; do not move to KaleidoDesign)
+// MARK: - Sea Battle theme (game-local tokens; do not move to PrismetDesign)
 
 private enum SeaTheme {
     // Sunlit tropical water, not a midnight navy — the point is "playful", not "sad".
@@ -190,11 +190,11 @@ struct SeaBattleView: View {
             HStack(alignment: .firstTextBaseline) {
                 Text("DEPLOY FLEET")
                     .font(.caption.weight(.bold)).tracking(1.1)
-                    .foregroundStyle(Kaleido.ink3)
+                    .foregroundStyle(PrismetDesign.ink3)
                 Spacer()
                 Text(ready ? "LOCKED" : "STANDARD 5 SHIPS")
                     .font(.caption2.weight(.bold)).tracking(0.8)
-                    .foregroundStyle(Kaleido.ink3)
+                    .foregroundStyle(PrismetDesign.ink3)
             }
 
             oceanPanel {
@@ -214,7 +214,7 @@ struct SeaBattleView: View {
                     Spacer(minLength: 0)
                     Text(deployment.nextLength.map { "Next: \($0)" } ?? "Fleet complete")
                         .font(.footnote.weight(.semibold)).monospacedDigit()
-                        .foregroundStyle(Kaleido.ink2)
+                        .foregroundStyle(PrismetDesign.ink2)
                 }
 
                 Picker("Ship direction", selection: $placementOrientation) {
@@ -255,7 +255,7 @@ struct SeaBattleView: View {
 
             Text(ready ? "Your fleet is locked." : "Drag placed ships to move them. Tap open water to place the next ship; tap a ship to remove it.")
                 .font(.caption)
-                .foregroundStyle(Kaleido.ink3)
+                .foregroundStyle(PrismetDesign.ink3)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
@@ -267,12 +267,12 @@ struct SeaBattleView: View {
             HStack(alignment: .firstTextBaseline) {
                 Text("TARGET WATERS")
                     .font(.caption.weight(.bold)).tracking(1.1)
-                    .foregroundStyle(Kaleido.ink3)
+                    .foregroundStyle(PrismetDesign.ink3)
                 Spacer()
                 HStack(spacing: 6) {
                     Text("ENEMY FLEET")
                         .font(.caption2.weight(.bold)).tracking(0.8)
-                        .foregroundStyle(Kaleido.ink3)
+                        .foregroundStyle(PrismetDesign.ink3)
                     fleetPips(sunk: flags, height: 6, unit: 5)
                 }
                 .accessibilityElement(children: .ignore)
@@ -357,7 +357,7 @@ struct SeaBattleView: View {
             VStack(alignment: .leading, spacing: 9) {
                 Text("YOUR FLEET")
                     .font(.caption.weight(.bold)).tracking(1.1)
-                    .foregroundStyle(Kaleido.ink3)
+                    .foregroundStyle(PrismetDesign.ink3)
                 VStack(alignment: .leading, spacing: 5) {
                     ForEach(Array(SeaBattleGame.fleet.enumerated()), id: \.offset) { index, length in
                         Capsule()
@@ -367,7 +367,7 @@ struct SeaBattleView: View {
                 }
                 Text("\(afloat) of \(SeaBattleGame.fleet.count) afloat")
                     .font(.footnote.weight(.semibold)).monospacedDigit()
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
             }
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("Your fleet: \(afloat) of \(SeaBattleGame.fleet.count) ships afloat")
@@ -382,15 +382,15 @@ struct SeaBattleView: View {
                 .foregroundStyle(SeaTheme.hitGlow)
             if let aim {
                 Text(coordLabel(aim))
-                    .font(Kaleido.rounded(18)).monospacedDigit()
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.rounded(18)).monospacedDigit()
+                    .foregroundStyle(PrismetDesign.ink)
                 Text("locked")
                     .font(.caption)
-                    .foregroundStyle(Kaleido.ink3)
+                    .foregroundStyle(PrismetDesign.ink3)
             } else {
                 Text("Take aim")
                     .font(.subheadline)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
             }
             Spacer()
             Button {
@@ -460,7 +460,7 @@ struct SeaBattleView: View {
             .overlay {
                 VStack(spacing: 6) {
                     Text(title)
-                        .font(Kaleido.title(28))
+                        .font(PrismetDesign.title(28))
                         .foregroundStyle(.white)
                     Text(sub)
                         .font(.subheadline).monospacedDigit()

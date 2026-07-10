@@ -1,6 +1,6 @@
 // PRISM: RELEASE Agent-B 2026-06-28 — Checkers model behavior coverage.
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 final class CheckersGameTests: XCTestCase {
     func testInitialBoardHasDarkMovingUpAndLightMovingDown() {

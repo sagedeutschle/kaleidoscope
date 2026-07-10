@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only Supabase launch security probe for Kaleidoscope.
+"""Read-only Supabase launch security probe for Prismet.
 
 This script uses the shipped anon client key because that is the credential any
 App Store user can extract. It never prints keys, bearer tokens, or raw table
@@ -105,7 +105,7 @@ def probe_daily_word(base_url: str) -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run Kaleidoscope's read-only Supabase security probe.")
+    parser = argparse.ArgumentParser(description="Run Prismet's read-only Supabase security probe.")
     parser.add_argument("--json-summary", action="store_true", help="Also print a redacted machine-readable summary.")
     args = parser.parse_args()
 

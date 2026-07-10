@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 final class GameSessionStateTests: XCTestCase {
     func testGame2048SessionRetainsProgressAcrossReuse() {

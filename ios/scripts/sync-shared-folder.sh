@@ -2,7 +2,7 @@
 # DEPRECATED. This repo now syncs through git, not an rsync mirror.
 #
 # Previously this script rsync-mirrored just the iOS app to
-# /Volumes/homes/Kaleidescopesharedfolder/Kaleidoscope. That created a
+# /Volumes/homes/Kaleidescopesharedfolder/Prismet. That created a
 # divergent copy that fought the real source of truth. Don't use it.
 #
 # The whole monorepo (ios/ + macos/ + oracle/) is a git repo whose canonical

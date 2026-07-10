@@ -36,7 +36,7 @@ struct BannerAdBar: View {
             BannerAdView()
                 .frame(width: 320, height: 50)
                 .frame(maxWidth: .infinity)
-                .background(Kaleido.panel.opacity(0.0))
+                .background(PrismetDesign.panel.opacity(0.0))
         }
     }
 }

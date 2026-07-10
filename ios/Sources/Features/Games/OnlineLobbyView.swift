@@ -47,7 +47,7 @@ struct OnlineGameLobbyView: View {
     private var card: GameCard? {
         GameCard.all.first { $0.canonicalGameID == gameID }
     }
-    private var accent: Color { card?.accent ?? Kaleido.gold }
+    private var accent: Color { card?.accent ?? PrismetDesign.gold }
     private var gameTitle: String { card?.title ?? gameID.rawValue.capitalized }
 
     var body: some View {
@@ -110,11 +110,11 @@ struct OnlineGameLobbyView: View {
             // Host
             VStack(alignment: .leading, spacing: 10) {
                 Label("Host a match", systemImage: "antenna.radiowaves.left.and.right")
-                    .font(Kaleido.rounded(18, .bold))
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.rounded(18, .bold))
+                    .foregroundStyle(PrismetDesign.ink)
                 Text("You get a \(OnlineMatchStore.roomCodeLength)-letter code. Your friend types it on their device to join you.")
                     .font(.subheadline)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
                 Button {
                     Task {
                         guard let stateJSON = try? Self.initialStateJSON(for: gameID) else { return }
@@ -133,19 +133,19 @@ struct OnlineGameLobbyView: View {
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .kaleidoCard()
+            .prismetCard()
 
             // Join
             VStack(alignment: .leading, spacing: 10) {
                 Label("Join a friend", systemImage: "person.badge.key")
-                    .font(Kaleido.rounded(18, .bold))
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.rounded(18, .bold))
+                    .foregroundStyle(PrismetDesign.ink)
                 Text("Type the code your friend is showing you.")
                     .font(.subheadline)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
                 HStack(spacing: 10) {
                     TextField("CODE", text: $joinCode)
-                        .font(Kaleido.rounded(26, .bold))
+                        .font(PrismetDesign.rounded(26, .bold))
                         .tracking(6)
                         .multilineTextAlignment(.center)
                         .textInputAutocapitalization(.characters)
@@ -159,9 +159,9 @@ struct OnlineGameLobbyView: View {
                         .padding(.vertical, 8)
                         .background(
                             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .fill(Kaleido.panel)
+                                .fill(PrismetDesign.panel)
                                 .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                    .strokeBorder(codeFieldFocused ? accent : Kaleido.outline, lineWidth: codeFieldFocused ? 2 : 1))
+                                    .strokeBorder(codeFieldFocused ? accent : PrismetDesign.outline, lineWidth: codeFieldFocused ? 2 : 1))
                         )
                     Button {
                         codeFieldFocused = false
@@ -183,7 +183,7 @@ struct OnlineGameLobbyView: View {
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .kaleidoCard()
+            .prismetCard()
         }
     }
 
@@ -191,9 +191,9 @@ struct OnlineGameLobbyView: View {
         VStack(spacing: 16) {
             Text("YOUR ROOM CODE")
                 .font(.caption.weight(.heavy)).tracking(2.4)
-                .foregroundStyle(Kaleido.ink3)
+                .foregroundStyle(PrismetDesign.ink3)
             Text(session.roomCode ?? "----")
-                .font(Kaleido.rounded(58, .bold))
+                .font(PrismetDesign.rounded(58, .bold))
                 .tracking(14)
                 .foregroundStyle(accent)
                 .padding(.horizontal, 18)
@@ -208,11 +208,11 @@ struct OnlineGameLobbyView: View {
                 ProgressView()
                 Text("Waiting for your friend…")
                     .font(.subheadline)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
             }
             Text("On their device: \(gameTitle) ▸ Online friend ▸ Join, then this code.")
                 .font(.caption)
-                .foregroundStyle(Kaleido.ink3)
+                .foregroundStyle(PrismetDesign.ink3)
                 .multilineTextAlignment(.center)
             Button {
                 Task { await session.cancelHosting() }
@@ -220,23 +220,23 @@ struct OnlineGameLobbyView: View {
                 Label("Cancel", systemImage: "xmark")
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(AccentButtonStyle(accent: Kaleido.ink))
+            .buttonStyle(AccentButtonStyle(accent: PrismetDesign.ink))
         }
         .padding(20)
         .frame(maxWidth: .infinity)
-        .kaleidoCard()
+        .prismetCard()
     }
 
     private func workingCard(_ label: String) -> some View {
         VStack(spacing: 12) {
             ProgressView().controlSize(.large)
             Text(label)
-                .font(Kaleido.rounded(17))
-                .foregroundStyle(Kaleido.ink2)
+                .font(PrismetDesign.rounded(17))
+                .foregroundStyle(PrismetDesign.ink2)
         }
         .padding(28)
         .frame(maxWidth: .infinity)
-        .kaleidoCard()
+        .prismetCard()
     }
 
     private func failedCard(_ message: String) -> some View {
@@ -246,7 +246,7 @@ struct OnlineGameLobbyView: View {
                 .foregroundStyle(accent)
             Text(message)
                 .font(.subheadline)
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
                 .multilineTextAlignment(.center)
             Button {
                 session.retryFromFailure()
@@ -258,7 +258,7 @@ struct OnlineGameLobbyView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity)
-        .kaleidoCard()
+        .prismetCard()
     }
 
     private var offlineNotice: some View {
@@ -267,11 +267,11 @@ struct OnlineGameLobbyView: View {
                 .font(.system(size: 34, weight: .semibold))
                 .foregroundStyle(accent)
             Text("Online play needs an internet connection.")
-                .font(Kaleido.rounded(17))
-                .foregroundStyle(Kaleido.ink)
+                .font(PrismetDesign.rounded(17))
+                .foregroundStyle(PrismetDesign.ink)
             Text("Connect to Wi-Fi or cellular, then try again.")
                 .font(.subheadline)
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
             Button {
                 retryingConnection = true
                 Task {
@@ -290,7 +290,7 @@ struct OnlineGameLobbyView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity)
-        .kaleidoCard()
+        .prismetCard()
     }
 
     // MARK: - Game hand-off

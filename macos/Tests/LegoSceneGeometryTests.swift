@@ -1,6 +1,6 @@
 import XCTest
 import SceneKit
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// Pure layout math for the Brick Bench 3D scene. These coordinates are shared
 /// by the renderer and by click hit-testing, so a wrong mapping shows up as a

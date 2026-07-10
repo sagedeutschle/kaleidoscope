@@ -2,7 +2,7 @@ import Foundation
 
 // The Steam Web API key lives ONLY on the user's machine — never in the bundle, never in git.
 // Read order: env var (dev) → local config file in Application Support. The user enters it once in the
-// app's Settings and it is written here. PRISM: when this folds into Kaleidoscope, the key moves behind
+// app's Settings and it is written here. PRISM: when this folds into Prismet, the key moves behind
 // Codex's proxy and this file is dropped; the app then talks to the proxy with no key at all.
 enum SteamCredentials {
     static let configURL: URL = {

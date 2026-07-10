@@ -1,4 +1,4 @@
-# Kaleidoscope — backend setup (one time)
+# Prismet — backend setup (one time)
 
 The app **builds and runs without this**, but shows an "Almost there" screen until you
 add your Supabase keys. Do these steps to make phone sign-in work on the phone.
@@ -29,7 +29,7 @@ Phone sign-in needs an SMS provider. Twilio Verify is the simplest.
 
 ## 5. Run it
 ```bash
-cd mobile-development/Kaleidoscope
+cd mobile-development/Prismet
 ./scripts/deploy.sh            # builds + installs + launches on "Poopoohead"
 ```
 Enter your phone number in **E.164** form (e.g. `+15551234567`), get the SMS code, verify,

@@ -76,14 +76,14 @@ struct NonogramView: View {
             } label: {
                 HStack(spacing: 6) {
                     Text("Level \(levelIndex + 1) · \(currentLevel.name)")
-                        .font(Kaleido.rounded(15))
-                        .foregroundStyle(Kaleido.ink)
+                        .font(PrismetDesign.rounded(15))
+                        .foregroundStyle(PrismetDesign.ink)
                     Image(systemName: "chevron.up.chevron.down")
                         .font(.system(size: 11, weight: .bold))
-                        .foregroundStyle(Kaleido.ink3)
+                        .foregroundStyle(PrismetDesign.ink3)
                 }
                 .padding(.horizontal, 14).padding(.vertical, 9)
-                .background(Capsule().fill(Kaleido.panelHi).overlay(Capsule().strokeBorder(Kaleido.outline, lineWidth: 1)))
+                .background(Capsule().fill(PrismetDesign.panelHi).overlay(Capsule().strokeBorder(PrismetDesign.outline, lineWidth: 1)))
             }
             .frame(maxWidth: .infinity)
 
@@ -144,19 +144,19 @@ struct NonogramView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .aspectRatio(1, contentMode: .fit)
-        .kaleidoCard()
+        .prismetCard()
     }
 
     private func cellView(_ r: Int, _ c: Int, size: CGFloat) -> some View {
         let m = game.mark(row: r, col: c)
         return RoundedRectangle(cornerRadius: 4, style: .continuous)
-            .fill(m == .filled ? accent : Kaleido.panel)
-            .overlay(RoundedRectangle(cornerRadius: 4, style: .continuous).strokeBorder(Kaleido.outline, lineWidth: 1))
+            .fill(m == .filled ? accent : PrismetDesign.panel)
+            .overlay(RoundedRectangle(cornerRadius: 4, style: .continuous).strokeBorder(PrismetDesign.outline, lineWidth: 1))
             .overlay {
                 if m == .crossed {
                     Image(systemName: "xmark")
                         .font(.system(size: size * 0.42, weight: .bold))
-                        .foregroundStyle(Kaleido.ink3)
+                        .foregroundStyle(PrismetDesign.ink3)
                 }
             }
             .frame(width: size, height: size)
@@ -174,8 +174,8 @@ struct NonogramView: View {
             Spacer(minLength: 0)
             ForEach(Array(game.rowClues[r].enumerated()), id: \.offset) { _, clue in
                 Text("\(clue)")
-                    .font(Kaleido.rounded(min(height * 0.5, 15)))
-                    .foregroundStyle(Kaleido.ink2)
+                    .font(PrismetDesign.rounded(min(height * 0.5, 15)))
+                    .foregroundStyle(PrismetDesign.ink2)
             }
         }
         .frame(width: width, height: height)
@@ -186,8 +186,8 @@ struct NonogramView: View {
             Spacer(minLength: 0)
             ForEach(Array(game.columnClues[c].enumerated()), id: \.offset) { _, clue in
                 Text("\(clue)")
-                    .font(Kaleido.rounded(min(width * 0.5, 15)))
-                    .foregroundStyle(Kaleido.ink2)
+                    .font(PrismetDesign.rounded(min(width * 0.5, 15)))
+                    .foregroundStyle(PrismetDesign.ink2)
             }
         }
         .frame(width: width, height: height)

@@ -2,7 +2,7 @@
 import Foundation
 
 // Pure, Foundation-only metrics over a snapshot. No SwiftUI, no I/O — this is the reusable engine
-// that ports unchanged to iOS / the Kaleidoscope tab.
+// that ports unchanged to iOS / the Prismet tab.
 enum SteamMetrics {
     static func totalHours(_ s: SteamProfileSnapshot) -> Double {
         s.ownedGames.reduce(0.0) { (acc: Double, g: OwnedGame) in acc + g.hoursForever }

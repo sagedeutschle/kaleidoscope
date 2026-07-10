@@ -15,7 +15,7 @@ private struct SolitaireTheme {
     static let feltDeep = Color(red: 0.075, green: 0.255, blue: 0.157)
     static let well = Color(red: 0.088, green: 0.290, blue: 0.180)
     static let cardBackField = Color(red: 0.078, green: 0.224, blue: 0.161)
-    static let stitch = Kaleido.gold.opacity(0.55)
+    static let stitch = PrismetDesign.gold.opacity(0.55)
 
     // Card stock.
     static let ivory = Color(red: 0.976, green: 0.957, blue: 0.906)
@@ -51,7 +51,7 @@ struct SolitaireView: View {
     @State private var now = Date()
 
     private let accent = SolitaireTheme.accent
-    private let leaderboardService = KaleidoscopeLeaderboardService.shared
+    private let leaderboardService = PrismetLeaderboardService.shared
     private let ticker = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     private let cardW: CGFloat = 52
@@ -430,7 +430,7 @@ private struct SolitaireCardFace: View {
             RoundedRectangle(cornerRadius: 6, style: .continuous)
                 .fill(SolitaireTheme.ivory)
             RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .strokeBorder(selected ? Kaleido.gold : Color.black.opacity(0.25),
+                .strokeBorder(selected ? PrismetDesign.gold : Color.black.opacity(0.25),
                               lineWidth: selected ? 2.5 : 1)
 
             if covered {
@@ -451,7 +451,7 @@ private struct SolitaireCardFace: View {
     private var coveredIndexChip: some View {
         HStack(spacing: 2) {
             Text(card.rank.shortLabel)
-                .font(Kaleido.rounded(min(width * 0.40, 15), .black))
+                .font(PrismetDesign.rounded(min(width * 0.40, 15), .black))
             Text(card.suit.symbol)
                 .font(.system(size: min(width * 0.34, 13), weight: .heavy))
         }
@@ -618,7 +618,7 @@ private struct SolitaireCourtMedallion: View {
             HStack(spacing: max(1.5, width * 0.05)) {
                 ForEach(0..<points, id: \.self) { _ in
                     Rectangle()
-                        .fill(Kaleido.gold)
+                        .fill(PrismetDesign.gold)
                         .frame(width: max(2.5, width * 0.06), height: max(2.5, width * 0.06))
                         .rotationEffect(.degrees(45))
                 }
@@ -643,7 +643,7 @@ private struct SolitaireCourtMedallion: View {
 // MARK: - Card back (printed rosette)
 
 /// Card back: ivory margin frame around a deep field carrying the kaleidoscope
-/// rosette motif — a 12-fold rosette built from the Kaleido.wheel colors. Drawn in
+/// rosette motif — a 12-fold rosette built from the PrismetDesign.wheel colors. Drawn in
 /// a single static Canvas so a full face-down tableau stays cheap. Replaces the
 /// old flat blue-gradient/seal placeholder with the iOS printed-stock identity.
 private struct SolitaireCardBack: View {
@@ -670,7 +670,7 @@ private struct SolitaireCardBack: View {
             Canvas { context, size in
                 Self.drawRosette(context: context, size: size)
             }
-            inner.strokeBorder(Kaleido.gold.opacity(0.4), lineWidth: 0.8)
+            inner.strokeBorder(PrismetDesign.gold.opacity(0.4), lineWidth: 0.8)
         }
         .clipShape(inner)
     }
@@ -687,12 +687,12 @@ private struct SolitaireCardBack: View {
             let transform = CGAffineTransform(translationX: center.x, y: center.y)
                 .rotated(by: angle)
             context.fill(petal.applying(transform),
-                         with: .color(Kaleido.wheel[i % Kaleido.wheel.count].opacity(0.75)))
+                         with: .color(PrismetDesign.wheel[i % PrismetDesign.wheel.count].opacity(0.75)))
         }
         let hub = radius * 0.16
         context.fill(Path(ellipseIn: CGRect(x: center.x - hub, y: center.y - hub,
                                             width: hub * 2, height: hub * 2)),
-                     with: .color(Kaleido.gold))
+                     with: .color(PrismetDesign.gold))
     }
 }
 

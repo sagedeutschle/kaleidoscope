@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// Tester bug #2 (celebration): the UI fires its "You Won!" overlay off the model's
 /// completion signal. These cover the pure progress accounting added to

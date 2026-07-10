@@ -34,13 +34,13 @@ private struct PlasticButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
     func makeBody(configuration: Configuration) -> some View {
-        let face: Color = accent ?? Kaleido.panelHi
-        let edgeColor: Color = edge ?? Color.black.opacity(Kaleido.isDark ? 0.55 : 0.30)
-        let textColor: Color = accent == nil ? Kaleido.ink : .white
+        let face: Color = accent ?? PrismetDesign.panelHi
+        let edgeColor: Color = edge ?? Color.black.opacity(PrismetDesign.isDark ? 0.55 : 0.30)
+        let textColor: Color = accent == nil ? PrismetDesign.ink : .white
         let shape = RoundedRectangle(cornerRadius: WorkshopTheme.capCorner, style: .continuous)
 
         configuration.label
-            .font(Kaleido.rounded(compact ? 12 : 13, .semibold))
+            .font(PrismetDesign.rounded(compact ? 12 : 13, .semibold))
             .foregroundStyle(textColor)
             .padding(.horizontal, compact ? 9 : 14)
             .padding(.vertical, compact ? 5 : 8)
@@ -177,7 +177,7 @@ struct LegoBuilderView: View {
         Image("brickbench_wood")
             .resizable()
             .scaledToFill()
-            .overlay(Color.black.opacity(Kaleido.isDark ? 0.30 : 0.10))
+            .overlay(Color.black.opacity(PrismetDesign.isDark ? 0.30 : 0.10))
             .clipped()
             .ignoresSafeArea()
     }
@@ -209,11 +209,11 @@ struct LegoBuilderView: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("Brick Bench")
-                    .font(Kaleido.title(26))
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.title(26))
+                    .foregroundStyle(PrismetDesign.ink)
                 Text("Clean-room LEGO-style layout. Export generates BrickLink-compatible wanted-list XML.")
                     .font(.subheadline)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
                     .fixedSize(horizontal: false, vertical: true)
             }
 
@@ -286,7 +286,7 @@ struct LegoBuilderView: View {
                 selectionGhost(cell: cell)
             }
             .frame(width: side, height: side)
-            .background(Kaleido.panelHi.opacity(0.55))
+            .background(PrismetDesign.panelHi.opacity(0.55))
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 20).stroke(WorkshopTheme.moldLine, lineWidth: 2))
         }
@@ -313,7 +313,7 @@ struct LegoBuilderView: View {
                      ? "Tip: press E to place. Click a brick to select it, then move with arrows or ←→ ↑↓, raise/lower with Space/Tab, and rotate with Q/R."
                      : "Brick selected — move with arrows or ←→ ↑↓ · Space raises, Tab lowers · Q/R rotate · Esc undo, Page Down redo.")
                     .font(.caption)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
                     .fixedSize(horizontal: false, vertical: true)
 
                 Divider()
@@ -329,7 +329,7 @@ struct LegoBuilderView: View {
         .frame(width: 300)
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Kaleido.panel)
+                .fill(PrismetDesign.panel)
                 .overlay(
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
                         .fill(LinearGradient(colors: [.white.opacity(0.10), .clear],
@@ -337,7 +337,7 @@ struct LegoBuilderView: View {
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .strokeBorder(Kaleido.outline, lineWidth: 1)
+                        .strokeBorder(PrismetDesign.outline, lineWidth: 1)
                 )
         )
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
@@ -346,8 +346,8 @@ struct LegoBuilderView: View {
     private var toolShelfHeader: some View {
         HStack {
             Text("Palette")
-                .font(Kaleido.title(19))
-                .foregroundStyle(Kaleido.ink)
+                .font(PrismetDesign.title(19))
+                .foregroundStyle(PrismetDesign.ink)
             Spacer()
             Button {
                 showingSettings.toggle()
@@ -482,7 +482,7 @@ struct LegoBuilderView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("BrickLink")
                 .font(.headline)
-                .foregroundStyle(Kaleido.ink)
+                .foregroundStyle(PrismetDesign.ink)
 
             HStack(spacing: 10) {
                 Button("Export XML") {
@@ -503,7 +503,7 @@ struct LegoBuilderView: View {
                 .scrollContentBackground(.hidden)
                 .padding(6)
                 .background(
-                    RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Kaleido.panelHi)
+                    RoundedRectangle(cornerRadius: 8, style: .continuous).fill(PrismetDesign.panelHi)
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(WorkshopTheme.moldLine, lineWidth: 1)
@@ -512,7 +512,7 @@ struct LegoBuilderView: View {
                     if importXML.isEmpty {
                         Text("Paste BrickLink wanted-list XML")
                             .font(.caption)
-                            .foregroundStyle(Kaleido.ink3)
+                            .foregroundStyle(PrismetDesign.ink3)
                             .padding(10)
                             .allowsHitTesting(false)
                     }
@@ -521,7 +521,7 @@ struct LegoBuilderView: View {
             if !importMessage.isEmpty {
                 Text(importMessage)
                     .font(.caption)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
             }
 
             if !exportedXML.isEmpty {
@@ -531,7 +531,7 @@ struct LegoBuilderView: View {
                     .scrollContentBackground(.hidden)
                     .padding(6)
                     .background(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Kaleido.panelHi)
+                        RoundedRectangle(cornerRadius: 8, style: .continuous).fill(PrismetDesign.panelHi)
                     )
                     .overlay(
                         RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(WorkshopTheme.moldLine, lineWidth: 1)
@@ -697,16 +697,16 @@ private struct PaletteShelf: View {
         } label: {
             HStack(spacing: 8) {
                 BrickProfileShape(kind: kind)
-                    .fill(isSelected ? Color.white : Kaleido.ink3)
+                    .fill(isSelected ? Color.white : PrismetDesign.ink3)
                     .frame(width: 24, height: 15)
                 Text(kind.displayName)
-                    .font(Kaleido.rounded(13, .semibold))
+                    .font(PrismetDesign.rounded(13, .semibold))
             }
-            .foregroundStyle(isSelected ? .white : Kaleido.ink)
+            .foregroundStyle(isSelected ? .white : PrismetDesign.ink)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 8)
             .background(
-                shape.fill(isSelected ? accent : Kaleido.panelHi)
+                shape.fill(isSelected ? accent : PrismetDesign.panelHi)
                     .overlay(
                         shape.fill(LinearGradient(
                             colors: [Color.white.opacity(isSelected ? 0.22 : 0.10), .clear],
@@ -723,9 +723,9 @@ private struct PaletteShelf: View {
         HStack(spacing: 10) {
             arrowButton("minus") { selectedLayer = max(0, selectedLayer - 1) }
             Text("Layer \(selectedLayer)")
-                .font(Kaleido.rounded(14, .semibold))
+                .font(PrismetDesign.rounded(14, .semibold))
                 .monospacedDigit()
-                .foregroundStyle(Kaleido.ink)
+                .foregroundStyle(PrismetDesign.ink)
                 .frame(minWidth: 72)
             arrowButton("plus") { selectedLayer = min(12, selectedLayer + 1) }
             Spacer()
@@ -735,7 +735,7 @@ private struct PaletteShelf: View {
     private func arrowButton(_ system: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: system)
-                .font(Kaleido.rounded(12, .bold))
+                .font(PrismetDesign.rounded(12, .bold))
                 .frame(width: 26, height: 15)
         }
         .buttonStyle(PlasticButtonStyle(compact: true))
@@ -743,8 +743,8 @@ private struct PaletteShelf: View {
 
     private func sectionLabel(_ text: String) -> some View {
         Text(text)
-            .font(Kaleido.rounded(11, .semibold))
-            .foregroundStyle(Kaleido.ink2)
+            .font(PrismetDesign.rounded(11, .semibold))
+            .foregroundStyle(PrismetDesign.ink2)
             .textCase(.uppercase)
     }
 
@@ -759,15 +759,15 @@ private struct PaletteShelf: View {
             VStack(spacing: 4) {
                 studDots(size, selected: isSelected)
                 Text("\(size.studsWide)×\(size.studsDeep)")
-                    .font(Kaleido.rounded(10, .semibold))
+                    .font(PrismetDesign.rounded(10, .semibold))
                     .monospacedDigit()
             }
-            .foregroundStyle(isSelected ? Color.white : Kaleido.ink)
+            .foregroundStyle(isSelected ? Color.white : PrismetDesign.ink)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .background(
-                shape.fill(isSelected ? accent : Kaleido.panelHi)
-                    .overlay(shape.strokeBorder(isSelected ? WorkshopTheme.moldLine : Kaleido.hairline,
+                shape.fill(isSelected ? accent : PrismetDesign.panelHi)
+                    .overlay(shape.strokeBorder(isSelected ? WorkshopTheme.moldLine : PrismetDesign.hairline,
                                                 lineWidth: 1))
             )
         }
@@ -782,7 +782,7 @@ private struct PaletteShelf: View {
                 HStack(spacing: 2) {
                     ForEach(0..<size.studsDeep, id: \.self) { _ in
                         Circle()
-                            .fill(selected ? Color.white.opacity(0.92) : Kaleido.ink3)
+                            .fill(selected ? Color.white.opacity(0.92) : PrismetDesign.ink3)
                             .frame(width: dot, height: dot)
                     }
                 }
@@ -808,8 +808,8 @@ private struct PaletteShelf: View {
                             .opacity(isSelected ? 1 : 0)
                     )
                 Text(color.displayName)
-                    .font(Kaleido.rounded(10, .regular))
-                    .foregroundStyle(isSelected ? Kaleido.ink : Kaleido.ink2)
+                    .font(PrismetDesign.rounded(10, .regular))
+                    .foregroundStyle(isSelected ? PrismetDesign.ink : PrismetDesign.ink2)
                     .lineLimit(1)
             }
             .frame(width: 50)
@@ -834,19 +834,19 @@ private struct PartsShelf: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text("PARTS")
-                    .font(Kaleido.rounded(11, .semibold))
+                    .font(PrismetDesign.rounded(11, .semibold))
                     .tracking(0.6)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
                 Spacer()
                 Text("\(totalParts) part\(totalParts == 1 ? "" : "s")")
-                    .font(Kaleido.rounded(11, .medium))
+                    .font(PrismetDesign.rounded(11, .medium))
                     .monospacedDigit()
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
             }
             if parts.isEmpty {
                 Text("No bricks placed yet.")
-                    .font(Kaleido.rounded(12, .regular))
-                    .foregroundStyle(Kaleido.ink3)
+                    .font(PrismetDesign.rounded(12, .regular))
+                    .foregroundStyle(PrismetDesign.ink3)
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
@@ -869,12 +869,12 @@ private struct PartsShelf: View {
                           width: 30, height: 22, corner: 6)
             VStack(alignment: .leading, spacing: 0) {
                 Text("×\(part.quantity)")
-                    .font(Kaleido.rounded(11, .semibold))
+                    .font(PrismetDesign.rounded(11, .semibold))
                     .monospacedDigit()
-                    .foregroundStyle(Kaleido.ink)
+                    .foregroundStyle(PrismetDesign.ink)
                 Text(part.color.displayName)
                     .font(.system(size: 9))
-                    .foregroundStyle(Kaleido.ink3)
+                    .foregroundStyle(PrismetDesign.ink3)
             }
         }
         .help("\(part.quantity) \(part.color.displayName) \(size?.displayName ?? part.partNumber)")

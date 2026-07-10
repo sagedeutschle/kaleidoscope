@@ -1,10 +1,10 @@
-# Kaleidoscope
+# Prismet
 
 A cross-platform games app — a "fidget shell" of ~18 games plus live "lenses" (an Oracle
 of daily decrees, a live U.S. Debt Clock) — shipping on **iOS** and **macOS**, backed by a
 small Python decree service.
 
-This is the shared home for all Kaleidoscope work. Sage and his dad Ben both develop here,
+This is the shared home for all Prismet work. Sage and his dad Ben both develop here,
 each with their own AI agents.
 
 ## Layout
@@ -13,7 +13,7 @@ each with their own AI agents.
 kaleidoscope/
 ├── ios/        Shipping iOS app        (SwiftUI · iOS 17 · XcodeGen + SPM)
 ├── macos/      Desktop app             (SwiftUI · XcodeGen)  — parity with iOS is a release gate
-├── shared/     KaleidoscopeShared      (local Swift package both apps depend on)
+├── shared/     PrismetShared      (local Swift package both apps depend on)
 ├── oracle/     Wizard King's Decree    (Python · daily job → public gist both apps read)
 ├── docs/       Coordination ledger · handoff · release gates
 ├── AGENTS.md   ← the contract every agent reads first
@@ -29,7 +29,7 @@ cd kaleidoscope
 
 # iOS
 cd ios && xcodegen generate      # .xcodeproj is generated, not committed
-open Kaleidoscope.xcodeproj      # then build to a simulator
+open Prismet.xcodeproj      # then build to a simulator
 
 # macOS
 cd ../macos && xcodegen generate && ./scripts/deploy-mac.sh

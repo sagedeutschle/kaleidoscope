@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// Tester bug #2: "once all cards are uncovered, it should auto-complete."
 /// These verify the model support the UI cascade drives (`canAutoFinish`,

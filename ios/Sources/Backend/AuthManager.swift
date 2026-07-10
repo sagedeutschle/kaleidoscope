@@ -2,7 +2,7 @@ import Foundation
 import Supabase
 import GameKit
 
-/// Identity for Kaleidoscope. Apple Game Center supplies the display name when
+/// Identity for Prismet. Apple Game Center supplies the display name when
 /// available; a Supabase anonymous session can back cloud leaderboards/saves with
 /// a real `auth.uid()` so existing RLS keeps working. If cloud identity is not
 /// available, the player still gets in as a local guest.

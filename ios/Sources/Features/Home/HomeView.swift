@@ -61,9 +61,9 @@ struct HomeView: View {
     @State private var showRemoveAds = false
     @State private var showGameCenterHint = false
     @State private var showSettings = false
-    // Default mirrors Kaleido.paper's fallback (dark) so the Reading picker reflects
+    // Default mirrors PrismetDesign.paper's fallback (dark) so the Reading picker reflects
     // the true paper before a choice is ever stored.
-    @AppStorage("kaleido.paper") private var paperRaw = KaleidoPaper.dark.rawValue
+    @AppStorage("kaleido.paper") private var paperRaw = PrismetPaper.dark.rawValue
 
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 16)]
 
@@ -79,12 +79,12 @@ struct HomeView: View {
                 .padding(18)
             }
             .id(paperRaw)
-            .background(FacetBackdrop(accent: Kaleido.gold, multiHue: true))
-            .navigationTitle("Kaleidoscope")
+            .background(FacetBackdrop(accent: PrismetDesign.gold, multiHue: true))
+            .navigationTitle("Prismet")
             // Own the bar: an opaque ground-colored background keyed to the paper, so
             // the collapsed bar never shows stock translucent material (or floating
             // pills) over scrolled content.
-            .toolbarBackground(Kaleido.ground, for: .navigationBar)
+            .toolbarBackground(PrismetDesign.ground, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationDestination(for: String.self) { id in
                 if id == GameCard.debtClockID {
@@ -109,7 +109,7 @@ struct HomeView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     Menu {
                         Picker("Reading", selection: $paperRaw) {
-                            ForEach(KaleidoPaper.allCases) { Text($0.rawValue).tag($0.rawValue) }
+                            ForEach(PrismetPaper.allCases) { Text($0.rawValue).tag($0.rawValue) }
                         }
                     } label: {
                         Label("Reading", systemImage: "circle.lefthalf.filled")
@@ -173,8 +173,8 @@ struct HomeView: View {
                 }
             }
         }
-        .tint(Kaleido.gold)
-        .preferredColorScheme(Kaleido.isDark ? .dark : .light)
+        .tint(PrismetDesign.gold)
+        .preferredColorScheme(PrismetDesign.isDark ? .dark : .light)
         .task {
             configureLeaderboard()
             await adEntitlement.refreshPurchasedEntitlement()
@@ -247,12 +247,12 @@ struct HomeView: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 8) {
                     Capsule()
-                        .fill(LinearGradient(colors: [Kaleido.gold, Kaleido.gold.opacity(0.35)],
+                        .fill(LinearGradient(colors: [PrismetDesign.gold, PrismetDesign.gold.opacity(0.35)],
                                              startPoint: .top, endPoint: .bottom))
                         .frame(width: 3, height: 13)
                     Text(category.uppercased())
                         .font(.caption.weight(.heavy)).tracking(2.4)
-                        .foregroundStyle(Kaleido.gold)
+                        .foregroundStyle(PrismetDesign.gold)
                 }
                 .padding(.horizontal, 4)
                 LazyVGrid(columns: columns, spacing: 16) {
@@ -268,26 +268,26 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 12) {
                 ZStack {
-                    Circle().fill(AngularGradient(gradient: Gradient(colors: Kaleido.wheel), center: .center))
+                    Circle().fill(AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center))
                         .frame(width: 42, height: 42)
-                    Circle().strokeBorder(Kaleido.gold, lineWidth: 2).frame(width: 42, height: 42)
-                    Circle().fill(Kaleido.ground).frame(width: 13, height: 13)
+                    Circle().strokeBorder(PrismetDesign.gold, lineWidth: 2).frame(width: 42, height: 42)
+                    Circle().fill(PrismetDesign.ground).frame(width: 13, height: 13)
                 }
                 .shadow(color: Color.black.opacity(0.16), radius: 5, y: 2)
                 Text("Turn the lens.")
                     .font(.system(size: 17, weight: .regular, design: .serif)).italic()
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
                 Spacer()
             }
             Text("Classic games, daily puzzles, and live data lenses — one beautiful box.")
                 .font(.footnote)
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(.horizontal, 2)
         .padding(.bottom, 8)
         .overlay(alignment: .bottom) {
-            LinearGradient(colors: [Kaleido.gold.opacity(0.55), Kaleido.gold.opacity(0.04)],
+            LinearGradient(colors: [PrismetDesign.gold.opacity(0.55), PrismetDesign.gold.opacity(0.04)],
                            startPoint: .leading, endPoint: .trailing)
                 .frame(height: 1)
         }
@@ -305,8 +305,8 @@ struct HomeView: View {
                     Text("SOON")
                         .font(.caption2.bold())
                         .padding(.horizontal, 7).padding(.vertical, 3)
-                        .background(Capsule().fill(Kaleido.outline))
-                        .foregroundStyle(Kaleido.panel)
+                        .background(Capsule().fill(PrismetDesign.outline))
+                        .foregroundStyle(PrismetDesign.panel)
                         .padding(10)
                 }
         }
@@ -331,14 +331,14 @@ struct GameTile: View {
             icon
             .frame(width: 62, height: 62)
             .shadow(color: card.accent.opacity(0.30), radius: 6, y: 3)
-            Text(card.title).font(Kaleido.title(20)).foregroundStyle(Kaleido.ink)
+            Text(card.title).font(PrismetDesign.title(20)).foregroundStyle(PrismetDesign.ink)
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
                 .padding(.horizontal, 6)
         }
         .frame(maxWidth: .infinity)
         .frame(height: 140)
-        .kaleidoCard()
+        .prismetCard()
     }
 
     private var iconShape: RoundedRectangle {
@@ -368,7 +368,7 @@ struct GameTile: View {
                                          center: .topLeading, startRadius: 2, endRadius: 66))
                 iconShape
                     .inset(by: 3.5)
-                    .strokeBorder(Kaleido.gold.opacity(0.65), lineWidth: 1)
+                    .strokeBorder(PrismetDesign.gold.opacity(0.65), lineWidth: 1)
                 iconShape
                     .strokeBorder(Color.white.opacity(0.22), lineWidth: 1)
                 Image(systemName: card.icon)

@@ -3,11 +3,11 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-PROJECT_NAME="Kaleidoscope"
+PROJECT_NAME="Prismet"
 SCHEME="$PROJECT_NAME"
 CONFIG="${CONFIG:-Debug}"
 BUNDLE_ID="com.gtrktscrb.kaleidoscope"
-BUILD_DIR="${BUILD_DIR:-$HOME/Library/Caches/Kaleidoscope-mac-build}"
+BUILD_DIR="${BUILD_DIR:-$HOME/Library/Caches/Prismet-mac-build}"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/Applications}"
 LOG_FILE="$BUILD_DIR/last-build.log"
 
@@ -36,13 +36,13 @@ if [[ $status -ne 0 ]]; then
   exit "$status"
 fi
 
-APP_PATH="$(find "$BUILD_DIR/DerivedData/Build/Products/$CONFIG" -maxdepth 1 -name 'Kaleidoscope.app' -print -quit)"
+APP_PATH="$(find "$BUILD_DIR/DerivedData/Build/Products/$CONFIG" -maxdepth 1 -name 'Prismet.app' -print -quit)"
 if [[ -z "$APP_PATH" ]]; then
-  echo "Build completed, but Kaleidoscope.app was not found."
+  echo "Build completed, but Prismet.app was not found."
   exit 1
 fi
 
-DEST_APP="$INSTALL_DIR/Kaleidoscope.app"
+DEST_APP="$INSTALL_DIR/Prismet.app"
 echo "==> Closing any running $BUNDLE_ID"
 osascript -e "tell application id \"$BUNDLE_ID\" to quit" >/dev/null 2>&1 || true
 sleep 0.5

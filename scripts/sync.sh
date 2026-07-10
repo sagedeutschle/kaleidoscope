@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Kaleidoscope sync: pull the latest, then push your committed work.
+# Prismet sync: pull the latest, then push your committed work.
 # Run this before you start and after you commit. It never touches the NAS mount —
 # everything flows through GitHub.
 set -euo pipefail

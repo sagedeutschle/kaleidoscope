@@ -123,7 +123,7 @@ struct SteamRewindView: View {
                 .textFieldStyle(.plain)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
-                .font(Kaleido.rounded(14, .semibold))
+                .font(PrismetDesign.rounded(14, .semibold))
                 .padding(.horizontal, 12).padding(.vertical, 9)
                 .background(RoundedRectangle(cornerRadius: 11, style: .continuous)
                     .fill(Color.white.opacity(0.06)))
@@ -156,7 +156,7 @@ struct SteamRewindView: View {
 
     private func errorCard(_ message: String) -> some View {
         Text(message)
-            .font(Kaleido.rounded(12.5, .semibold))
+            .font(PrismetDesign.rounded(12.5, .semibold))
             .foregroundStyle(Hue.bad)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(12)
@@ -168,7 +168,7 @@ struct SteamRewindView: View {
 
     private var disclaimer: some View {
         Text("Reads your own library via your free Steam Web API key (steamcommunity.com/dev/apikey) — the key stays on this device. Prices are current full-price estimates, not what you paid; Steam never discloses purchase history to apps. Demo library shown until you load a profile.")
-            .font(Kaleido.rounded(10.5, .regular))
+            .font(PrismetDesign.rounded(10.5, .regular))
             .foregroundStyle(Hue.sublabel)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.top, 2)
@@ -188,7 +188,7 @@ private struct ProfileHeaderCard: View {
                 ZStack {
                     Circle().fill(Hue.steam.opacity(0.18))
                     Text(snapshot.player.avatarInitials)
-                        .font(Kaleido.rounded(16, .heavy))
+                        .font(PrismetDesign.rounded(16, .heavy))
                         .foregroundStyle(Hue.steam)
                 }
                 .frame(width: 46, height: 46)
@@ -196,20 +196,20 @@ private struct ProfileHeaderCard: View {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 8) {
                         Text(snapshot.player.personaName)
-                            .font(Kaleido.rounded(18, .heavy))
+                            .font(PrismetDesign.rounded(18, .heavy))
                             .foregroundStyle(.white)
                         if !isLive { demoBadge }
                     }
                     Text(memberLine)
-                        .font(Kaleido.rounded(11.5, .semibold))
+                        .font(PrismetDesign.rounded(11.5, .semibold))
                         .foregroundStyle(Hue.sublabel)
                 }
                 Spacer()
                 if let level = snapshot.steamLevel {
                     VStack(spacing: 1) {
-                        Text("LVL").font(Kaleido.rounded(9, .heavy)).tracking(1.4)
+                        Text("LVL").font(PrismetDesign.rounded(9, .heavy)).tracking(1.4)
                             .foregroundStyle(Hue.sublabel)
-                        Text("\(level)").font(Kaleido.rounded(17, .heavy))
+                        Text("\(level)").font(PrismetDesign.rounded(17, .heavy))
                             .monospacedDigit()
                             .foregroundStyle(Hue.gold)
                     }
@@ -250,10 +250,10 @@ private struct ProfileHeaderCard: View {
 
     private func statPair(_ big: String, _ label: String) -> some View {
         VStack(alignment: .leading, spacing: 1) {
-            Text(big).font(Kaleido.rounded(15, .heavy)).monospacedDigit()
+            Text(big).font(PrismetDesign.rounded(15, .heavy)).monospacedDigit()
                 .foregroundStyle(.white.opacity(0.92))
                 .lineLimit(1).minimumScaleFactor(0.7)
-            Text(label.uppercased()).font(Kaleido.rounded(9, .heavy)).tracking(1.2)
+            Text(label.uppercased()).font(PrismetDesign.rounded(9, .heavy)).tracking(1.2)
                 .foregroundStyle(Hue.sublabel)
         }
     }
@@ -285,7 +285,7 @@ private struct LensChipsRow: View {
                 Image(systemName: lens.symbol)
                     .font(.system(size: 11, weight: .bold))
                 Text(lens.title.uppercased())
-                    .font(Kaleido.rounded(10.5, .heavy)).tracking(1.1)
+                    .font(PrismetDesign.rounded(10.5, .heavy)).tracking(1.1)
             }
             .padding(.horizontal, 11).padding(.vertical, 7)
             .background(Capsule().fill(active ? Hue.steam.opacity(0.2) : Color.white.opacity(0.05)))
@@ -307,7 +307,7 @@ private struct LensResultSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(lens.blurb(snapshot))
-                .font(Kaleido.rounded(13.5, .regular))
+                .font(PrismetDesign.rounded(13.5, .regular))
                 .foregroundStyle(.white.opacity(0.9))
                 .fixedSize(horizontal: false, vertical: true)
             switch LensCatalog.evaluate(lens, snapshot) {
@@ -326,7 +326,7 @@ private struct LensResultSection: View {
             }
             if let note = lens.note {
                 Text(note)
-                    .font(Kaleido.rounded(10.5, .regular))
+                    .font(PrismetDesign.rounded(10.5, .regular))
                     .foregroundStyle(Hue.sublabel)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -335,7 +335,7 @@ private struct LensResultSection: View {
 
     private var emptyCard: some View {
         Text("Nothing qualifies for this lens yet — which is its own kind of achievement.")
-            .font(Kaleido.rounded(12.5, .regular))
+            .font(PrismetDesign.rounded(12.5, .regular))
             .foregroundStyle(Hue.sublabel)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(14)
@@ -359,12 +359,12 @@ private struct LensListRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(alignment: .firstTextBaseline) {
                     Text(row.name)
-                        .font(Kaleido.rounded(14, .bold))
+                        .font(PrismetDesign.rounded(14, .bold))
                         .foregroundStyle(.white)
                         .lineLimit(1).minimumScaleFactor(0.75)
                     Spacer(minLength: 8)
                     Text(row.stat.big)
-                        .font(Kaleido.rounded(13.5, .heavy))
+                        .font(PrismetDesign.rounded(13.5, .heavy))
                         .monospacedDigit()
                         .foregroundStyle(hue)
                         .lineLimit(1)
@@ -379,7 +379,7 @@ private struct LensListRow: View {
                     }
                     .frame(height: 4)
                     Text(row.stat.sub)
-                        .font(Kaleido.rounded(10.5, .semibold))
+                        .font(PrismetDesign.rounded(10.5, .semibold))
                         .foregroundStyle(Hue.sublabel)
                         .lineLimit(1).minimumScaleFactor(0.7)
                         .layoutPriority(1)
@@ -409,11 +409,11 @@ private struct LensBarRow: View {
                         .foregroundStyle(Hue.steam)
                 }
                 Text(bar.label)
-                    .font(Kaleido.rounded(13, .bold))
+                    .font(PrismetDesign.rounded(13, .bold))
                     .foregroundStyle(.white.opacity(0.92))
                 Spacer()
                 Text(bar.detail)
-                    .font(Kaleido.rounded(11.5, .heavy))
+                    .font(PrismetDesign.rounded(11.5, .heavy))
                     .monospacedDigit()
                     .foregroundStyle(Hue.steam)
             }
@@ -447,7 +447,7 @@ private struct SteamKeySheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Steam Rewind reads your library with your own free Steam Web API key. Grab it at steamcommunity.com/dev/apikey (any domain value works, e.g. \"localhost\"), paste it below, done.")
-                        .font(Kaleido.rounded(13.5, .regular))
+                        .font(PrismetDesign.rounded(13.5, .regular))
                         .foregroundStyle(.white.opacity(0.9))
                         .fixedSize(horizontal: false, vertical: true)
                     SecureField("Steam Web API key", text: $keyText)
@@ -464,7 +464,7 @@ private struct SteamKeySheet: View {
                         dismiss()
                     } label: {
                         Text("Save key")
-                            .font(Kaleido.rounded(14, .heavy))
+                            .font(PrismetDesign.rounded(14, .heavy))
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 11)
                             .background(RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -480,13 +480,13 @@ private struct SteamKeySheet: View {
                             dismiss()
                         } label: {
                             Text("Remove saved key")
-                                .font(Kaleido.rounded(12.5, .semibold))
+                                .font(PrismetDesign.rounded(12.5, .semibold))
                                 .foregroundStyle(Hue.bad)
                         }
                         .buttonStyle(.plain)
                     }
-                    Text("The key is stored only on this device and only ever sent to Steam. It never touches Kaleidoscope's servers, the app bundle, or git.")
-                        .font(Kaleido.rounded(11, .regular))
+                    Text("The key is stored only on this device and only ever sent to Steam. It never touches Prismet's servers, the app bundle, or git.")
+                        .font(PrismetDesign.rounded(11, .regular))
                         .foregroundStyle(Hue.sublabel)
                         .fixedSize(horizontal: false, vertical: true)
                 }

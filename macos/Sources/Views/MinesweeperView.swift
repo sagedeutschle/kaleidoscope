@@ -81,8 +81,8 @@ struct MinesweeperView: View {
             boardViewport {
                 boardGrid
                     .padding(CGFloat(layout.boardPadding))
-                    .background(RoundedRectangle(cornerRadius: 10, style: .continuous).fill(Kaleido.panel.opacity(0.8)))
-                    .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(Kaleido.hairline, lineWidth: 1))
+                    .background(RoundedRectangle(cornerRadius: 10, style: .continuous).fill(PrismetDesign.panel.opacity(0.8)))
+                    .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(PrismetDesign.hairline, lineWidth: 1))
             }
             controlStack(tint: accent)
         }
@@ -396,7 +396,7 @@ struct MinesweeperView: View {
             RoundedRectangle(cornerRadius: CGFloat(layout.cornerRadius), style: .continuous)
                 .fill(revealed
                       ? (session.game.hasMine(row: row, col: col) ? Color(red: 0.78, green: 0.20, blue: 0.22) : Color(red: 0.91, green: 0.87, blue: 0.77))
-                      : Kaleido.panelHi)
+                      : PrismetDesign.panelHi)
                 .overlay(revealed ? nil : RoundedRectangle(cornerRadius: CGFloat(layout.cornerRadius), style: .continuous)
                     .fill(LinearGradient(colors: [.white.opacity(0.10), .clear], startPoint: .top, endPoint: .bottom)))
             cellGlyph(row: row, col: col,
@@ -611,10 +611,10 @@ private struct MinesweeperModeButtonStyle: ButtonStyle {
             .padding(.vertical, 7)
             .background(
                 Capsule()
-                    .fill(isSelected ? AnyShapeStyle(accent.gradient) : AnyShapeStyle(Kaleido.panelHi))
-                    .overlay(Capsule().strokeBorder(isSelected ? Color.white.opacity(0.34) : Kaleido.hairline, lineWidth: 1))
+                    .fill(isSelected ? AnyShapeStyle(accent.gradient) : AnyShapeStyle(PrismetDesign.panelHi))
+                    .overlay(Capsule().strokeBorder(isSelected ? Color.white.opacity(0.34) : PrismetDesign.hairline, lineWidth: 1))
             )
-            .foregroundStyle(isSelected ? .white : Kaleido.ink)
+            .foregroundStyle(isSelected ? .white : PrismetDesign.ink)
             .opacity(configuration.isPressed ? 0.82 : 1)
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
             .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
@@ -631,10 +631,10 @@ private struct MinesweeperIconButtonStyle: ButtonStyle {
             .frame(width: 36, height: 34)
             .background(
                 Circle()
-                    .fill(isSelected ? AnyShapeStyle(accent.gradient) : AnyShapeStyle(Kaleido.panelHi))
-                    .overlay(Circle().strokeBorder(isSelected ? Color.white.opacity(0.34) : Kaleido.hairline, lineWidth: 1))
+                    .fill(isSelected ? AnyShapeStyle(accent.gradient) : AnyShapeStyle(PrismetDesign.panelHi))
+                    .overlay(Circle().strokeBorder(isSelected ? Color.white.opacity(0.34) : PrismetDesign.hairline, lineWidth: 1))
             )
-            .foregroundStyle(isSelected ? .white : Kaleido.ink)
+            .foregroundStyle(isSelected ? .white : PrismetDesign.ink)
             .opacity(configuration.isPressed ? 0.82 : 1)
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
             .animation(.easeOut(duration: 0.12), value: configuration.isPressed)

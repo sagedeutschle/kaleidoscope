@@ -119,7 +119,7 @@ struct ConnectFourView: View {
             return color(for: winner)
         }
         if game.isDraw {
-            return Kaleido.ink2
+            return PrismetDesign.ink2
         }
         return color(for: game.currentPlayer)
     }
@@ -267,7 +267,7 @@ struct ConnectFourView: View {
             HStack {
                 Label("Difficulty", systemImage: "slider.horizontal.3")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
                 Spacer()
                 Text("ELO \(Int(aiELO)) · \(tierName(forELO: Int(aiELO)))")
                     .font(.subheadline.weight(.semibold))
@@ -277,9 +277,9 @@ struct ConnectFourView: View {
             Slider(value: $aiELO, in: 600...2400, step: 100) {
                 Text("AI strength")
             } minimumValueLabel: {
-                Text("600").font(.caption2).foregroundStyle(Kaleido.ink3)
+                Text("600").font(.caption2).foregroundStyle(PrismetDesign.ink3)
             } maximumValueLabel: {
-                Text("2400").font(.caption2).foregroundStyle(Kaleido.ink3)
+                Text("2400").font(.caption2).foregroundStyle(PrismetDesign.ink3)
             }
             .tint(accent)
         }
@@ -303,7 +303,7 @@ struct ConnectFourView: View {
             if online.phase == .finished || game.isGameOver {
                 Text("Head back for a rematch — host a fresh code.")
                     .font(.caption)
-                    .foregroundStyle(Kaleido.ink3)
+                    .foregroundStyle(PrismetDesign.ink3)
             } else {
                 Button(role: .destructive) {
                     Task { await online.resign() }
@@ -311,7 +311,7 @@ struct ConnectFourView: View {
                     Label("Resign", systemImage: "flag.fill")
                         .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(AccentButtonStyle(accent: Kaleido.ink))
+                .buttonStyle(AccentButtonStyle(accent: PrismetDesign.ink))
             }
         }
     }

@@ -1,15 +1,15 @@
-# Kaleidoscope — App Store Connect listing kit
+# Prismet — App Store Connect listing kit
 
 Everything you paste into App Store Connect for v1. Drafts — tweak voice to taste.
 
 ## App name (30 char max)
 
-- **First choice:** `Kaleidoscope` (12)
-- "Kaleidoscope" is a common word and **may be taken** on the App Store. Backups
+- **First choice:** `Prismet` (12)
+- "Prismet" is a common word and **may be taken** on the App Store. Backups
   that keep the brand and stay unique:
-  - `Kaleidoscope Games` (18)
-  - `Kaleidoscope Arcade` (19)
-  - `Kaleidoscope: Classics` (22)
+  - `Prismet Games` (18)
+  - `Prismet Arcade` (19)
+  - `Prismet: Classics` (22)
 
 > Check availability in App Store Connect → New App → the name field tells you if it's free.
 
@@ -28,7 +28,7 @@ Everything you paste into App Store Connect for v1. Drafts — tweak voice to ta
 
 ## Description
 
-Kaleidoscope is a calm, beautiful home for the games you already love — fifteen
+Prismet is a calm, beautiful home for the games you already love — fifteen
 classics in one app, wrapped in a warm parchment design you can read in any light.
 
 GAMES INCLUDED
@@ -115,7 +115,7 @@ Connect IAP product is live yet. Re-enable this section when the IAP is ready:
   - Product ID: **`com.spocksclub.kaleidoscope.removeads`** (must match `project.yml`)
   - Price: **$4.99** (Tier 5), display name "Remove Ads", a short description + a review screenshot
   - The IAP is reviewed **with** the build, so submit it alongside v1.
-- **Tester/family codes** grant the unlock for free (hashed in `KaleidoscopeAdUnlockCodeHashes`).
+- **Tester/family codes** grant the unlock for free (hashed in `PrismetAdUnlockCodeHashes`).
   App-Store-safe: you're giving the product away, not selling unlocks outside Apple's IAP.
 - **App Privacy:** no new data types from the IAP itself; purchase is handled by Apple.
 
@@ -145,7 +145,7 @@ Refreshed to reflect the CURRENT app (build 11): ~18 games incl. the new ones (G
 **Keywords (≤100):** `2048,sudoku,chess,solitaire,minesweeper,snake,gomoku,checkers,connect four,battleship,word,puzzle` (97 chars)
 
 **Description:**
-Kaleidoscope is a calm, beautiful home for the games you already love - over eighteen classics in one app, each with its own hand-crafted look, plus a 3D brick builder and a daily Oracle. No ads, no pop-ups, no paywalls.
+Prismet is a calm, beautiful home for the games you already love - over eighteen classics in one app, each with its own hand-crafted look, plus a 3D brick builder and a daily Oracle. No ads, no pop-ups, no paywalls.
 
 GAMES INCLUDED
 - Chess - a real study board with a built-in engine, 2D or 3D
@@ -167,7 +167,7 @@ DESIGNED TO FEEL GOOD
 Free to play. More games and features on the way.
 
 **What's New (first release):**
-`Welcome to Kaleidoscope - over eighteen beautifully crafted classic games in one calm app. Play the computer, pass-and-play, or challenge a friend online. Real sound, haptics, and three reading themes. No ads, no login wall. More games coming soon.`
+`Welcome to Prismet - over eighteen beautifully crafted classic games in one calm app. Play the computer, pass-and-play, or challenge a friend online. Real sound, haptics, and three reading themes. No ads, no login wall. More games coming soon.`
 
 **Screenshots (6.9in, 1320x2868, staged):** checkers (red/black), sea battle, chess study table, 2048 walnut, snake neon, sudoku newspaper, solitaire baize — in scratchpad/appstore/. Oracle dropped (dynamic political content).
 

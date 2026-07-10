@@ -91,7 +91,7 @@ struct Game2048View: View {
     @FocusState private var isFocused: Bool
 
     private let accent = FacetRegistry.accent(for: "2048")
-    private let leaderboardService = KaleidoscopeLeaderboardService.shared
+    private let leaderboardService = PrismetLeaderboardService.shared
     private var boardLayout: Game2048BoardLayout {
         Game2048BoardLayout(tileSize: tileSize(for: session.game.size))
     }
@@ -178,7 +178,7 @@ struct Game2048View: View {
                                              startPoint: .top, endPoint: .bottom),
                               lineWidth: 1)
         )
-        .shadow(color: .black.opacity(Kaleido.isDark ? 0.45 : 0.22), radius: 14, y: 8)
+        .shadow(color: .black.opacity(PrismetDesign.isDark ? 0.45 : 0.22), radius: 14, y: 8)
         .frame(width: cardSide, height: cardSide, alignment: .center)
         .frame(maxWidth: .infinity, alignment: .center)
     }

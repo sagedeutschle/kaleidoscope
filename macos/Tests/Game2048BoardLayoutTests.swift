@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 final class Game2048BoardLayoutTests: XCTestCase {
     func testDefaultLayoutUsesClassicTileScale() {

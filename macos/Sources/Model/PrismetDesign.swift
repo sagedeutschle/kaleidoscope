@@ -3,7 +3,7 @@ import SwiftUI
 // NOTE TO THE OTHER AGENT: two agents share this project — see docs/AGENT-COORDINATION.md
 // for lanes + conventions. New design tokens go HERE (don't reference undefined ones).
 
-// MARK: - Kaleidoscope design system  ·  "Rustic scroll + kaleidoscope iris"
+// MARK: - Prismet design system  ·  "Rustic scroll + kaleidoscope iris"
 //
 // Warm parchment/vellum surfaces, sepia ink, and gilt edges — the whole app reads
 // like an illuminated scroll (congruent with the Oracle/Wizard King's Decree). The
@@ -13,20 +13,20 @@ import SwiftUI
 // The token API is intentionally STABLE so facets that use it inherit the theme.
 
 /// User-selectable "paper" — controls overall contrast/readability. Persisted in
-/// UserDefaults (`Kaleido.paperKey`); the shell re-themes the whole app on change.
-enum KaleidoPaper: String, CaseIterable, Identifiable {
+/// UserDefaults (`PrismetDesign.paperKey`); the shell re-themes the whole app on change.
+enum PrismetPaper: String, CaseIterable, Identifiable {
     case contrast = "High Contrast"
     case parchment = "Parchment"
     case dark = "Dark"
     var id: String { rawValue }
 }
 
-enum Kaleido {
+enum PrismetDesign {
     static let paperKey = "kaleido.paper"
 
     /// Active paper. Dark is the default (Sage, 2026-07-03) — a stored choice wins.
-    static var paper: KaleidoPaper {
-        KaleidoPaper(rawValue: UserDefaults.standard.string(forKey: paperKey) ?? "") ?? .dark
+    static var paper: PrismetPaper {
+        PrismetPaper(rawValue: UserDefaults.standard.string(forKey: paperKey) ?? "") ?? .dark
     }
 
     struct Palette {
@@ -98,7 +98,7 @@ enum Kaleido {
 
 /// A facet's accent refracted into a ring of related stops.
 func irisColors(_ accent: Color) -> [Color] {
-    [accent, accent.opacity(0.40), Kaleido.gold.opacity(0.6), accent.opacity(0.40), accent]
+    [accent, accent.opacity(0.40), PrismetDesign.gold.opacity(0.6), accent.opacity(0.40), accent]
 }
 
 // MARK: - Backdrop
@@ -111,8 +111,8 @@ struct FacetBackdrop: View {
 
     var body: some View {
         ZStack {
-            Kaleido.ground
-            if !Kaleido.isDark {
+            PrismetDesign.ground
+            if !PrismetDesign.isDark {
                 // Real parchment grain (multiplied so it textures without washing out).
                 Image("oracle_parchment")
                     .resizable()
@@ -124,7 +124,7 @@ struct FacetBackdrop: View {
                            center: .topLeading, startRadius: 6, endRadius: 560)
             if multiHue {
                 Circle()
-                    .fill(AngularGradient(gradient: Gradient(colors: Kaleido.wheel), center: .center))
+                    .fill(AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center))
                     .frame(width: 680, height: 680)
                     .blur(radius: 170)
                     .opacity(0.18)
@@ -132,7 +132,7 @@ struct FacetBackdrop: View {
             }
             // Aged edge vignette for a scroll feel — light papers only; the warm
             // brown wash muddies the cool dark palette.
-            if !Kaleido.isDark {
+            if !PrismetDesign.isDark {
                 RadialGradient(colors: [.clear, Color(red: 0.34, green: 0.24, blue: 0.12).opacity(0.18)],
                                center: .center, startRadius: 240, endRadius: 760)
             }
@@ -147,11 +147,11 @@ extension View {
     }
 
     /// A raised vellum card used to frame a playfield.
-    func kaleidoCard(cornerRadius: CGFloat = 16) -> some View {
+    func prismetCard(cornerRadius: CGFloat = 16) -> some View {
         padding(12)
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(Kaleido.panel)
+                    .fill(PrismetDesign.panel)
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                             .fill(LinearGradient(colors: [.white.opacity(0.30), .clear],
@@ -159,7 +159,7 @@ extension View {
                     )
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                            .strokeBorder(Kaleido.outline, lineWidth: 1)
+                            .strokeBorder(PrismetDesign.outline, lineWidth: 1)
                     )
             )
             .shadow(color: Color(red: 0.30, green: 0.20, blue: 0.10).opacity(0.28), radius: 16, y: 10)
@@ -192,12 +192,12 @@ struct GameHeader<Trailing: View>: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(Kaleido.title(30))
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.title(30))
+                    .foregroundStyle(PrismetDesign.ink)
                 if let subtitle {
                     Text(subtitle)
                         .font(.subheadline)
-                        .foregroundStyle(Kaleido.ink2)
+                        .foregroundStyle(PrismetDesign.ink2)
                 }
             }
 
@@ -218,16 +218,16 @@ extension GameHeader where Trailing == EmptyView {
 struct StatBadge: View {
     let label: String
     let value: String
-    var accent: Color = Kaleido.ink
+    var accent: Color = PrismetDesign.ink
 
     var body: some View {
         VStack(alignment: .trailing, spacing: 2) {
             Text(label.uppercased())
                 .font(.caption2.weight(.bold))
                 .tracking(0.7)
-                .foregroundStyle(Kaleido.ink3)
+                .foregroundStyle(PrismetDesign.ink3)
             Text(value)
-                .font(Kaleido.rounded(24))
+                .font(PrismetDesign.rounded(24))
                 .monospacedDigit()
                 .foregroundStyle(accent)
         }
@@ -261,10 +261,10 @@ struct GlassButtonStyle: ButtonStyle {
             .padding(.horizontal, 16)
             .padding(.vertical, 9)
             .background(
-                Capsule().fill(Kaleido.panelHi)
-                    .overlay(Capsule().strokeBorder(Kaleido.outline, lineWidth: 1))
+                Capsule().fill(PrismetDesign.panelHi)
+                    .overlay(Capsule().strokeBorder(PrismetDesign.outline, lineWidth: 1))
             )
-            .foregroundStyle(Kaleido.ink)
+            .foregroundStyle(PrismetDesign.ink)
             .opacity(configuration.isPressed ? 0.8 : 1)
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
             .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
@@ -276,6 +276,6 @@ struct GlassButtonStyle: ButtonStyle {
 extension FacetRegistry {
     /// The accent colour registered for a facet id (used by each facet to self-theme).
     static func accent(for id: String) -> Color {
-        descriptor(for: id)?.accent ?? Kaleido.gold
+        descriptor(for: id)?.accent ?? PrismetDesign.gold
     }
 }

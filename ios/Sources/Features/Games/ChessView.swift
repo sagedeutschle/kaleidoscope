@@ -426,7 +426,7 @@ struct ChessView: View {
                     .foregroundStyle(study.brass)
             }
             Text(tierName(forELO: Int(aiELO)))
-                .font(Kaleido.title(20))
+                .font(PrismetDesign.title(20))
                 .foregroundStyle(study.ivory)
             Slider(value: $aiELO, in: 600...2400, step: 100) {
                 Text("AI strength")
@@ -558,7 +558,7 @@ struct ChessView: View {
             if case .checkmate(let winner) = status {
                 ChessPieceGlyph(piece: Piece(color: winner, type: .king), size: 54, theme: theme)
                 Text("Checkmate")
-                    .font(Kaleido.title(25))
+                    .font(PrismetDesign.title(25))
                     .foregroundStyle(study.ivory)
             } else {
                 HStack(spacing: -6) {
@@ -566,7 +566,7 @@ struct ChessView: View {
                     ChessPieceGlyph(piece: Piece(color: .black, type: .king), size: 40, theme: theme)
                 }
                 Text(status == .stalemate ? "Stalemate" : "Draw")
-                    .font(Kaleido.title(25))
+                    .font(PrismetDesign.title(25))
                     .foregroundStyle(study.ivory)
             }
             Text(endSubtitle)

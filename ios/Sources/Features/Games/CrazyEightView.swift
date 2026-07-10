@@ -129,11 +129,11 @@ private struct C8ChipStyle: ButtonStyle {
             .padding(.vertical, 8)
             .background(
                 Capsule()
-                    .fill(prominent ? AnyShapeStyle(tint.gradient) : AnyShapeStyle(Kaleido.panelHi))
+                    .fill(prominent ? AnyShapeStyle(tint.gradient) : AnyShapeStyle(PrismetDesign.panelHi))
                     .overlay(Capsule().strokeBorder(
-                        prominent ? Color.white.opacity(0.28) : Kaleido.outline, lineWidth: 1))
+                        prominent ? Color.white.opacity(0.28) : PrismetDesign.outline, lineWidth: 1))
             )
-            .foregroundStyle(prominent ? Color.white : Kaleido.ink)
+            .foregroundStyle(prominent ? Color.white : PrismetDesign.ink)
             .opacity(configuration.isPressed ? 0.84 : 1)
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
     }
@@ -475,7 +475,7 @@ struct CrazyEightView: View {
                     .accessibilityHidden(true)
                 VStack(spacing: 6) {
                     Text("Wild eight!")
-                        .font(Kaleido.title(21))
+                        .font(PrismetDesign.title(21))
                         .foregroundStyle(C8Theme.blackInk)
                     Text("Choose the next suit")
                         .font(.system(size: 14, weight: .semibold, design: .rounded))
@@ -566,15 +566,15 @@ struct CrazyEightView: View {
     private var opponentSheet: some View {
         VStack(spacing: 8) {
             Text("Opponent")
-                .font(Kaleido.title(22))
-                .foregroundStyle(Kaleido.ink)
+                .font(PrismetDesign.title(22))
+                .foregroundStyle(PrismetDesign.ink)
             Text(tierName(forELO: Int(aiELO)))
                 .font(.system(size: 36, weight: .black, design: .rounded))
                 .foregroundStyle(Self.accent)
             Text("ELO \(Int(aiELO))")
                 .font(.subheadline.weight(.semibold))
                 .monospacedDigit()
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
             Slider(value: $aiELO, in: 600...2400, step: 100) {
                 Text("AI strength")
             }
@@ -589,7 +589,7 @@ struct CrazyEightView: View {
             }
             .font(.caption2)
             .monospacedDigit()
-            .foregroundStyle(Kaleido.ink3)
+            .foregroundStyle(PrismetDesign.ink3)
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)

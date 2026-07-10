@@ -29,7 +29,7 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var selection: String? = "chess"
     @State private var showAccount = false
-    @AppStorage("kaleido.paper") private var paperRaw = KaleidoPaper.contrast.rawValue
+    @AppStorage("kaleido.paper") private var paperRaw = PrismetPaper.contrast.rawValue
     @State private var style: BoardStyle = .iso
     // Board theme is a user preference and persists across launches (defaults to
     // the chess.com green). Stored as the theme id; `theme` resolves it back.
@@ -50,12 +50,12 @@ struct ContentView: View {
         .navigationSplitViewStyle(.balanced)
         .frame(minWidth: 960, minHeight: 700)
         .id(paperRaw)
-        .preferredColorScheme(Kaleido.isDark ? .dark : .light)
-        .tint(Kaleido.gold)
+        .preferredColorScheme(PrismetDesign.isDark ? .dark : .light)
+        .tint(PrismetDesign.gold)
         .toolbar { toolbarContent }
-        .toolbarBackground(Kaleido.ground, for: .windowToolbar)
+        .toolbarBackground(PrismetDesign.ground, for: .windowToolbar)
         .toolbarBackground(.visible, for: .windowToolbar)
-        .toolbarColorScheme(Kaleido.isDark ? .dark : .light, for: .windowToolbar)
+        .toolbarColorScheme(PrismetDesign.isDark ? .dark : .light, for: .windowToolbar)
         .task {
             bootstrapPersistence()
             gameCenter.startAuthentication()
@@ -108,7 +108,7 @@ struct ContentView: View {
                         Text(category.rawValue.uppercased())
                             .font(.caption2.weight(.bold))
                             .tracking(1.6)
-                            .foregroundStyle(Kaleido.gold)
+                            .foregroundStyle(PrismetDesign.gold)
                     }
                 }
             }
@@ -116,14 +116,14 @@ struct ContentView: View {
         .listStyle(.sidebar)
         .scrollContentBackground(.hidden)
         .background(sidebarParchment)
-        .tint(Kaleido.gold)
+        .tint(PrismetDesign.gold)
         .navigationSplitViewColumnWidth(min: 212, ideal: 244, max: 300)
         .safeAreaInset(edge: .top, spacing: 0) { sidebarBrand }
     }
 
     private var sidebarParchment: some View {
         ZStack {
-            Kaleido.ground
+            PrismetDesign.ground
             Image("oracle_parchment")
                 .resizable()
                 .scaledToFill()
@@ -132,7 +132,7 @@ struct ContentView: View {
             // a faint gilt seam down the binding edge of the scroll
             HStack {
                 Spacer()
-                LinearGradient(colors: [.clear, Kaleido.gold.opacity(0.18)],
+                LinearGradient(colors: [.clear, PrismetDesign.gold.opacity(0.18)],
                                startPoint: .leading, endPoint: .trailing)
                     .frame(width: 14)
             }
@@ -144,28 +144,28 @@ struct ContentView: View {
         HStack(spacing: 11) {
             ZStack {
                 Circle().strokeBorder(
-                    AngularGradient(gradient: Gradient(colors: Kaleido.wheel), center: .center),
+                    AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center),
                     lineWidth: 3)
                 Image(systemName: "circle.hexagongrid.fill")
                     .font(.system(size: 15))
-                    .foregroundStyle(AngularGradient(gradient: Gradient(colors: Kaleido.wheel), center: .center))
+                    .foregroundStyle(AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center))
             }
             .frame(width: 34, height: 34)
             VStack(alignment: .leading, spacing: 0) {
-                Text("Kaleidoscope")
-                    .font(Kaleido.title(20))
-                    .foregroundStyle(Kaleido.ink)
+                Text("Prismet")
+                    .font(PrismetDesign.title(20))
+                    .foregroundStyle(PrismetDesign.ink)
                 Text("turn the lens.")
                     .font(.caption.italic())
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
             }
             Spacer()
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
-        .background(Kaleido.ground)
+        .background(PrismetDesign.ground)
         .overlay(alignment: .bottom) {
-            LinearGradient(colors: [.clear, Kaleido.gold.opacity(0.7), .clear],
+            LinearGradient(colors: [.clear, PrismetDesign.gold.opacity(0.7), .clear],
                            startPoint: .leading, endPoint: .trailing)
                 .frame(height: 1.5)
         }
@@ -176,16 +176,16 @@ struct ContentView: View {
         return HStack(spacing: 11) {
             Image(systemName: facet.systemImage)
                 .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(ready ? facet.accent : Kaleido.ink3)
+                .foregroundStyle(ready ? facet.accent : PrismetDesign.ink3)
                 .frame(width: 22)
             Text(facet.title)
                 .font(.body)
-                .foregroundStyle(ready ? Kaleido.ink : Kaleido.ink3)
+                .foregroundStyle(ready ? PrismetDesign.ink : PrismetDesign.ink3)
             Spacer()
             if !ready {
                 Text("soon")
                     .font(.caption2.weight(.semibold))
-                    .foregroundStyle(Kaleido.ink3)
+                    .foregroundStyle(PrismetDesign.ink3)
             }
         }
         .padding(.vertical, 2)
@@ -223,45 +223,45 @@ struct ContentView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Kaleido.ground)
+        .background(PrismetDesign.ground)
     }
 
     private var welcomeDetail: some View {
         VStack(spacing: 16) {
             ZStack {
                 Circle().strokeBorder(
-                    AngularGradient(gradient: Gradient(colors: Kaleido.wheel), center: .center),
+                    AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center),
                     lineWidth: 5)
                 Image(systemName: "circle.hexagongrid.fill")
                     .font(.system(size: 40))
-                    .foregroundStyle(AngularGradient(gradient: Gradient(colors: Kaleido.wheel), center: .center))
+                    .foregroundStyle(AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center))
             }
             .frame(width: 86, height: 86)
-            .shadow(color: Kaleido.gold.opacity(0.4), radius: 12)
+            .shadow(color: PrismetDesign.gold.opacity(0.4), radius: 12)
 
-            Text("Kaleidoscope")
-                .font(Kaleido.title(34))
-                .foregroundStyle(Kaleido.ink)
+            Text("Prismet")
+                .font(PrismetDesign.title(34))
+                .foregroundStyle(PrismetDesign.ink)
             Text("Turn the lens — choose a facet from the scroll.")
                 .font(.system(.subheadline, design: .serif).italic())
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
         }
         .padding(48)
         .background(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Kaleido.panel.opacity(0.55))
+                .fill(PrismetDesign.panel.opacity(0.55))
                 .overlay(
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .strokeBorder(Kaleido.gold.opacity(0.55), lineWidth: 1.5)
+                        .strokeBorder(PrismetDesign.gold.opacity(0.55), lineWidth: 1.5)
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 15, style: .continuous)
-                        .strokeBorder(Kaleido.gold.opacity(0.30), lineWidth: 1)
+                        .strokeBorder(PrismetDesign.gold.opacity(0.30), lineWidth: 1)
                         .padding(6)
                 )
         )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(FacetBackdrop(accent: Kaleido.gold, multiHue: true))
+        .background(FacetBackdrop(accent: PrismetDesign.gold, multiHue: true))
     }
 
     private var chessDetail: some View {
@@ -324,7 +324,7 @@ struct ContentView: View {
         }
         .padding(.horizontal, 18)
         .padding(.vertical, 11)
-        .background(Kaleido.ground)
+        .background(PrismetDesign.ground)
     }
 
     // MARK: - Toolbar (chess only)
@@ -344,18 +344,18 @@ struct ContentView: View {
                     .foregroundStyle(facet.accent)
                 Text(facet.title)
                     .font(.system(.headline, design: .serif))
-                    .foregroundStyle(Kaleido.ink)
+                    .foregroundStyle(PrismetDesign.ink)
             } else {
-                Text("Kaleidoscope")
+                Text("Prismet")
                     .font(.system(.headline, design: .serif))
-                    .foregroundStyle(Kaleido.ink)
+                    .foregroundStyle(PrismetDesign.ink)
             }
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 4)
         .background(
-            Capsule().fill(Kaleido.panel.opacity(0.7))
-                .overlay(Capsule().strokeBorder(Kaleido.gold.opacity(0.45), lineWidth: 1))
+            Capsule().fill(PrismetDesign.panel.opacity(0.7))
+                .overlay(Capsule().strokeBorder(PrismetDesign.gold.opacity(0.45), lineWidth: 1))
         )
     }
 
@@ -368,7 +368,7 @@ struct ContentView: View {
         ToolbarItem(placement: .automatic) {
             Menu {
                 Picker("Reading", selection: $paperRaw) {
-                    ForEach(KaleidoPaper.allCases) { Text($0.rawValue).tag($0.rawValue) }
+                    ForEach(PrismetPaper.allCases) { Text($0.rawValue).tag($0.rawValue) }
                 }
             } label: {
                 Label("Reading", systemImage: "circle.lefthalf.filled")
@@ -386,7 +386,7 @@ struct ContentView: View {
             } label: {
                 Label(accountLabel, systemImage: accountIcon)
             }
-            .help("Kaleidoscope account shared with the mobile app")
+            .help("Prismet account shared with the mobile app")
         }
 
         if selection == "chess" {

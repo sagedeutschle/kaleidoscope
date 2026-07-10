@@ -49,8 +49,8 @@ enum GameCenterLeaderboardCatalog {
     }
 }
 
-actor KaleidoscopeLeaderboardService: LeaderboardService {
-    static let shared = KaleidoscopeLeaderboardService(localService: .shared,
+actor PrismetLeaderboardService: LeaderboardService {
+    static let shared = PrismetLeaderboardService(localService: .shared,
                                                        gameCenterSubmitter: GameKitScoreSubmitter())
 
     private let localService: LocalLeaderboardService

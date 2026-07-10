@@ -73,7 +73,7 @@ struct SlidingPuzzleView: View {
         }
         .aspectRatio(1, contentMode: .fit)
         .padding(16)
-        .kaleidoCard()
+        .prismetCard()
     }
 
     @ViewBuilder
@@ -81,23 +81,23 @@ struct SlidingPuzzleView: View {
         let value = game.tiles[index]
         if value == 0 {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Kaleido.ground)
+                .fill(PrismetDesign.ground)
                 .overlay(
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .strokeBorder(Kaleido.hairline, lineWidth: 1)
+                        .strokeBorder(PrismetDesign.hairline, lineWidth: 1)
                 )
                 .frame(width: size, height: size)
         } else {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Kaleido.panelHi)
+                .fill(PrismetDesign.panelHi)
                 .overlay(
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .strokeBorder(Self.accent.opacity(0.55), lineWidth: 1.5)
                 )
                 .overlay(
                     Text("\(value)")
-                        .font(Kaleido.rounded(min(size * 0.42, 30)))
-                        .foregroundStyle(Kaleido.ink)
+                        .font(PrismetDesign.rounded(min(size * 0.42, 30)))
+                        .foregroundStyle(PrismetDesign.ink)
                 )
                 .frame(width: size, height: size)
                 .contentShape(Rectangle())

@@ -143,7 +143,7 @@ struct MogulBoardView: View {
                     .font(.system(size: 24, weight: .heavy, design: .rounded))
                     .foregroundStyle(.white)
                 Text("Audited by the Council of Bots · satire")
-                    .font(Kaleido.rounded(12, .semibold))
+                    .font(PrismetDesign.rounded(12, .semibold))
                     .foregroundStyle(Hue.sublabel)
             }
             Spacer()
@@ -152,7 +152,7 @@ struct MogulBoardView: View {
                     Text("\(ledger.moguls.count) moguls").foregroundStyle(Hue.label)
                     Text("as of \(ledger.asOf)").foregroundStyle(Hue.sublabel)
                 }
-                .font(Kaleido.rounded(11, .semibold))
+                .font(PrismetDesign.rounded(11, .semibold))
             }
             refreshControl
         }
@@ -192,7 +192,7 @@ struct MogulBoardView: View {
 
         return VStack(alignment: .leading, spacing: 12) {
             Text("COMBINED AUDITED FORTUNE")
-                .font(Kaleido.rounded(13, .heavy)).tracking(3)
+                .font(PrismetDesign.rounded(13, .heavy)).tracking(3)
                 .foregroundStyle(Hue.gold.opacity(0.95))
             Text(currency(live))
                 .font(.system(size: 38, weight: .heavy, design: .rounded))
@@ -203,7 +203,7 @@ struct MogulBoardView: View {
                 .lineLimit(1)
             HStack(spacing: 14) {
                 HStack(spacing: 5) {
-                    Text("▲").font(Kaleido.rounded(10, .heavy)).accessibilityHidden(true)
+                    Text("▲").font(PrismetDesign.rounded(10, .heavy)).accessibilityHidden(true)
                     Text("+\(currency(Self.perSecondDrift(base)))/sec").monospacedDigit()
                 }
                 .foregroundStyle(Hue.money)
@@ -214,7 +214,7 @@ struct MogulBoardView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
-            .font(Kaleido.rounded(12, .bold))
+            .font(PrismetDesign.rounded(12, .bold))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(20)
@@ -239,7 +239,7 @@ struct MogulBoardView: View {
                     filter = candidate
                 } label: {
                     Text(candidate.rawValue)
-                        .font(Kaleido.rounded(11, .heavy)).tracking(1.4)
+                        .font(PrismetDesign.rounded(11, .heavy)).tracking(1.4)
                         .padding(.horizontal, 12).padding(.vertical, 7)
                         .background(
                             Capsule().fill(filter == candidate
@@ -275,7 +275,7 @@ struct MogulBoardView: View {
         let flickerDip = !reduceMotion && Int(now.timeIntervalSinceReferenceDate * 4) % 3 == 0
         return VStack(alignment: .leading, spacing: 12) {
             Text("THE COUNCIL IS CONVENING")
-                .font(Kaleido.rounded(13, .heavy)).tracking(3)
+                .font(PrismetDesign.rounded(13, .heavy)).tracking(3)
                 .foregroundStyle(Hue.gold.opacity(0.45))
             Text("$--,---,---,---,---")
                 .font(.system(size: 38, weight: .heavy, design: .rounded))
@@ -285,7 +285,7 @@ struct MogulBoardView: View {
                 .minimumScaleFactor(0.35)
                 .lineLimit(1)
             Text("CLAUDE · CODEX · DEEPSEEK — REVIEWING THE LEDGERS")
-                .font(Kaleido.rounded(10.5, .bold)).tracking(1.5)
+                .font(PrismetDesign.rounded(10.5, .bold)).tracking(1.5)
                 .foregroundStyle(Hue.sublabel)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
@@ -304,7 +304,7 @@ struct MogulBoardView: View {
 
     private func disclaimer(_ ledger: MogulLedger) -> some View {
         Text("Council verdicts are satire — comedy bits written by AI bots (Claude, Codex, DeepSeek), not factual claims or accusations. Net worth and compensation are public estimates (Forbes, Bloomberg, SEC proxy filings); ticking figures are estimated drift, not live market data.")
-            .font(Kaleido.rounded(10.5, .regular))
+            .font(PrismetDesign.rounded(10.5, .regular))
             .foregroundStyle(Hue.sublabel)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.top, 2)
@@ -340,12 +340,12 @@ struct MogulRow: View {
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(mogul.name)
-                    .font(Kaleido.rounded(15, .bold))
+                    .font(PrismetDesign.rounded(15, .bold))
                     .foregroundStyle(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
                 Text(mogul.title)
-                    .font(Kaleido.rounded(11, .semibold))
+                    .font(PrismetDesign.rounded(11, .semibold))
                     .foregroundStyle(Hue.sublabel)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
@@ -362,7 +362,7 @@ struct MogulRow: View {
                     // median worker (Dodd-Frank pay-ratio disclosure).
                     if let ratio = mogul.payRatio {
                         Text("×\(Int(ratio.rounded()).formatted()) their median worker")
-                            .font(Kaleido.rounded(10, .heavy))
+                            .font(PrismetDesign.rounded(10, .heavy))
                             .foregroundStyle(Hue.aight)
                             .padding(.horizontal, 6).padding(.vertical, 2)
                             .background(Capsule().fill(Hue.aight.opacity(0.14)))
@@ -370,7 +370,7 @@ struct MogulRow: View {
                             .minimumScaleFactor(0.7)
                     }
                 }
-                .font(Kaleido.rounded(13, .heavy))
+                .font(PrismetDesign.rounded(13, .heavy))
                 .monospacedDigit()
             }
 
@@ -457,7 +457,7 @@ struct MogulDetailSheet: View {
             // Done bar up top (see DecreeDetailView).
             HStack {
                 Text(mogul.category.label.uppercased())
-                    .font(Kaleido.rounded(10, .heavy)).tracking(1.6)
+                    .font(PrismetDesign.rounded(10, .heavy)).tracking(1.6)
                     .foregroundStyle(Hue.gold.opacity(0.8))
                 Spacer()
                 Button("Done") { dismiss() }
@@ -475,7 +475,7 @@ struct MogulDetailSheet: View {
                                 .font(.system(size: 26, weight: .heavy, design: .rounded))
                                 .foregroundStyle(.white)
                             Text(mogul.title)
-                                .font(Kaleido.rounded(13, .semibold))
+                                .font(PrismetDesign.rounded(13, .semibold))
                                 .foregroundStyle(Hue.label)
                         }
                         Spacer()
@@ -491,10 +491,10 @@ struct MogulDetailSheet: View {
 
                     VStack(alignment: .leading, spacing: 6) {
                         Text("KNOWN FOR")
-                            .font(Kaleido.rounded(11, .heavy)).tracking(2)
+                            .font(PrismetDesign.rounded(11, .heavy)).tracking(2)
                             .foregroundStyle(Hue.sublabel)
                         Text(mogul.knownFor)
-                            .font(Kaleido.rounded(14, .regular))
+                            .font(PrismetDesign.rounded(14, .regular))
                             .foregroundStyle(.white.opacity(0.92))
                             .fixedSize(horizontal: false, vertical: true)
                     }
@@ -502,7 +502,7 @@ struct MogulDetailSheet: View {
                     councilSection
 
                     Text("Satire: the council's verdicts and quips are comedy written by AI bots, not factual claims. Figures: \(mogul.source).")
-                        .font(Kaleido.rounded(10.5, .regular))
+                        .font(PrismetDesign.rounded(10.5, .regular))
                         .foregroundStyle(Hue.sublabel)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -527,7 +527,7 @@ struct MogulDetailSheet: View {
             let live = reduceMotion ? worth : worth + drift * elapsed
             VStack(alignment: .leading, spacing: 10) {
                 Text("ESTIMATED NET WORTH")
-                    .font(Kaleido.rounded(12, .heavy)).tracking(2.6)
+                    .font(PrismetDesign.rounded(12, .heavy)).tracking(2.6)
                     .foregroundStyle(Hue.money.opacity(0.9))
                 Text(live.formatted(.currency(code: "USD").precision(.fractionLength(0))))
                     .font(.system(size: 34, weight: .heavy, design: .rounded))
@@ -538,7 +538,7 @@ struct MogulDetailSheet: View {
                     .lineLimit(1)
                 HStack(spacing: 6) {
                     Text("▲ +\(drift.formatted(.currency(code: "USD").precision(.fractionLength(0))))/sec")
-                        .font(Kaleido.rounded(12, .bold))
+                        .font(PrismetDesign.rounded(12, .bold))
                         .monospacedDigit()
                         .foregroundStyle(Hue.money.opacity(0.85))
                     Text("EST")
@@ -567,11 +567,11 @@ struct MogulDetailSheet: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Text("ANNUAL COMP")
-                    .font(Kaleido.rounded(11, .heavy)).tracking(2)
+                    .font(PrismetDesign.rounded(11, .heavy)).tracking(2)
                     .foregroundStyle(Hue.comp.opacity(0.8))
                 Spacer()
                 Text(MogulRow.compactDollars(comp) + (mogul.compYear.map { " (\($0))" } ?? ""))
-                    .font(Kaleido.rounded(16, .heavy))
+                    .font(PrismetDesign.rounded(16, .heavy))
                     .monospacedDigit()
                     .foregroundStyle(Hue.comp)
             }
@@ -580,10 +580,10 @@ struct MogulDetailSheet: View {
                 HStack(alignment: .center, spacing: 12) {
                     VStack(alignment: .leading, spacing: 3) {
                         Text("THEIR MEDIAN WORKER")
-                            .font(Kaleido.rounded(9.5, .heavy)).tracking(1.4)
+                            .font(PrismetDesign.rounded(9.5, .heavy)).tracking(1.4)
                             .foregroundStyle(Hue.sublabel)
                         Text(MogulRow.compactDollars(worker) + "/yr")
-                            .font(Kaleido.rounded(15, .heavy))
+                            .font(PrismetDesign.rounded(15, .heavy))
                             .monospacedDigit()
                             .foregroundStyle(.white.opacity(0.85))
                     }
@@ -595,12 +595,12 @@ struct MogulDetailSheet: View {
                             .foregroundStyle(Hue.aight)
                             .shadow(color: Hue.aight.opacity(0.55), radius: 10)
                         Text("THE RATIO")
-                            .font(Kaleido.rounded(9.5, .heavy)).tracking(1.6)
+                            .font(PrismetDesign.rounded(9.5, .heavy)).tracking(1.6)
                             .foregroundStyle(Hue.aight.opacity(0.7))
                     }
                 }
                 Text("A median employee would need \(Int(ratio.rounded()).formatted()) years on the job to earn the boss's \(mogul.compYear.map(String.init) ?? "annual") package.")
-                    .font(Kaleido.rounded(12, .regular))
+                    .font(PrismetDesign.rounded(12, .regular))
                     .italic()
                     .foregroundStyle(Hue.sublabel)
                     .fixedSize(horizontal: false, vertical: true)
@@ -635,7 +635,7 @@ struct MogulDetailSheet: View {
 
             VStack(alignment: .leading, spacing: 10) {
                 Text("THE JUSTICES")
-                    .font(Kaleido.rounded(11, .heavy)).tracking(2)
+                    .font(PrismetDesign.rounded(11, .heavy)).tracking(2)
                     .foregroundStyle(Hue.gold.opacity(0.85))
                 ForEach(bench.justices, id: \.self) { justice in
                     justiceCard(justice)
@@ -647,7 +647,7 @@ struct MogulDetailSheet: View {
             }
 
             Text("How the bench votes: two Justices and two juries hold one seat each — a jury's seat goes to the majority of its three jurors (a full split hangs the jury). Three of four seats rule; on a tie, Justices who agree prevail; if the Justices split too, the vibe is officially mid.")
-                .font(Kaleido.rounded(10.5, .regular))
+                .font(PrismetDesign.rounded(10.5, .regular))
                 .foregroundStyle(Hue.sublabel)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -663,16 +663,16 @@ struct MogulDetailSheet: View {
                     .foregroundStyle(Hue.gold)
                     .accessibilityHidden(true)
                 Text("THE COUNCIL'S CONSENSUS")
-                    .font(Kaleido.rounded(11, .heavy)).tracking(2)
+                    .font(PrismetDesign.rounded(11, .heavy)).tracking(2)
                     .foregroundStyle(Hue.gold.opacity(0.9))
             }
             Text(consensus)
-                .font(Kaleido.rounded(14, .regular))
+                .font(PrismetDesign.rounded(14, .regular))
                 .foregroundStyle(.white.opacity(0.92))
                 .fixedSize(horizontal: false, vertical: true)
             if let summary = mogul.voteSummary {
                 Text(summary.uppercased())
-                    .font(Kaleido.rounded(10, .heavy)).tracking(1.2)
+                    .font(PrismetDesign.rounded(10, .heavy)).tracking(1.2)
                     .foregroundStyle(hue.opacity(0.85))
                     .lineLimit(2)
                     .minimumScaleFactor(0.7)
@@ -699,15 +699,15 @@ struct MogulDetailSheet: View {
                     .foregroundStyle(hue)
                     .accessibilityHidden(true)
                 Text("\(justice.councilor.uppercased()), J.")
-                    .font(Kaleido.rounded(13, .heavy)).tracking(1.4)
+                    .font(PrismetDesign.rounded(13, .heavy)).tracking(1.4)
                     .foregroundStyle(.white.opacity(0.92))
                 Spacer()
                 Text(justice.verdict.stamp)
-                    .font(Kaleido.rounded(12, .heavy))
+                    .font(PrismetDesign.rounded(12, .heavy))
                     .foregroundStyle(hue)
             }
             Text(justice.opinion)
-                .font(Kaleido.rounded(13.5, .regular))
+                .font(PrismetDesign.rounded(13.5, .regular))
                 .foregroundStyle(.white.opacity(0.9))
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -733,11 +733,11 @@ struct MogulDetailSheet: View {
                     .foregroundStyle(hue.opacity(0.9))
                     .accessibilityHidden(true)
                 Text(jury.name.uppercased())
-                    .font(Kaleido.rounded(11.5, .heavy)).tracking(1.6)
+                    .font(PrismetDesign.rounded(11.5, .heavy)).tracking(1.6)
                     .foregroundStyle(.white.opacity(0.85))
                 Spacer()
                 Text("RETURNS: \(jury.juryVerdict.stamp)")
-                    .font(Kaleido.rounded(10.5, .heavy))
+                    .font(PrismetDesign.rounded(10.5, .heavy))
                     .foregroundStyle(hue)
             }
             ForEach(jury.jurors, id: \.self) { juror in
@@ -759,15 +759,15 @@ struct MogulDetailSheet: View {
         return VStack(alignment: .leading, spacing: 3) {
             HStack(spacing: 6) {
                 Text(juror.persona)
-                    .font(Kaleido.rounded(12, .heavy))
+                    .font(PrismetDesign.rounded(12, .heavy))
                     .foregroundStyle(hue.opacity(0.95))
                 Spacer()
                 Text(juror.verdict.stamp)
-                    .font(Kaleido.rounded(10, .heavy))
+                    .font(PrismetDesign.rounded(10, .heavy))
                     .foregroundStyle(hue.opacity(0.85))
             }
             Text("“\(juror.quip)”")
-                .font(Kaleido.rounded(12.5, .regular))
+                .font(PrismetDesign.rounded(12.5, .regular))
                 .italic()
                 .foregroundStyle(.white.opacity(0.85))
                 .fixedSize(horizontal: false, vertical: true)
@@ -782,11 +782,11 @@ struct MogulDetailSheet: View {
     private var flatCouncilSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("THE COUNCIL'S AUDIT")
-                .font(Kaleido.rounded(11, .heavy)).tracking(2)
+                .font(PrismetDesign.rounded(11, .heavy)).tracking(2)
                 .foregroundStyle(Hue.gold.opacity(0.85))
             if mogul.council.isEmpty {
                 Text("The council abstained. Suspicious… or shy.")
-                    .font(Kaleido.rounded(13, .regular))
+                    .font(PrismetDesign.rounded(13, .regular))
                     .foregroundStyle(Hue.sublabel)
             } else {
                 ForEach(mogul.council, id: \.self) { opinion in
@@ -805,15 +805,15 @@ struct MogulDetailSheet: View {
                     .foregroundStyle(hue)
                     .accessibilityHidden(true)
                 Text(opinion.councilor.uppercased())
-                    .font(Kaleido.rounded(12, .heavy)).tracking(1.4)
+                    .font(PrismetDesign.rounded(12, .heavy)).tracking(1.4)
                     .foregroundStyle(.white.opacity(0.9))
                 Spacer()
                 Text(opinion.verdict.stamp)
-                    .font(Kaleido.rounded(11, .heavy))
+                    .font(PrismetDesign.rounded(11, .heavy))
                     .foregroundStyle(hue)
             }
             Text("“\(opinion.quip)”")
-                .font(Kaleido.rounded(13.5, .regular))
+                .font(PrismetDesign.rounded(13.5, .regular))
                 .italic()
                 .foregroundStyle(.white.opacity(0.88))
                 .fixedSize(horizontal: false, vertical: true)

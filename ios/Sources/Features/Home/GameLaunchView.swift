@@ -52,17 +52,17 @@ struct GameLaunchView: View {
                 Circle().fill(card.accent.opacity(option.isPlayable ? 0.18 : 0.10))
                 Image(systemName: option.mode.systemImage)
                     .font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(option.isPlayable ? card.accent : Kaleido.ink3)
+                    .foregroundStyle(option.isPlayable ? card.accent : PrismetDesign.ink3)
             }
             .frame(width: 48, height: 48)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(option.mode.title)
-                    .font(Kaleido.rounded(18, .bold))
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.rounded(18, .bold))
+                    .foregroundStyle(PrismetDesign.ink)
                 Text(option.mode.subtitle)
                     .font(.subheadline)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
                     .lineLimit(2)
             }
 
@@ -78,17 +78,17 @@ struct GameLaunchView: View {
                     .tracking(0.7)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(Capsule().fill(Kaleido.panelHi))
-                    .foregroundStyle(Kaleido.ink2)
+                    .background(Capsule().fill(PrismetDesign.panelHi))
+                    .foregroundStyle(PrismetDesign.ink2)
             }
         }
         .padding(14)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Kaleido.panel)
+                .fill(PrismetDesign.panel)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .strokeBorder(option.isPlayable ? card.accent.opacity(0.35) : Kaleido.outline, lineWidth: 1)
+                        .strokeBorder(option.isPlayable ? card.accent.opacity(0.35) : PrismetDesign.outline, lineWidth: 1)
                 )
         )
     }

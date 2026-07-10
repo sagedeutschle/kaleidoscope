@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// Verifies game-end classification (`MoveGenerator.status`) that the UI relies
 /// on for "Checkmate / Stalemate / Check" — perft validates move counts but not

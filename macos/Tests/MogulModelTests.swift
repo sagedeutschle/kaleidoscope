@@ -1,6 +1,6 @@
 // PRISM: RELEASE Agent-Design/Fable 2026-07-04 — Moguls board model tests — macOS mirror (ports verbatim).
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 final class MogulModelTests: XCTestCase {
     private func opinion(_ councilor: String, _ verdict: MogulVerdict) -> CouncilOpinion {

@@ -11,14 +11,14 @@ import SwiftUI
 // VISUAL LAYER ONLY. SpiderGame model calls, SpiderSnapshot shape, persistence
 // configure/save wiring, and tap semantics are unchanged from the Codex build.
 
-// Game-local theme tokens (per design direction: no additions to KaleidoDesign).
+// Game-local theme tokens (per design direction: no additions to PrismetDesign).
 private enum SpiderTheme {
     // Felt table
     static let feltHi   = Color(red: 0.157, green: 0.416, blue: 0.267)
     static let felt     = Color(red: 0.098, green: 0.325, blue: 0.208)
     static let feltLo   = Color(red: 0.047, green: 0.216, blue: 0.129)
     static let feltRail = Color(red: 0.075, green: 0.267, blue: 0.169)
-    static let goldLine = Kaleido.gold.opacity(0.55)
+    static let goldLine = PrismetDesign.gold.opacity(0.55)
     // Card stock
     static let ivory    = Color(red: 0.978, green: 0.966, blue: 0.925)
     static let ivoryLo  = Color(red: 0.936, green: 0.915, blue: 0.856)
@@ -245,7 +245,7 @@ struct SpiderView: View {
     private var sweepOverlay: some View {
         if sweepVisible {
             SpiderCardFaceView(card: Card(rank: .king, suit: .spades), width: 58, height: 82)
-                .shadow(color: Kaleido.gold.opacity(0.65), radius: 14)
+                .shadow(color: PrismetDesign.gold.opacity(0.65), radius: 14)
                 .scaleEffect(sweepFly ? 0.28 : 1.08)
                 .offset(y: sweepFly ? 260 : 0)
                 .opacity(sweepFly ? 0 : 1)
@@ -370,12 +370,12 @@ struct SpiderView: View {
                 .foregroundStyle(SpiderTheme.inkBlack)
             }
             RoundedRectangle(cornerRadius: 3, style: .continuous)
-                .strokeBorder(filled ? Kaleido.gold.opacity(0.55) : Color.black.opacity(0.3),
+                .strokeBorder(filled ? PrismetDesign.gold.opacity(0.55) : Color.black.opacity(0.3),
                               lineWidth: 1)
         }
         .frame(width: 16, height: 23)
         .scaleEffect(isNewest && trayPulse ? 1.3 : 1)
-        .shadow(color: isNewest && trayPulse ? Kaleido.gold.opacity(0.8) : .clear, radius: 6)
+        .shadow(color: isNewest && trayPulse ? PrismetDesign.gold.opacity(0.8) : .clear, radius: 6)
     }
 
     private var newDealChip: some View {
@@ -471,7 +471,7 @@ private struct SpiderCardFaceView: View {
                 compactFace
             }
             RoundedRectangle(cornerRadius: corner, style: .continuous)
-                .strokeBorder(selected ? Kaleido.gold : SpiderTheme.cardEdge,
+                .strokeBorder(selected ? PrismetDesign.gold : SpiderTheme.cardEdge,
                               lineWidth: selected ? 2 : 1)
         }
         .frame(width: width, height: height)
@@ -550,7 +550,7 @@ private struct SpiderCardFaceView: View {
     private var courtMedallion: some View {
         ZStack {
             Circle()
-                .strokeBorder(Kaleido.gold.opacity(0.75), lineWidth: 1.2)
+                .strokeBorder(PrismetDesign.gold.opacity(0.75), lineWidth: 1.2)
             Circle()
                 .strokeBorder(pipColor.opacity(0.25), lineWidth: 0.8)
                 .padding(3)
@@ -628,7 +628,7 @@ private struct SpiderCardBackView: View {
                 rosette
             }
             RoundedRectangle(cornerRadius: max(2, corner - 2), style: .continuous)
-                .strokeBorder(Kaleido.gold.opacity(0.35), lineWidth: 0.8)
+                .strokeBorder(PrismetDesign.gold.opacity(0.35), lineWidth: 0.8)
                 .padding(inset)
             RoundedRectangle(cornerRadius: corner, style: .continuous)
                 .strokeBorder(SpiderTheme.cardEdge, lineWidth: 1)
@@ -636,18 +636,18 @@ private struct SpiderCardBackView: View {
         .frame(width: width, height: height)
     }
 
-    // 12-fold rosette built from the Kaleido wheel — the one place the brand mark lives.
+    // 12-fold rosette built from the PrismetDesign wheel — the one place the brand mark lives.
     private var rosette: some View {
         ZStack {
             ForEach(0..<12, id: \.self) { i in
                 Ellipse()
-                    .fill(Kaleido.wheel[i % Kaleido.wheel.count].opacity(0.85))
+                    .fill(PrismetDesign.wheel[i % PrismetDesign.wheel.count].opacity(0.85))
                     .frame(width: rosetteSize * 0.18, height: rosetteSize * 0.52)
                     .offset(y: -rosetteSize * 0.26)
                     .rotationEffect(.degrees(Double(i) * 30))
             }
             Circle()
-                .fill(Kaleido.gold)
+                .fill(PrismetDesign.gold)
                 .frame(width: rosetteSize * 0.16, height: rosetteSize * 0.16)
         }
         .frame(width: rosetteSize, height: rosetteSize)
@@ -670,10 +670,10 @@ private struct SpiderWinBanner: View {
 
             VStack(spacing: 12) {
                 SpiderCardFaceView(card: Card(rank: .king, suit: .spades), width: 64, height: 90)
-                    .shadow(color: Kaleido.gold.opacity(0.6), radius: 12)
+                    .shadow(color: PrismetDesign.gold.opacity(0.6), radius: 12)
 
                 Text("Table Cleared")
-                    .font(Kaleido.title(30))
+                    .font(PrismetDesign.title(30))
                     .foregroundStyle(.white)
 
                 Text("All eight runs in \(moves) moves")
@@ -686,7 +686,7 @@ private struct SpiderWinBanner: View {
                         .font(.headline)
                         .padding(.horizontal, 26)
                         .padding(.vertical, 10)
-                        .background(Capsule().fill(Kaleido.gold.gradient))
+                        .background(Capsule().fill(PrismetDesign.gold.gradient))
                         .foregroundStyle(Color(red: 0.12, green: 0.10, blue: 0.04))
                 }
                 .buttonStyle(.plain)
@@ -703,7 +703,7 @@ private struct SpiderWinBanner: View {
                     )
                     .overlay(
                         RoundedRectangle(cornerRadius: 22, style: .continuous)
-                            .strokeBorder(Kaleido.gold.opacity(0.7), lineWidth: 1.5)
+                            .strokeBorder(PrismetDesign.gold.opacity(0.7), lineWidth: 1.5)
                     )
                     .shadow(color: Color.black.opacity(0.4), radius: 22, y: 10)
             )

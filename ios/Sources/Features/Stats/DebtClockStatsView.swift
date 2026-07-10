@@ -2,7 +2,7 @@
 import SwiftUI
 
 /// US Debt Clock — a dark, glowing, color-coded counter board mirroring
-/// usdebtclock.org (black field, category-colored LED figures) in the Kaleidoscope
+/// usdebtclock.org (black field, category-colored LED figures) in the Prismet
 /// app. DESIGN lane (Agent-Design): the dark theme, per-category color coordination,
 /// the grouped grid, and the smooth per-tick animation. The STATISTICS
 /// (`DebtClockStats.swift`: values, growth rate, accuracy, sources) are Agent-Ads/
@@ -109,7 +109,7 @@ struct DebtClockStatsView: View {
         var body: some View {
             Button(action: action) {
                 Text(title)
-                    .font(Kaleido.rounded(12.5, .heavy))
+                    .font(PrismetDesign.rounded(12.5, .heavy))
                     .tracking(2)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
@@ -155,7 +155,7 @@ struct DebtClockStatsView: View {
                     .font(.system(size: 24, weight: .heavy, design: .rounded))
                     .foregroundStyle(.white)
                 Text("Live figures · free public sources")
-                    .font(Kaleido.rounded(12, .semibold))
+                    .font(PrismetDesign.rounded(12, .semibold))
                     .foregroundStyle(Hue.sublabel)
             }
             Spacer()
@@ -164,7 +164,7 @@ struct DebtClockStatsView: View {
                     Text("\(s.metrics.count) metrics").foregroundStyle(Hue.label)
                     Text("\(sourceCount(s)) sources").foregroundStyle(Hue.sublabel)
                 }
-                .font(Kaleido.rounded(11, .semibold))
+                .font(PrismetDesign.rounded(11, .semibold))
             }
         }
     }
@@ -226,12 +226,12 @@ struct DebtClockStatsView: View {
             if let arrow { blinkArrow(arrow, hue: hue, dim: blinkDim) }
             VStack(spacing: 3) {
                 Text(headline)
-                    .font(Kaleido.rounded(16, .heavy)).tracking(2.2)
+                    .font(PrismetDesign.rounded(16, .heavy)).tracking(2.2)
                     .foregroundStyle(hue.opacity(dimmed ? 0.75 : 1))
                     .shadow(color: hue.opacity(dimmed ? 0.2 : 0.6), radius: 8)
                 if let rateLine {
                     Text(rateLine)
-                        .font(Kaleido.rounded(12, .bold)).tracking(1.2)
+                        .font(PrismetDesign.rounded(12, .bold)).tracking(1.2)
                         .monospacedDigit()
                         .foregroundStyle(hue.opacity(0.85))
                 }
@@ -303,7 +303,7 @@ struct DebtClockStatsView: View {
         let perCitizen = snapshot.metric(.debtPerCitizen).map { liveValue($0, snapshot: snapshot, now: now) }
         return VStack(alignment: .leading, spacing: 12) {
             Text("U.S. NATIONAL DEBT")
-                .font(Kaleido.rounded(13, .heavy)).tracking(3)
+                .font(PrismetDesign.rounded(13, .heavy)).tracking(3)
                 .foregroundStyle(Hue.debt.opacity(0.95))
             Text(currency(live, fraction: 0))
                 .font(.system(size: 42, weight: .heavy, design: .rounded))
@@ -317,7 +317,7 @@ struct DebtClockStatsView: View {
                 if let rate {
                     HStack(spacing: 5) {
                         Text(rate >= 0 ? "▲" : "▼")
-                            .font(Kaleido.rounded(10, .heavy))
+                            .font(PrismetDesign.rounded(10, .heavy))
                             .accessibilityHidden(true)
                         Text("\(signedCurrency(rate))/sec").monospacedDigit()
                     }
@@ -326,14 +326,14 @@ struct DebtClockStatsView: View {
                 if let perCitizen {
                     HStack(spacing: 5) {
                         Text("PER CITIZEN")
-                            .font(Kaleido.rounded(9.5, .heavy)).tracking(1.2)
+                            .font(PrismetDesign.rounded(9.5, .heavy)).tracking(1.2)
                             .foregroundStyle(Hue.ratio.opacity(0.7))
                         Text(currency(perCitizen, fraction: 0)).monospacedDigit()
                             .foregroundStyle(Hue.ratio)
                     }
                 }
             }
-            .font(Kaleido.rounded(12, .bold))
+            .font(PrismetDesign.rounded(12, .bold))
             .lineLimit(1)
             .minimumScaleFactor(0.7)
         }
@@ -362,7 +362,7 @@ struct DebtClockStatsView: View {
                 Circle().fill(section.hue).frame(width: 8, height: 8)
                     .shadow(color: section.hue.opacity(0.8), radius: 4)
                 Text(section.title.uppercased())
-                    .font(Kaleido.rounded(13, .heavy)).tracking(1.8)
+                    .font(PrismetDesign.rounded(13, .heavy)).tracking(1.8)
                     .foregroundStyle(section.hue)
             }
             if !wide.isEmpty {
@@ -402,7 +402,7 @@ struct DebtClockStatsView: View {
         let isLiveEstimated = metric.isEstimated || flowing
         return VStack(alignment: .leading, spacing: 7) {
             Text(metric.title)
-                .font(Kaleido.rounded(11.5, .semibold))
+                .font(PrismetDesign.rounded(11.5, .semibold))
                 .foregroundStyle(Hue.label)
                 .lineLimit(fullWidth ? 1 : 2, reservesSpace: !fullWidth)
                 .fixedSize(horizontal: false, vertical: true)
@@ -422,7 +422,7 @@ struct DebtClockStatsView: View {
                 if isLiveEstimated { chip("EST", hue) }
                 else if metric.isDerived { chip("DERIVED", hue) }
             }
-            .font(Kaleido.rounded(10.5, .regular))
+            .font(PrismetDesign.rounded(10.5, .regular))
             .foregroundStyle(Hue.sublabel)
         }
         .frame(maxWidth: .infinity, minHeight: fullWidth ? 0 : 92, alignment: .leading)
@@ -445,7 +445,7 @@ struct DebtClockStatsView: View {
 
     private var disclaimer: some View {
         Text("Figures from U.S. Treasury FiscalData, FRED, Census, and BLS public APIs. Ticking values are estimates between official source updates; fixed values show the latest official observation. Not investment advice.")
-            .font(Kaleido.rounded(10.5, .regular))
+            .font(PrismetDesign.rounded(10.5, .regular))
             .foregroundStyle(Hue.sublabel)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.top, 2)
@@ -459,7 +459,7 @@ struct DebtClockStatsView: View {
         let flickerDip = !reduceMotion && Int(now.timeIntervalSinceReferenceDate * 4) % 3 == 0
         return VStack(alignment: .leading, spacing: 12) {
             Text("U.S. NATIONAL DEBT")
-                .font(Kaleido.rounded(13, .heavy)).tracking(3)
+                .font(PrismetDesign.rounded(13, .heavy)).tracking(3)
                 .foregroundStyle(Hue.debt.opacity(0.45))
             Text("$--,---,---,---,---")
                 .font(.system(size: 42, weight: .heavy, design: .rounded))
@@ -469,7 +469,7 @@ struct DebtClockStatsView: View {
                 .minimumScaleFactor(0.35)
                 .lineLimit(1)
             Text("CONTACTING TREASURY · FRED · CENSUS · BLS")
-                .font(Kaleido.rounded(10.5, .bold)).tracking(1.5)
+                .font(PrismetDesign.rounded(10.5, .bold)).tracking(1.5)
                 .foregroundStyle(Hue.sublabel)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
@@ -492,14 +492,14 @@ struct DebtClockStatsView: View {
                 Circle().fill(Hue.deficit).frame(width: 8, height: 8)
                     .shadow(color: Hue.deficit.opacity(0.8), radius: 4)
                 Text("SIGNAL LOST — SOME SOURCES OFFLINE")
-                    .font(Kaleido.rounded(12.5, .heavy)).tracking(1.6)
+                    .font(PrismetDesign.rounded(12.5, .heavy)).tracking(1.6)
                     .foregroundStyle(Hue.deficit)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
             ForEach(errors, id: \.self) { error in
                 Text(error)
-                    .font(Kaleido.rounded(11.5, .regular))
+                    .font(PrismetDesign.rounded(11.5, .regular))
                     .foregroundStyle(Hue.label)
                     .fixedSize(horizontal: false, vertical: true)
             }

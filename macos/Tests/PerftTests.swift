@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// Perft (performance test): count the number of leaf nodes in the legal-move
 /// tree to a given depth. The reference node counts below are the canonical,

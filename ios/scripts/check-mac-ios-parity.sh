@@ -9,7 +9,7 @@ PHONE_ROOT="$(pwd)"
 # so PHONE_ROOT is <repo>/ios and the repo root is one level up.
 REPO_ROOT="$(cd "$PHONE_ROOT/.." && pwd -P)"
 MAC_ROOT="${MAC_ROOT:-$REPO_ROOT/macos}"
-SHARED_ROOT="${SHARED_ROOT:-$REPO_ROOT/shared/KaleidoscopeShared}"
+SHARED_ROOT="${SHARED_ROOT:-$REPO_ROOT/shared/PrismetShared}"
 PARITY_DOC="$PHONE_ROOT/docs/MAC-IOS-GAME-PARITY.md"
 STRICT=0
 SINCE_MINUTES="${SINCE_MINUTES:-1440}"
@@ -123,7 +123,7 @@ suggest_mac_targets() {
       printf '  - %s -> %s/Sources/Views/%s\n' "$file" "$MAC_ROOT" "$base"
       ;;
     Sources/Core/Design/*)
-      printf '  - %s -> %s/Sources/Model/KaleidoscopeDesign.swift\n' "$file" "$MAC_ROOT"
+      printf '  - %s -> %s/Sources/Model/PrismetDesign.swift\n' "$file" "$MAC_ROOT"
       ;;
     Sources/Features/Home/*)
       printf '  - %s -> %s/Sources/App/ContentView.swift, Sources/Views/HomeLensView.swift, Sources/Model/FacetRegistry.swift\n' "$file" "$MAC_ROOT"

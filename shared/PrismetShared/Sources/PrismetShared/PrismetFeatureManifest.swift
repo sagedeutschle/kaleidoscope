@@ -1,11 +1,11 @@
 import Foundation
 
-public enum KaleidoscopePlatform: String, CaseIterable, Codable, Hashable, Sendable {
+public enum PrismetPlatform: String, CaseIterable, Codable, Hashable, Sendable {
     case iOS
     case macOS
 }
 
-public enum KaleidoscopeFeatureCategory: String, CaseIterable, Codable, Hashable, Sendable {
+public enum PrismetFeatureCategory: String, CaseIterable, Codable, Hashable, Sendable {
     case daily = "Daily"
     case puzzles = "Puzzles"
     case board = "Board"
@@ -13,7 +13,7 @@ public enum KaleidoscopeFeatureCategory: String, CaseIterable, Codable, Hashable
     case oracle = "Oracle"
 }
 
-public enum KaleidoscopeLeaderboardMetric: String, Codable, Hashable, Sendable {
+public enum PrismetLeaderboardMetric: String, Codable, Hashable, Sendable {
     case highScore
     case fewestMoves
     case fastestTime
@@ -23,31 +23,31 @@ public enum KaleidoscopeLeaderboardMetric: String, Codable, Hashable, Sendable {
     }
 }
 
-public enum KaleidoscopeLeaderboardPeriod: String, Codable, Hashable, Sendable {
+public enum PrismetLeaderboardPeriod: String, Codable, Hashable, Sendable {
     case daily
     case lifetime
 }
 
-public struct KaleidoscopeFeature: Codable, Hashable, Identifiable, Sendable {
+public struct PrismetFeature: Codable, Hashable, Identifiable, Sendable {
     public var id: String { canonicalID.rawValue }
 
-    public let canonicalID: KaleidoscopeFeatureID
+    public let canonicalID: PrismetFeatureID
     public let title: String
-    public let category: KaleidoscopeFeatureCategory
+    public let category: PrismetFeatureCategory
     public let iOSID: String?
     public let macOSID: String?
-    public let leaderboardMetric: KaleidoscopeLeaderboardMetric?
-    public let leaderboardPeriod: KaleidoscopeLeaderboardPeriod
+    public let leaderboardMetric: PrismetLeaderboardMetric?
+    public let leaderboardPeriod: PrismetLeaderboardPeriod
     public let visibleInLaunchReview: Bool
 
     public init(
-        canonicalID: KaleidoscopeFeatureID,
+        canonicalID: PrismetFeatureID,
         title: String,
-        category: KaleidoscopeFeatureCategory,
+        category: PrismetFeatureCategory,
         iOSID: String?,
         macOSID: String?,
-        leaderboardMetric: KaleidoscopeLeaderboardMetric? = nil,
-        leaderboardPeriod: KaleidoscopeLeaderboardPeriod = .lifetime,
+        leaderboardMetric: PrismetLeaderboardMetric? = nil,
+        leaderboardPeriod: PrismetLeaderboardPeriod = .lifetime,
         visibleInLaunchReview: Bool = true
     ) {
         self.canonicalID = canonicalID
@@ -60,7 +60,7 @@ public struct KaleidoscopeFeature: Codable, Hashable, Identifiable, Sendable {
         self.visibleInLaunchReview = visibleInLaunchReview
     }
 
-    public func platformID(for platform: KaleidoscopePlatform) -> String? {
+    public func platformID(for platform: PrismetPlatform) -> String? {
         switch platform {
         case .iOS: return iOSID
         case .macOS: return macOSID
@@ -68,7 +68,7 @@ public struct KaleidoscopeFeature: Codable, Hashable, Identifiable, Sendable {
     }
 }
 
-public enum KaleidoscopeFeatureID: String, CaseIterable, Codable, Hashable, Sendable {
+public enum PrismetFeatureID: String, CaseIterable, Codable, Hashable, Sendable {
     case game2048 = "2048"
     case snake
     case minesweeper
@@ -88,55 +88,55 @@ public enum KaleidoscopeFeatureID: String, CaseIterable, Codable, Hashable, Send
     case debtClock = "debt-clock"
 }
 
-public enum KaleidoscopeFeatureManifest {
-    public static let all: [KaleidoscopeFeature] = [
-        KaleidoscopeFeature(canonicalID: .game2048,
+public enum PrismetFeatureManifest {
+    public static let all: [PrismetFeature] = [
+        PrismetFeature(canonicalID: .game2048,
                             title: "2048",
                             category: .puzzles,
                             iOSID: "2048",
                             macOSID: "2048",
                             leaderboardMetric: .highScore),
-        KaleidoscopeFeature(canonicalID: .snake,
+        PrismetFeature(canonicalID: .snake,
                             title: "Snake",
                             category: .puzzles,
                             iOSID: "snake",
                             macOSID: "snake",
                             leaderboardMetric: .highScore),
-        KaleidoscopeFeature(canonicalID: .minesweeper,
+        PrismetFeature(canonicalID: .minesweeper,
                             title: "Minesweeper",
                             category: .puzzles,
                             iOSID: "minesweeper",
                             macOSID: "minesweeper",
                             leaderboardMetric: .fastestTime),
-        KaleidoscopeFeature(canonicalID: .sudoku,
+        PrismetFeature(canonicalID: .sudoku,
                             title: "Sudoku",
                             category: .puzzles,
                             iOSID: "sudoku",
                             macOSID: "sudoku"),
-        KaleidoscopeFeature(canonicalID: .rubiksCube,
+        PrismetFeature(canonicalID: .rubiksCube,
                             title: "Rubik's Cube",
                             category: .puzzles,
                             iOSID: "rubiks",
                             macOSID: "rubiks-cube",
                             leaderboardMetric: .fewestMoves),
-        KaleidoscopeFeature(canonicalID: .lightsOut,
+        PrismetFeature(canonicalID: .lightsOut,
                             title: "Lights Out",
                             category: .puzzles,
                             iOSID: "lightsout",
                             macOSID: "lights-out",
                             leaderboardMetric: .fewestMoves),
-        KaleidoscopeFeature(canonicalID: .slidingPuzzle,
+        PrismetFeature(canonicalID: .slidingPuzzle,
                             title: "Sliding Puzzle",
                             category: .puzzles,
                             iOSID: "sliding",
                             macOSID: "sliding-15",
                             leaderboardMetric: .fewestMoves),
-        KaleidoscopeFeature(canonicalID: .nonogram,
+        PrismetFeature(canonicalID: .nonogram,
                             title: "Nonogram",
                             category: .puzzles,
                             iOSID: "nonogram",
                             macOSID: "nonogram"),
-        KaleidoscopeFeature(canonicalID: .wordgame,
+        PrismetFeature(canonicalID: .wordgame,
                             title: "Wordgame",
                             category: .daily,
                             iOSID: "wordle",
@@ -144,59 +144,59 @@ public enum KaleidoscopeFeatureManifest {
                             leaderboardMetric: .fewestMoves,
                             leaderboardPeriod: .daily,
                             visibleInLaunchReview: true),
-        KaleidoscopeFeature(canonicalID: .chess,
+        PrismetFeature(canonicalID: .chess,
                             title: "Chess",
                             category: .board,
                             iOSID: "chess",
                             macOSID: "chess"),
-        KaleidoscopeFeature(canonicalID: .reversi,
+        PrismetFeature(canonicalID: .reversi,
                             title: "Reversi",
                             category: .board,
                             iOSID: "reversi",
                             macOSID: "reversi"),
-        KaleidoscopeFeature(canonicalID: .checkers,
+        PrismetFeature(canonicalID: .checkers,
                             title: "Checkers",
                             category: .board,
                             iOSID: "checkers",
                             macOSID: "checkers",
                             leaderboardMetric: .highScore),
-        KaleidoscopeFeature(canonicalID: .connectFour,
+        PrismetFeature(canonicalID: .connectFour,
                             title: "Connect Four",
                             category: .board,
                             iOSID: "connectfour",
                             macOSID: "connect-four",
                             leaderboardMetric: .highScore),
-        KaleidoscopeFeature(canonicalID: .solitaire,
+        PrismetFeature(canonicalID: .solitaire,
                             title: "Solitaire",
                             category: .cards,
                             iOSID: "solitaire",
                             macOSID: "solitaire"),
-        KaleidoscopeFeature(canonicalID: .brickBench,
+        PrismetFeature(canonicalID: .brickBench,
                             title: "Brick Bench",
                             category: .oracle,
                             iOSID: "brickbench",
                             macOSID: "brick-bench"),
-        KaleidoscopeFeature(canonicalID: .oracle,
+        PrismetFeature(canonicalID: .oracle,
                             title: "Oracle",
                             category: .oracle,
                             iOSID: "oracle",
                             macOSID: "oracle"),
-        KaleidoscopeFeature(canonicalID: .debtClock,
+        PrismetFeature(canonicalID: .debtClock,
                             title: "Debt Clock",
                             category: .oracle,
                             iOSID: "debtclock",
                             macOSID: "debt-clock")
     ]
 
-    public static func feature(for canonicalID: KaleidoscopeFeatureID) -> KaleidoscopeFeature? {
+    public static func feature(for canonicalID: PrismetFeatureID) -> PrismetFeature? {
         all.first { $0.canonicalID == canonicalID }
     }
 
-    public static func feature(platformID: String, platform: KaleidoscopePlatform) -> KaleidoscopeFeature? {
+    public static func feature(platformID: String, platform: PrismetPlatform) -> PrismetFeature? {
         all.first { $0.platformID(for: platform) == platformID }
     }
 
-    public static func platformID(for canonicalID: KaleidoscopeFeatureID, platform: KaleidoscopePlatform) -> String? {
+    public static func platformID(for canonicalID: PrismetFeatureID, platform: PrismetPlatform) -> String? {
         feature(for: canonicalID)?.platformID(for: platform)
     }
 }

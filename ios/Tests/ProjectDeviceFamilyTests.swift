@@ -11,7 +11,7 @@ final class ProjectDeviceFamilyTests: XCTestCase {
         XCTAssertFalse(targetFamilyLines.isEmpty)
         XCTAssertTrue(
             targetFamilyLines.allSatisfy { $0.contains(#""1,2""#) },
-            "Kaleidoscope must target iPhone and iPad so physical iPads do not run the app in iPhone compatibility mode."
+            "Prismet must target iPhone and iPad so physical iPads do not run the app in iPhone compatibility mode."
         )
     }
 

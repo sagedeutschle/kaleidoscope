@@ -16,7 +16,7 @@ struct ProfileSetupView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 22) {
-                Text("Set up your profile").font(Kaleido.title(30)).foregroundStyle(Kaleido.ink)
+                Text("Set up your profile").font(PrismetDesign.title(30)).foregroundStyle(PrismetDesign.ink)
                 Text(emoji).font(.system(size: 72))
                     .frame(width: 110, height: 110)
                     .background(Circle().fill(Color(hex: colorHex).opacity(0.2)))
@@ -28,7 +28,7 @@ struct ProfileSetupView: View {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 46))], spacing: 10) {
                     ForEach(emojis, id: \.self) { e in
                         Text(e).font(.title).padding(6)
-                            .background(Circle().fill(emoji == e ? Kaleido.gold.opacity(0.25) : .clear))
+                            .background(Circle().fill(emoji == e ? PrismetDesign.gold.opacity(0.25) : .clear))
                             .onTapGesture { emoji = e }
                     }
                 }
@@ -45,7 +45,7 @@ struct ProfileSetupView: View {
                 Button { Task { await save() } } label: {
                     HStack { if saving { ProgressView() }; Text("Start playing") }.frame(maxWidth: 320)
                 }
-                .buttonStyle(AccentButtonStyle(accent: Kaleido.gold))
+                .buttonStyle(AccentButtonStyle(accent: PrismetDesign.gold))
                 .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty || saving)
 
                 if let err = profiles.lastError {
@@ -55,7 +55,7 @@ struct ProfileSetupView: View {
             .padding(28)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(FacetBackdrop(accent: Kaleido.gold, multiHue: true))
+        .background(FacetBackdrop(accent: PrismetDesign.gold, multiHue: true))
     }
 
     private func save() async {

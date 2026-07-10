@@ -1,8 +1,8 @@
-# Kaleidoscope — Privacy Policy
+# Prismet — Privacy Policy
 
 _Last updated: June 29, 2026_
 
-Kaleidoscope ("the app", "we", "us") is a free collection of classic games. This
+Prismet ("the app", "we", "us") is a free collection of classic games. This
 policy explains what we collect, why, and your choices. We keep it short because
 we collect as little as possible.
 
@@ -46,7 +46,7 @@ These providers process data on our behalf under their own privacy terms.
 
 ## Children
 
-Kaleidoscope is rated 10+ and is intended for a general audience. It is not
+Prismet is rated 10+ and is intended for a general audience. It is not
 directed to children under 13, and we do not knowingly collect data from children
 under 13. If you believe a child has provided us data, contact us and we will
 remove it.

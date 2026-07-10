@@ -1,6 +1,6 @@
 import SceneKit
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 final class SceneKitRenderGeometryTests: XCTestCase {
     func testChessTileCenterMatchesDesktopBoardCoordinates() {

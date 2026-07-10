@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# Kaleidoscope deploy: regen project → build → install → launch on Poopoohead.
+# Prismet deploy: regen project → build → install → launch on Poopoohead.
 # Mirrors AlarmClock's deploy.sh. Build dir lives in ~/Library/Caches (NOT iCloud Desktop)
 # so the .app has no file-provider xattrs that break CodeSign.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-PROJECT_NAME="Kaleidoscope"
+PROJECT_NAME="Prismet"
 SCHEME="$PROJECT_NAME"
 CONFIG="${CONFIG:-Debug}"
 BUNDLE_ID="com.spocksclub.kaleidoscope"
 DEVICE_ID="${DEVICE_ID:-}"
 DEVICE_NAME="${DEVICE_NAME:-Poopoohead}"
 if [ -n "$DEVICE_ID" ]; then DESTINATION="platform=iOS,id=$DEVICE_ID"; else DESTINATION="platform=iOS,name=$DEVICE_NAME"; fi
-BUILD_DIR="${BUILD_DIR:-$HOME/Library/Caches/Kaleidoscope-build}"
+BUILD_DIR="${BUILD_DIR:-$HOME/Library/Caches/Prismet-build}"
 LOG_FILE="$BUILD_DIR/last-build.log"
 mkdir -p "$BUILD_DIR"
 

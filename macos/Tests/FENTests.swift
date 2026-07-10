@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// Tests for parsing Forsyth–Edwards Notation into a `Position`.
 final class FENTests: XCTestCase {

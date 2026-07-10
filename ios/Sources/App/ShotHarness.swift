@@ -5,12 +5,12 @@ import SwiftUI
 /// Launch-flag screenshot harness — **DEBUG only**, so it is compiled out of the
 /// Release (App Store) build entirely and can never ship.
 ///
-/// When the process is launched with the env var `KALEIDO_SHOT` set to a screen
+/// When the process is launched with the env var `PRISMET_SHOT` set to a screen
 /// name, `RootView` renders this instead of the auth gate, dropping straight into
 /// a single game view. That lets App Store screenshots be captured headlessly on a
 /// simulator (no phone-OTP sign-in needed):
 ///
-///   SIMCTL_CHILD_KALEIDO_SHOT=chess3d xcrun simctl launch <dev> com.spocksclub.kaleidoscope
+///   SIMCTL_CHILD_PRISMET_SHOT=chess3d xcrun simctl launch <dev> com.spocksclub.kaleidoscope
 ///   xcrun simctl io <dev> screenshot chess3d.png
 struct ShotHarness: View {
     let screen: String
@@ -27,7 +27,7 @@ struct ShotHarness: View {
 
     var body: some View {
         NavigationStack { content }
-            .tint(Kaleido.gold)
+            .tint(PrismetDesign.gold)
     }
 
     @ViewBuilder private var content: some View {

@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Game glyphs for grid-puzzle Home cards
 //
-// Self-contained, app-icon-style vector glyphs for four Kaleidoscope games.
+// Self-contained, app-icon-style vector glyphs for four Prismet games.
 // Each is a `View` that draws a SQUARE icon filling its frame edge-to-edge:
 // a filled rounded-square background tile in the game's authentic color plus a
 // bold, high-contrast, centered motif inset ~12-15%. Everything is normalized

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Generate the Kaleidoscope 'Wizard King's Lens' app icon as SVG.
+"""Generate the Prismet 'Wizard King's Lens' app icon as SVG.
 
 Fuses the app's identity:
-  - kaleidoscope iris  -> a 12-fold jewel mandala (Kaleido.wheel palette)
+  - kaleidoscope iris  -> a 12-fold jewel mandala (PrismetDesign.wheel palette)
   - illuminated scroll -> gilt bezel + warm rim light
   (The Wizard King figure — crown, face, beard — was removed by request; the
    icon is now purely the kaleidoscope lens.)
@@ -19,7 +19,7 @@ INSET = 100
 BODY = W - 2 * INSET          # 824
 RAD = 185                     # corner radius
 
-# Kaleido.wheel jewel palette (from KaleidoscopeDesign.swift)
+# PrismetDesign.wheel jewel palette
 GARNET  = "#DB474F"
 AMBER   = "#E68C33"
 GOLD    = "#CCA838"
@@ -28,7 +28,7 @@ LAPIS   = "#3D75A8"
 AMETHYST= "#76579E"
 WHEEL = [GARNET, AMBER, GOLD, JADE, LAPIS, AMETHYST]
 
-GILT      = "#D8A53B"   # gilt accent (Kaleido.gold-ish, brighter for leaf)
+GILT      = "#D8A53B"   # gilt accent (PrismetDesign.gold-ish, brighter for leaf)
 GILT_HI   = "#F4D77E"   # highlight gold
 GILT_DEEP = "#9A6E22"   # shadow gold
 

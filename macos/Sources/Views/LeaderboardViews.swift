@@ -24,11 +24,11 @@ struct ResultSlipView: View {
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(title)
-                        .font(Kaleido.title(30))
-                        .foregroundStyle(Kaleido.ink)
+                        .font(PrismetDesign.title(30))
+                        .foregroundStyle(PrismetDesign.ink)
                     Text(subtitle)
                         .font(.subheadline)
-                        .foregroundStyle(Kaleido.ink2)
+                        .foregroundStyle(PrismetDesign.ink2)
                 }
 
                 Spacer(minLength: 12)
@@ -65,7 +65,7 @@ struct ResultSlipView: View {
         }
         .padding(24)
         .frame(width: 420)
-        .background(Kaleido.ground)
+        .background(PrismetDesign.ground)
     }
 
     private var title: String {
@@ -107,9 +107,9 @@ struct ResultSlipView: View {
             Text(label.uppercased())
                 .font(.caption2.weight(.bold))
                 .tracking(0.7)
-                .foregroundStyle(Kaleido.ink3)
+                .foregroundStyle(PrismetDesign.ink3)
             Text(value)
-                .font(Kaleido.rounded(28))
+                .font(PrismetDesign.rounded(28))
                 .monospacedDigit()
                 .foregroundStyle(accent)
         }
@@ -117,8 +117,8 @@ struct ResultSlipView: View {
         .padding(14)
         .background(
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(Kaleido.panel)
-                .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(Kaleido.outline, lineWidth: 1))
+                .fill(PrismetDesign.panel)
+                .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(PrismetDesign.outline, lineWidth: 1))
         )
     }
 }
@@ -142,11 +142,11 @@ struct LocalLeaderboardPanel: View {
                     .foregroundStyle(accent)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(Kaleido.title(28))
-                        .foregroundStyle(Kaleido.ink)
+                        .font(PrismetDesign.title(28))
+                        .foregroundStyle(PrismetDesign.ink)
                     Text("Local Scores")
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Kaleido.ink2)
+                        .foregroundStyle(PrismetDesign.ink2)
                 }
                 Spacer()
                 Button {
@@ -175,7 +175,7 @@ struct LocalLeaderboardPanel: View {
         .padding(24)
         .frame(width: 460)
         .frame(minHeight: 360)
-        .background(Kaleido.ground)
+        .background(PrismetDesign.ground)
         .task {
             await loadEntries()
         }
@@ -189,7 +189,7 @@ struct LocalLeaderboardPanel: View {
         } else if let errorText {
             Text(errorText)
                 .font(.callout.weight(.semibold))
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if entries.isEmpty {
             VStack(spacing: 10) {
@@ -197,8 +197,8 @@ struct LocalLeaderboardPanel: View {
                     .font(.system(size: 34, weight: .semibold))
                     .foregroundStyle(accent.opacity(0.65))
                 Text("No Scores Yet")
-                    .font(Kaleido.rounded(18))
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.rounded(18))
+                    .foregroundStyle(PrismetDesign.ink)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
@@ -234,7 +234,7 @@ private struct LeaderboardRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Text("#\(entry.rank)")
-                .font(Kaleido.rounded(18))
+                .font(PrismetDesign.rounded(18))
                 .monospacedDigit()
                 .foregroundStyle(accent)
                 .frame(width: 44, alignment: .leading)
@@ -242,27 +242,27 @@ private struct LeaderboardRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(entry.displayName)
                     .font(.headline)
-                    .foregroundStyle(Kaleido.ink)
+                    .foregroundStyle(PrismetDesign.ink)
                 if let detail = entry.detail {
                     Text(detail)
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(Kaleido.ink3)
+                        .foregroundStyle(PrismetDesign.ink3)
                 }
             }
 
             Spacer()
 
             Text("\(entry.score)")
-                .font(Kaleido.rounded(22))
+                .font(PrismetDesign.rounded(22))
                 .monospacedDigit()
-                .foregroundStyle(Kaleido.ink)
+                .foregroundStyle(PrismetDesign.ink)
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
         .background(
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(Kaleido.panel)
-                .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(Kaleido.outline, lineWidth: 1))
+                .fill(PrismetDesign.panel)
+                .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(PrismetDesign.outline, lineWidth: 1))
         )
     }
 }

@@ -1,7 +1,7 @@
 // PRISM: RELEASE Agent-Design(gomoku) 2026-07-03 - v10 design pass
 import SwiftUI
 
-// MARK: - Skin & theme (game-local tokens; do not move into KaleidoDesign)
+// MARK: - Skin & theme (game-local tokens; do not move into PrismetDesign)
 
 private enum GomokuSkin: String, CaseIterable, Identifiable {
     case kaya = "Kaya"
@@ -38,7 +38,7 @@ private struct GomokuTheme {
                 grain: Color(red: 0.45, green: 0.30, blue: 0.14).opacity(0.10),
                 frameHi: Color(red: 0.47, green: 0.33, blue: 0.18),
                 frameLo: Color(red: 0.33, green: 0.22, blue: 0.11),
-                frameRule: Kaleido.gold.opacity(0.55),
+                frameRule: PrismetDesign.gold.opacity(0.55),
                 line: Color(red: 0.22, green: 0.14, blue: 0.06).opacity(0.78),
                 hoshi: Color(red: 0.20, green: 0.13, blue: 0.06).opacity(0.85),
                 chipHi: Color(red: 0.50, green: 0.36, blue: 0.20),
@@ -54,12 +54,12 @@ private struct GomokuTheme {
                 grain: Color.white.opacity(0.035),
                 frameHi: Color(red: 0.13, green: 0.12, blue: 0.11),
                 frameLo: Color(red: 0.06, green: 0.055, blue: 0.05),
-                frameRule: Kaleido.gold.opacity(0.60),
+                frameRule: PrismetDesign.gold.opacity(0.60),
                 line: Color(white: 0.80).opacity(0.52),
                 hoshi: Color(white: 0.85).opacity(0.72),
                 chipHi: Color(red: 0.24, green: 0.22, blue: 0.20),
                 chipLo: Color(red: 0.14, green: 0.13, blue: 0.12),
-                chipEdge: Kaleido.gold.opacity(0.35),
+                chipEdge: PrismetDesign.gold.opacity(0.35),
                 chipInk: Color(red: 0.92, green: 0.89, blue: 0.82),
                 accent: Color(red: 0.55, green: 0.50, blue: 0.38)
             )
@@ -255,14 +255,14 @@ struct GomokuView: View {
             }
             Text(subtitle)
                 .font(.system(size: 15, weight: .semibold, design: .serif))
-                .foregroundStyle(Kaleido.ink)
+                .foregroundStyle(PrismetDesign.ink)
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 6)
         .background(
             Capsule()
-                .fill(Kaleido.panelHi.opacity(0.85))
-                .overlay(Capsule().strokeBorder(Kaleido.hairline, lineWidth: 1))
+                .fill(PrismetDesign.panelHi.opacity(0.85))
+                .overlay(Capsule().strokeBorder(PrismetDesign.hairline, lineWidth: 1))
         )
         .accessibilityElement(children: .combine)
         .accessibilityLabel(subtitle)
@@ -554,21 +554,21 @@ struct GomokuView: View {
                         .accessibilityHidden(true)
                 }
                 Text(subtitle)
-                    .font(Kaleido.title(18))
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.title(18))
+                    .foregroundStyle(PrismetDesign.ink)
             }
             Text("Head back for a rematch — host a fresh code.")
                 .font(.footnote)
-                .foregroundStyle(Kaleido.ink3)
+                .foregroundStyle(PrismetDesign.ink3)
         }
         .padding(.horizontal, 18)
         .padding(.vertical, 12)
         .background(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Kaleido.panel)
+                .fill(PrismetDesign.panel)
                 .overlay(
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .strokeBorder(Kaleido.hairline, lineWidth: 1)
+                        .strokeBorder(PrismetDesign.hairline, lineWidth: 1)
                 )
         )
     }
@@ -593,16 +593,16 @@ struct GomokuView: View {
                 Text("OPPONENT")
                     .font(.caption2.weight(.bold))
                     .tracking(0.8)
-                    .foregroundStyle(Kaleido.ink3)
+                    .foregroundStyle(PrismetDesign.ink3)
                 Spacer()
                 Text("ELO \(Int(aiELO))")
                     .font(.subheadline.weight(.semibold))
                     .monospacedDigit()
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
             }
             Text(tierName(forELO: Int(aiELO)))
-                .font(Kaleido.title(20))
-                .foregroundStyle(Kaleido.ink)
+                .font(PrismetDesign.title(20))
+                .foregroundStyle(PrismetDesign.ink)
             Slider(value: $aiELO, in: 600...2400, step: 100) {
                 Text("AI strength")
             }
@@ -611,10 +611,10 @@ struct GomokuView: View {
         .padding(14)
         .background(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Kaleido.panel)
+                .fill(PrismetDesign.panel)
                 .overlay(
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .strokeBorder(Kaleido.hairline, lineWidth: 1)
+                        .strokeBorder(PrismetDesign.hairline, lineWidth: 1)
                 )
         )
         .accessibilityElement(children: .combine)

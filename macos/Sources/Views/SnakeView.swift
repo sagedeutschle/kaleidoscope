@@ -24,7 +24,7 @@ struct SnakeView: View {
     private let timer = Timer.publish(every: 0.16, on: .main, in: .common).autoconnect()
     private let cellSize: CGFloat = 24
     private let accent = FacetRegistry.accent(for: "snake")
-    private let leaderboardService = KaleidoscopeLeaderboardService.shared
+    private let leaderboardService = PrismetLeaderboardService.shared
 
     // Garden palette — emerald snake on a sage bed, framed by the vellum card.
     private let sageLight = Color(red: 0.78, green: 0.81, blue: 0.65)
@@ -46,7 +46,7 @@ struct SnakeView: View {
             }
             .frame(maxWidth: 480)
 
-            board.kaleidoCard()
+            board.prismetCard()
             controls
         }
         .padding(28)
@@ -98,7 +98,7 @@ struct SnakeView: View {
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(Kaleido.outline, lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(PrismetDesign.outline, lineWidth: 1))
     }
 
     @ViewBuilder

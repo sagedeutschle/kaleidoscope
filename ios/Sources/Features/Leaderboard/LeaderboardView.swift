@@ -14,7 +14,7 @@ struct LeaderboardView: View {
     /// The local player's Game Center id as reported by GameKit itself — covers
     /// callers that don't pass `gcAccountID` (e.g. in-game result sheets).
     @State private var resolvedGCID: UUID?
-    private let accent = Kaleido.gold
+    private let accent = PrismetDesign.gold
     private var rankedGames: [CanonicalGameID] {
         LeaderboardCatalog.ranked(friendsOnly: friendsOnly)
     }
@@ -55,7 +55,7 @@ struct LeaderboardView: View {
                     if let metric = LeaderboardCatalog.metric(for: selected) {
                         Text(metric.blurb.uppercased())
                             .font(.caption2.weight(.bold)).tracking(1.4)
-                            .foregroundStyle(Kaleido.ink3)
+                            .foregroundStyle(PrismetDesign.ink3)
                     }
                     periodBadge
                 }
@@ -93,9 +93,9 @@ struct LeaderboardView: View {
                     .font(.system(size: 36, weight: .semibold))
                     .foregroundStyle(accent.opacity(0.6))
                 Text("No scores yet")
-                    .font(Kaleido.rounded(18)).foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.rounded(18)).foregroundStyle(PrismetDesign.ink)
                 Text(emptyStateDetail)
-                    .font(.caption).foregroundStyle(Kaleido.ink3)
+                    .font(.caption).foregroundStyle(PrismetDesign.ink3)
                     .multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -115,23 +115,23 @@ struct LeaderboardView: View {
         let unit = LeaderboardCatalog.metric(for: selected)?.unit ?? ""
         return HStack(spacing: 12) {
             Text("#\(rank)")
-                .font(Kaleido.rounded(16)).monospacedDigit()
-                .foregroundStyle(rank <= 3 ? accent : Kaleido.ink3)
+                .font(PrismetDesign.rounded(16)).monospacedDigit()
+                .foregroundStyle(rank <= 3 ? accent : PrismetDesign.ink3)
                 .frame(width: 40, alignment: .leading)
             Text(row.avatarEmoji).font(.system(size: 22))
             Text(row.displayName + (isMe ? " (you)" : ""))
-                .font(.headline).foregroundStyle(Kaleido.ink).lineLimit(1)
+                .font(.headline).foregroundStyle(PrismetDesign.ink).lineLimit(1)
             Spacer(minLength: 8)
             Text("\(row.score) \(unit)")
-                .font(Kaleido.rounded(18)).monospacedDigit()
-                .foregroundStyle(Kaleido.ink)
+                .font(PrismetDesign.rounded(18)).monospacedDigit()
+                .foregroundStyle(PrismetDesign.ink)
         }
         .padding(.horizontal, 14).padding(.vertical, 10)
         .background(
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(isMe ? accent.opacity(0.16) : Kaleido.panel)
+                .fill(isMe ? accent.opacity(0.16) : PrismetDesign.panel)
                 .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .strokeBorder(isMe ? accent : Kaleido.outline, lineWidth: isMe ? 2 : 1))
+                    .strokeBorder(isMe ? accent : PrismetDesign.outline, lineWidth: isMe ? 2 : 1))
         )
     }
 

@@ -23,7 +23,7 @@ final class DeploymentScriptTests: XCTestCase {
         XCTAssertTrue(FileManager.default.isExecutableFile(atPath: scriptURL.path))
         XCTAssertTrue(script.contains("xcodegen generate"))
         XCTAssertTrue(script.contains("xcodebuild"))
-        XCTAssertTrue(script.contains("Kaleidoscope.app"))
+        XCTAssertTrue(script.contains("Prismet.app"))
         XCTAssertTrue(script.contains("open -a"))
     }
 

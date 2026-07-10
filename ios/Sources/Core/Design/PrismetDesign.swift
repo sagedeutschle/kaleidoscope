@@ -1,21 +1,21 @@
 // PRISM: RELEASE Agent-Design(shell) 2026-07-03 — v10 design pass
 import SwiftUI
 
-// Kaleidoscope design system (iOS) — "rustic scroll + kaleidoscope iris", paper-aware
+// Prismet design system (iOS) — "rustic scroll + kaleidoscope iris", paper-aware
 // for readability. Trimmed from the macOS app: pure SwiftUI, no AppKit, no image asset.
 
-enum KaleidoPaper: String, CaseIterable, Identifiable {
+enum PrismetPaper: String, CaseIterable, Identifiable {
     case contrast = "High Contrast"
     case parchment = "Parchment"
     case dark = "Dark"
     var id: String { rawValue }
 }
 
-enum Kaleido {
+enum PrismetDesign {
     static let paperKey = "kaleido.paper"
     // v10: the cabinet is dark by default — stored choices always win.
-    static var paper: KaleidoPaper {
-        KaleidoPaper(rawValue: UserDefaults.standard.string(forKey: paperKey) ?? "") ?? .dark
+    static var paper: PrismetPaper {
+        PrismetPaper(rawValue: UserDefaults.standard.string(forKey: paperKey) ?? "") ?? .dark
     }
 
     struct Palette {
@@ -27,7 +27,7 @@ enum Kaleido {
 
     /// Palette for an arbitrary paper — lets the shell (Settings) render true-color
     /// swatches for papers other than the active one.
-    static func palette(for paper: KaleidoPaper) -> Palette {
+    static func palette(for paper: PrismetPaper) -> Palette {
         switch paper {
         case .contrast:
             let ink = Color(red: 0.11, green: 0.10, blue: 0.07)
@@ -80,7 +80,7 @@ enum Kaleido {
 }
 
 func irisColors(_ accent: Color) -> [Color] {
-    [accent, accent.opacity(0.40), Kaleido.gold.opacity(0.6), accent.opacity(0.40), accent]
+    [accent, accent.opacity(0.40), PrismetDesign.gold.opacity(0.6), accent.opacity(0.40), accent]
 }
 
 struct FacetBackdrop: View {
@@ -88,12 +88,12 @@ struct FacetBackdrop: View {
     var multiHue: Bool = false
     var body: some View {
         ZStack {
-            Kaleido.ground
+            PrismetDesign.ground
             RadialGradient(colors: [accent.opacity(multiHue ? 0.18 : 0.13), .clear],
                            center: .topLeading, startRadius: 6, endRadius: 520)
             if multiHue {
                 Circle()
-                    .fill(AngularGradient(gradient: Gradient(colors: Kaleido.wheel), center: .center))
+                    .fill(AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center))
                     .frame(width: 520, height: 520).blur(radius: 150).opacity(0.16)
                     .offset(x: 120, y: -200)
             }
@@ -106,12 +106,12 @@ extension View {
     func facetBackground(_ accent: Color, multiHue: Bool = false) -> some View {
         background(FacetBackdrop(accent: accent, multiHue: multiHue))
     }
-    func kaleidoCard(cornerRadius: CGFloat = 16) -> some View {
+    func prismetCard(cornerRadius: CGFloat = 16) -> some View {
         padding(12)
             .background(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous).fill(Kaleido.panel)
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous).fill(PrismetDesign.panel)
                     .overlay(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                        .strokeBorder(Kaleido.outline, lineWidth: 1))
+                        .strokeBorder(PrismetDesign.outline, lineWidth: 1))
             )
             .shadow(color: Color.black.opacity(0.18), radius: 12, y: 6)
     }
@@ -132,8 +132,8 @@ struct GameHeader<Trailing: View>: View {
             }
             .frame(width: 48, height: 48)
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(Kaleido.title(26)).foregroundStyle(Kaleido.ink)
-                if let subtitle { Text(subtitle).font(.subheadline).foregroundStyle(Kaleido.ink2) }
+                Text(title).font(PrismetDesign.title(26)).foregroundStyle(PrismetDesign.ink)
+                if let subtitle { Text(subtitle).font(.subheadline).foregroundStyle(PrismetDesign.ink2) }
             }
             Spacer(minLength: 8)
             trailing()
@@ -150,11 +150,11 @@ extension GameHeader where Trailing == EmptyView {
 struct StatBadge: View {
     let label: String
     let value: String
-    var accent: Color = Kaleido.ink
+    var accent: Color = PrismetDesign.ink
     var body: some View {
         VStack(alignment: .trailing, spacing: 2) {
-            Text(label.uppercased()).font(.caption2.weight(.bold)).tracking(0.7).foregroundStyle(Kaleido.ink3)
-            Text(value).font(Kaleido.rounded(22)).monospacedDigit().foregroundStyle(accent)
+            Text(label.uppercased()).font(.caption2.weight(.bold)).tracking(0.7).foregroundStyle(PrismetDesign.ink3)
+            Text(value).font(PrismetDesign.rounded(22)).monospacedDigit().foregroundStyle(accent)
         }
         .frame(minWidth: 60, alignment: .trailing)
     }
@@ -174,8 +174,8 @@ struct GlassButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.headline).padding(.horizontal, 16).padding(.vertical, 10)
-            .background(Capsule().fill(Kaleido.panelHi).overlay(Capsule().strokeBorder(Kaleido.outline, lineWidth: 1)))
-            .foregroundStyle(Kaleido.ink)
+            .background(Capsule().fill(PrismetDesign.panelHi).overlay(Capsule().strokeBorder(PrismetDesign.outline, lineWidth: 1)))
+            .foregroundStyle(PrismetDesign.ink)
             .opacity(configuration.isPressed ? 0.8 : 1).scaleEffect(configuration.isPressed ? 0.97 : 1)
     }
 }

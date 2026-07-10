@@ -1,6 +1,6 @@
 import XCTest
 import AppKit
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// The 2D swatch and the 3D material must read identical colors so a red brick
 /// looks the same in both canvases. Both now derive from `rgb`, so pin it down.

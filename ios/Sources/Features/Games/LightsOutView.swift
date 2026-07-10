@@ -19,7 +19,7 @@ struct LightsOutView: View {
                 subtitle: session.game.isSolved ? "Solved!" : "Turn them all off"
             ) {
                 StatBadge(label: "Lit", value: "\(session.game.litCount)", accent: accent)
-                StatBadge(label: "Moves", value: "\(session.moves)", accent: Kaleido.ink)
+                StatBadge(label: "Moves", value: "\(session.moves)", accent: PrismetDesign.ink)
             }
 
             board
@@ -69,22 +69,22 @@ struct LightsOutView: View {
         }
         .aspectRatio(1, contentMode: .fit)
         .padding(16)
-        .kaleidoCard()
+        .prismetCard()
     }
 
     private func cellView(row: Int, col: Int, size: CGFloat) -> some View {
         let lit = session.game.isLit(row: row, col: col)
         return RoundedRectangle(cornerRadius: 12, style: .continuous)
-            .fill(lit ? accent : Kaleido.panelHi)
+            .fill(lit ? accent : PrismetDesign.panelHi)
             .opacity(lit ? 1.0 : 0.45)
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .strokeBorder(lit ? accent.opacity(0.9) : Kaleido.hairline, lineWidth: 1)
+                    .strokeBorder(lit ? accent.opacity(0.9) : PrismetDesign.hairline, lineWidth: 1)
             )
             .overlay(
                 Image(systemName: lit ? "lightbulb.fill" : "lightbulb")
                     .font(.system(size: size * 0.34, weight: .semibold))
-                    .foregroundStyle(lit ? Kaleido.ground : Kaleido.ink3)
+                    .foregroundStyle(lit ? PrismetDesign.ground : PrismetDesign.ink3)
             )
             .frame(width: size, height: size)
             .shadow(color: lit ? accent.opacity(0.55) : .clear, radius: lit ? 10 : 0, x: 0, y: 0)

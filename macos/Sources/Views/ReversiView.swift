@@ -43,8 +43,8 @@ struct ReversiView: View {
         .padding(14)
         .background(Color(red: 0.16, green: 0.43, blue: 0.32))
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Kaleido.outline, lineWidth: 1))
-        .kaleidoCard()
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(PrismetDesign.outline, lineWidth: 1))
+        .prismetCard()
     }
 
     private var controls: some View {

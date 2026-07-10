@@ -29,9 +29,9 @@ struct HomeLensView: View {
 
     private var homeBackground: some View {
         ZStack {
-            Kaleido.ground
+            PrismetDesign.ground
             Circle()
-                .fill(AngularGradient(gradient: Gradient(colors: Kaleido.wheel), center: .center))
+                .fill(AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center))
                 .frame(width: 640, height: 640)
                 .blur(radius: 140)
                 .opacity(0.30)
@@ -44,21 +44,21 @@ struct HomeLensView: View {
         HStack(spacing: 18) {
             ZStack {
                 Circle().strokeBorder(
-                    AngularGradient(gradient: Gradient(colors: Kaleido.wheel), center: .center),
+                    AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center),
                     lineWidth: 4)
                 Image(systemName: "circle.hexagongrid.fill")
                     .font(.system(size: 26))
-                    .foregroundStyle(AngularGradient(gradient: Gradient(colors: Kaleido.wheel), center: .center))
+                    .foregroundStyle(AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center))
             }
             .frame(width: 62, height: 62)
 
             VStack(alignment: .leading, spacing: 3) {
-                Text("Kaleidoscope")
-                    .font(Kaleido.title(42))
-                    .foregroundStyle(Kaleido.ink)
+                Text("Prismet")
+                    .font(PrismetDesign.title(42))
+                    .foregroundStyle(PrismetDesign.ink)
                 Text("turn the lens.")
                     .font(.title3.weight(.medium))
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
             }
             Spacer()
         }
@@ -69,7 +69,7 @@ struct HomeLensView: View {
             Text(category.rawValue.uppercased())
                 .font(.caption.weight(.bold))
                 .tracking(1.4)
-                .foregroundStyle(Kaleido.ink3)
+                .foregroundStyle(PrismetDesign.ink3)
             LazyVGrid(columns: columns, alignment: .leading, spacing: 16) {
                 ForEach(facets) { facet in
                     FacetTile(facet: facet) { onSelect(facet) }
@@ -110,18 +110,18 @@ private struct FacetTile: View {
                             .opacity(ready ? 1 : 0.35)
                         Image(systemName: facet.systemImage)
                             .font(.system(size: 23, weight: .bold))
-                            .foregroundStyle(ready ? facet.accent : Kaleido.ink3)
+                            .foregroundStyle(ready ? facet.accent : PrismetDesign.ink3)
                     }
                 }
                 .frame(width: 50, height: 50)
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(facet.title)
-                        .font(Kaleido.rounded(17))
-                        .foregroundStyle(ready ? Kaleido.ink : Kaleido.ink2)
+                        .font(PrismetDesign.rounded(17))
+                        .foregroundStyle(ready ? PrismetDesign.ink : PrismetDesign.ink2)
                     Text(ready ? facet.category.rawValue : "Coming soon")
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(Kaleido.ink3)
+                        .foregroundStyle(PrismetDesign.ink3)
                 }
                 Spacer(minLength: 0)
             }
@@ -130,7 +130,7 @@ private struct FacetTile: View {
             .background(tileBackground)
             .overlay(
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .strokeBorder(ready ? facet.accent.opacity(hover ? 0.65 : 0.28) : Kaleido.hairline,
+                    .strokeBorder(ready ? facet.accent.opacity(hover ? 0.65 : 0.28) : PrismetDesign.hairline,
                                   lineWidth: 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
@@ -146,7 +146,7 @@ private struct FacetTile: View {
 
     private var tileBackground: some View {
         RoundedRectangle(cornerRadius: 18, style: .continuous)
-            .fill(Kaleido.panel)
+            .fill(PrismetDesign.panel)
             .overlay(
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .fill(LinearGradient(colors: [facet.accent.opacity(ready ? 0.16 : 0.0), .clear],

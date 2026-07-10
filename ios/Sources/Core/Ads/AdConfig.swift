@@ -3,7 +3,7 @@ import Foundation
 /// Central AdMob configuration.
 ///
 /// Uses Google's official TEST ad ids until the real AdMob app + banner unit are
-/// created. To go live, set `KaleidoscopeAdMobBannerUnitID` to your
+/// created. To go live, set `PrismetAdMobBannerUnitID` to your
 /// `ca-app-pub-.../...` banner id and swap the `GADApplicationIdentifier` in
 /// `project.yml` (Info.plist) for your real `ca-app-pub-...~...` app id.
 enum AdConfig {
@@ -27,15 +27,15 @@ enum AdConfig {
 
     /// Optional real banner unit id from Info.plist. Missing/blank/malformed = test ads.
     private static var configuredBannerUnitID: String? {
-        Bundle.main.object(forInfoDictionaryKey: "KaleidoscopeAdMobBannerUnitID") as? String
+        Bundle.main.object(forInfoDictionaryKey: "PrismetAdMobBannerUnitID") as? String
     }
 
     private static var configuredRemoveAdsProductID: String? {
-        Bundle.main.object(forInfoDictionaryKey: "KaleidoscopeRemoveAdsProductID") as? String
+        Bundle.main.object(forInfoDictionaryKey: "PrismetRemoveAdsProductID") as? String
     }
 
     private static var configuredTesterCodeHashes: Any? {
-        Bundle.main.object(forInfoDictionaryKey: "KaleidoscopeAdUnlockCodeHashes")
+        Bundle.main.object(forInfoDictionaryKey: "PrismetAdUnlockCodeHashes")
     }
 
     static var bannerUnitID: String { resolvedBannerUnitID(configuredBannerUnitID) }

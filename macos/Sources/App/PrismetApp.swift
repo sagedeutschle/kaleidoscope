@@ -2,9 +2,9 @@
 import SwiftUI
 
 @main
-struct KaleidoscopeApp: App {
+struct PrismetApp: App {
     var body: some Scene {
-        WindowGroup("Kaleidoscope") {
+        WindowGroup("Prismet") {
             ContentView()
         }
         .windowResizability(.contentMinSize)

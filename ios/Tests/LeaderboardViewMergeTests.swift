@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// Covers the display-layer merge in `LeaderboardView`: the signed-in player's own
 /// best row is always unioned into the fetched rows (deduped by user, correctly

@@ -31,7 +31,7 @@ private struct GomokuTheme {
                 grain: Color(red: 0.45, green: 0.30, blue: 0.14).opacity(0.10),
                 frameHi: Color(red: 0.47, green: 0.33, blue: 0.18),
                 frameLo: Color(red: 0.33, green: 0.22, blue: 0.11),
-                frameRule: Kaleido.gold.opacity(0.55),
+                frameRule: PrismetDesign.gold.opacity(0.55),
                 line: Color(red: 0.22, green: 0.14, blue: 0.06).opacity(0.78),
                 hoshi: Color(red: 0.20, green: 0.13, blue: 0.06).opacity(0.85),
                 chipHi: Color(red: 0.50, green: 0.36, blue: 0.20),
@@ -47,12 +47,12 @@ private struct GomokuTheme {
                 grain: Color.white.opacity(0.035),
                 frameHi: Color(red: 0.13, green: 0.12, blue: 0.11),
                 frameLo: Color(red: 0.06, green: 0.055, blue: 0.05),
-                frameRule: Kaleido.gold.opacity(0.60),
+                frameRule: PrismetDesign.gold.opacity(0.60),
                 line: Color(white: 0.80).opacity(0.52),
                 hoshi: Color(white: 0.85).opacity(0.72),
                 chipHi: Color(red: 0.24, green: 0.22, blue: 0.20),
                 chipLo: Color(red: 0.14, green: 0.13, blue: 0.12),
-                chipEdge: Kaleido.gold.opacity(0.35),
+                chipEdge: PrismetDesign.gold.opacity(0.35),
                 chipInk: Color(red: 0.92, green: 0.89, blue: 0.82),
                 accent: Color(red: 0.55, green: 0.50, blue: 0.38)
             )
@@ -246,16 +246,16 @@ struct GomokuView: View {
                         Text("AI opponent")
                             .font(.caption2.weight(.bold))
                             .tracking(0.8)
-                            .foregroundStyle(Kaleido.ink3)
+                            .foregroundStyle(PrismetDesign.ink3)
                         Spacer()
                         Text("ELO \(session.aiELO)")
                             .font(.subheadline.weight(.semibold))
                             .monospacedDigit()
-                            .foregroundStyle(Kaleido.ink2)
+                            .foregroundStyle(PrismetDesign.ink2)
                     }
                     Text(tierName(forELO: session.aiELO))
-                        .font(Kaleido.title(20))
-                        .foregroundStyle(Kaleido.ink)
+                        .font(PrismetDesign.title(20))
+                        .foregroundStyle(PrismetDesign.ink)
                     Slider(value: botELOBinding, in: 600...2400, step: 100) {
                         Text("AI strength")
                     }
@@ -264,10 +264,10 @@ struct GomokuView: View {
                 .padding(12)
                 .background(
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(Kaleido.panel)
+                        .fill(PrismetDesign.panel)
                         .overlay(
                             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .strokeBorder(Kaleido.hairline, lineWidth: 1)
+                                .strokeBorder(PrismetDesign.hairline, lineWidth: 1)
                         )
                 )
             }

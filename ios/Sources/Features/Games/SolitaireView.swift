@@ -19,7 +19,7 @@ private enum SolitaireCardBackStyle: String, CaseIterable, Identifiable {
 }
 
 /// Game-local theme tokens for the baize table + card stock. Visual only —
-/// no Kaleido tokens are added; everything lives inside this file.
+/// no PrismetDesign tokens are added; everything lives inside this file.
 private struct SolitaireTheme {
     let accent: Color      // header/celebration tint, follows the felt
     let felt: Color        // main baize surface
@@ -43,7 +43,7 @@ private struct SolitaireTheme {
                 feltDeep: Color(red: 0.075, green: 0.255, blue: 0.157),
                 well: Color(red: 0.088, green: 0.290, blue: 0.180),
                 backField: Color(red: 0.078, green: 0.224, blue: 0.161),
-                stitch: Kaleido.gold.opacity(0.55))
+                stitch: PrismetDesign.gold.opacity(0.55))
         case .midnight:
             return SolitaireTheme(
                 accent: Color(red: 0.22, green: 0.34, blue: 0.55),
@@ -51,7 +51,7 @@ private struct SolitaireTheme {
                 feltDeep: Color(red: 0.067, green: 0.110, blue: 0.220),
                 well: Color(red: 0.082, green: 0.130, blue: 0.251),
                 backField: Color(red: 0.071, green: 0.102, blue: 0.204),
-                stitch: Kaleido.gold.opacity(0.55))
+                stitch: PrismetDesign.gold.opacity(0.55))
         case .crimson:
             return SolitaireTheme(
                 accent: Color(red: 0.55, green: 0.20, blue: 0.22),
@@ -59,7 +59,7 @@ private struct SolitaireTheme {
                 feltDeep: Color(red: 0.271, green: 0.078, blue: 0.094),
                 well: Color(red: 0.302, green: 0.090, blue: 0.110),
                 backField: Color(red: 0.243, green: 0.071, blue: 0.086),
-                stitch: Kaleido.gold.opacity(0.55))
+                stitch: PrismetDesign.gold.opacity(0.55))
         }
     }
 }
@@ -352,7 +352,7 @@ struct SolitaireView: View {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(SolitaireTheme.ivory)
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .strokeBorder(selected ? Kaleido.gold : Color.black.opacity(0.25),
+                .strokeBorder(selected ? PrismetDesign.gold : Color.black.opacity(0.25),
                               lineWidth: selected ? 2 : 1)
 
             if covered {
@@ -362,7 +362,7 @@ struct SolitaireView: View {
                 // reads clearly even against a busy pile underneath (tester bug #1).
                 HStack(spacing: 2) {
                     Text(card.rank.shortLabel)
-                        .font(Kaleido.rounded(min(width * 0.40, 17), .black))
+                        .font(PrismetDesign.rounded(min(width * 0.40, 17), .black))
                     Text(card.suit.symbol)
                         .font(.system(size: min(width * 0.34, 15), weight: .heavy))
                 }
@@ -507,7 +507,7 @@ struct SolitaireView: View {
             HStack(spacing: max(1.5, width * 0.05)) {
                 ForEach(0..<points, id: \.self) { _ in
                     Rectangle()
-                        .fill(Kaleido.gold)
+                        .fill(PrismetDesign.gold)
                         .frame(width: max(2.5, width * 0.06), height: max(2.5, width * 0.06))
                         .rotationEffect(.degrees(45))
                 }
@@ -529,7 +529,7 @@ struct SolitaireView: View {
     }
 
     /// Card back: ivory margin frame around a deep field carrying the kaleidoscope
-    /// motif — a 12-fold rosette built from the Kaleido.wheel colors (the one place
+    /// motif — a 12-fold rosette built from the PrismetDesign.wheel colors (the one place
     /// the brand mark belongs), or a gold lattice. Drawn in a single static Canvas
     /// per back so a full face-down tableau stays cheap.
     private func cardBack(width: CGFloat, height: CGFloat) -> some View {
@@ -548,7 +548,7 @@ struct SolitaireView: View {
                         Self.drawLattice(context: context, size: size)
                     }
                 }
-                inner.strokeBorder(Kaleido.gold.opacity(0.4), lineWidth: 0.8)
+                inner.strokeBorder(PrismetDesign.gold.opacity(0.4), lineWidth: 0.8)
             }
             .clipShape(inner)
             .padding(margin)
@@ -570,12 +570,12 @@ struct SolitaireView: View {
             let transform = CGAffineTransform(translationX: center.x, y: center.y)
                 .rotated(by: angle)
             context.fill(petal.applying(transform),
-                         with: .color(Kaleido.wheel[i % Kaleido.wheel.count].opacity(0.75)))
+                         with: .color(PrismetDesign.wheel[i % PrismetDesign.wheel.count].opacity(0.75)))
         }
         let hub = radius * 0.16
         context.fill(Path(ellipseIn: CGRect(x: center.x - hub, y: center.y - hub,
                                             width: hub * 2, height: hub * 2)),
-                     with: .color(Kaleido.gold))
+                     with: .color(PrismetDesign.gold))
     }
 
     /// Diagonal gold lattice, quiet alternative back.
@@ -590,7 +590,7 @@ struct SolitaireView: View {
             lines.addLine(to: CGPoint(x: x, y: size.height))
             x += step
         }
-        context.stroke(lines, with: .color(Kaleido.gold.opacity(0.45)), lineWidth: 0.8)
+        context.stroke(lines, with: .color(PrismetDesign.gold.opacity(0.45)), lineWidth: 0.8)
     }
 
     /// Recycle arrow debossed into the exhausted stock's felt well.
@@ -740,7 +740,7 @@ struct SolitaireView: View {
                         Capsule(style: .continuous)
                             .fill(Color.white.opacity(0.09))
                             .overlay(Capsule(style: .continuous)
-                                .strokeBorder(Kaleido.gold.opacity(0.35), lineWidth: 1))
+                                .strokeBorder(PrismetDesign.gold.opacity(0.35), lineWidth: 1))
                     )
             }
             .accessibilityLabel("Table style")
@@ -794,7 +794,7 @@ private struct FeltChipStyle: ButtonStyle {
                 Capsule(style: .continuous)
                     .fill(Color.white.opacity(configuration.isPressed ? 0.16 : 0.09))
                     .overlay(Capsule(style: .continuous)
-                        .strokeBorder(Kaleido.gold.opacity(0.35), lineWidth: 1))
+                        .strokeBorder(PrismetDesign.gold.opacity(0.35), lineWidth: 1))
             )
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
     }
@@ -824,13 +824,13 @@ private struct SolitaireCelebrationOverlay: View {
             VStack(spacing: 14) {
                 Image(systemName: "crown.fill")
                     .font(.system(size: 44, weight: .bold))
-                    .foregroundStyle(Kaleido.gold)
-                    .shadow(color: Kaleido.gold.opacity(0.6), radius: 10)
+                    .foregroundStyle(PrismetDesign.gold)
+                    .shadow(color: PrismetDesign.gold.opacity(0.6), radius: 10)
                     .scaleEffect(appeared ? 1 : 0.4)
                     .rotationEffect(.degrees(appeared ? 0 : -20))
 
                 Text("You Won!")
-                    .font(Kaleido.title(40))
+                    .font(PrismetDesign.title(40))
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.35), radius: 6, y: 2)
 
@@ -852,7 +852,7 @@ private struct SolitaireCelebrationOverlay: View {
                     .fill(accent.gradient)
                     .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous)
                         .strokeBorder(
-                            AngularGradient(gradient: Gradient(colors: irisColors(Kaleido.gold)),
+                            AngularGradient(gradient: Gradient(colors: irisColors(PrismetDesign.gold)),
                                             center: .center),
                             lineWidth: 3))
                     .shadow(color: .black.opacity(0.35), radius: 20, y: 10)
@@ -899,7 +899,7 @@ private struct ConfettiPiece: View {
 
     var body: some View {
         let (rx, ry, rr) = rand
-        let color = Kaleido.wheel[index % Kaleido.wheel.count]
+        let color = PrismetDesign.wheel[index % PrismetDesign.wheel.count]
         let startX = size.width * rx
         let drift = (rx - 0.5) * size.width * 0.6
         let fall = size.height * (0.55 + ry * 0.45)

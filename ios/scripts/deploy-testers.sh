@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# Build Kaleidoscope once, then install/launch it on every paired tester phone
+# Build Prismet once, then install/launch it on every paired tester phone
 # that CoreDevice can reach over USB or Wi-Fi.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-PROJECT_NAME="Kaleidoscope"
+PROJECT_NAME="Prismet"
 SCHEME="$PROJECT_NAME"
 CONFIG="${CONFIG:-Debug}"
 BUNDLE_ID="com.spocksclub.kaleidoscope"
-BUILD_DIR="${BUILD_DIR:-$HOME/Library/Caches/Kaleidoscope-testers-build}"
+BUILD_DIR="${BUILD_DIR:-$HOME/Library/Caches/Prismet-testers-build}"
 LOG_FILE="$BUILD_DIR/last-build.log"
 APP_PATH="${APP_PATH:-}"
 

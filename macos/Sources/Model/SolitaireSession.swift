@@ -18,7 +18,7 @@ final class SolitaireSession: ObservableObject {
     private let saveURL: URL?
 
     init(drawCount: Int = 1,
-         leaderboard: LeaderboardService = KaleidoscopeLeaderboardService.shared,
+         leaderboard: LeaderboardService = PrismetLeaderboardService.shared,
          saveURL: URL? = SolitaireSession.defaultSaveURL()) {
         self.leaderboard = leaderboard
         self.saveURL = saveURL

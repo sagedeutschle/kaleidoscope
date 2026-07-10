@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-You are working in the **Kaleidoscope monorepo** (iOS + macOS games app + Oracle backend),
+You are working in the **Prismet monorepo** (iOS + macOS games app + Oracle backend),
 collaboratively developed by Sage and his dad Ben, each with their own agents.
 
 **→ Read [`AGENTS.md`](AGENTS.md) first.** It is the shared contract for every agent

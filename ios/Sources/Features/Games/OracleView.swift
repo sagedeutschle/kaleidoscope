@@ -9,7 +9,7 @@ import SwiftUI
 /// The parchment is its own world: deliberately light paper regardless of the
 /// global theme, so the ledger glows against the dark shell.
 struct OracleView: View {
-    private let accent = Kaleido.gold
+    private let accent = PrismetDesign.gold
     private let accountID: UUID?
     @StateObject private var persistence = PersistedGameSession<OracleSnapshot>(gameID: .oracle)
     @StateObject private var archive = DecreeArchive()
@@ -291,7 +291,7 @@ struct OracleView: View {
                 }
                 .padding(.vertical, 4)
             }
-            .kaleidoCard()
+            .prismetCard()
         }
     }
 
@@ -326,7 +326,7 @@ struct OracleView: View {
                 }
                 .padding(.vertical, 4)
             }
-            .kaleidoCard()
+            .prismetCard()
         }
     }
 
@@ -342,7 +342,7 @@ struct OracleView: View {
                 }
                 .padding(.vertical, 4)
             }
-            .kaleidoCard()
+            .prismetCard()
         }
     }
 
@@ -353,7 +353,7 @@ struct OracleView: View {
             stamp(title, ink: inkColor)
             Text(subtitle)
                 .font(.system(size: 12, design: .serif).italic())
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
             Spacer(minLength: 0)
         }
         .padding(.horizontal, 2)
@@ -397,7 +397,7 @@ struct OracleView: View {
             Circle()
                 .fill(
                     AngularGradient(
-                        colors: Kaleido.wheel + [Kaleido.wheel.first ?? accent],
+                        colors: PrismetDesign.wheel + [PrismetDesign.wheel.first ?? accent],
                         center: .center
                     )
                 )
@@ -406,7 +406,7 @@ struct OracleView: View {
             Circle()
                 .fill(
                     RadialGradient(
-                        colors: [Kaleido.ground.opacity(0.0), Kaleido.ground.opacity(0.55)],
+                        colors: [PrismetDesign.ground.opacity(0.0), PrismetDesign.ground.opacity(0.55)],
                         center: .center,
                         startRadius: diameter * 0.05,
                         endRadius: diameter * 0.5
@@ -414,7 +414,7 @@ struct OracleView: View {
                 )
 
             Circle()
-                .fill(Kaleido.panel.opacity(0.85))
+                .fill(PrismetDesign.panel.opacity(0.85))
                 .frame(width: diameter * 0.34, height: diameter * 0.34)
                 .overlay(
                     Image(systemName: "sparkles")
@@ -441,12 +441,12 @@ struct OracleView: View {
             waxSeal(diameter: 38)
                 .opacity(0.9)
             Text(title)
-                .font(Kaleido.title(20))
-                .foregroundStyle(Kaleido.ink)
+                .font(PrismetDesign.title(20))
+                .foregroundStyle(PrismetDesign.ink)
                 .multilineTextAlignment(.center)
             Text(subtitle)
                 .font(.system(size: 14, design: .serif))
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
                 .multilineTextAlignment(.center)
             ornamentalRule
                 .frame(width: 140)
@@ -471,7 +471,7 @@ struct OracleView: View {
 
             // The proclamation itself.
             Text(decree.regal)
-                .font(Kaleido.title(20))
+                .font(PrismetDesign.title(20))
                 .foregroundStyle(OracleTheme.ink)
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
@@ -755,7 +755,7 @@ private enum OracleTheme {
     static let ink3 = Color(red: 0.16, green: 0.11, blue: 0.05).opacity(0.55)
 
     // Gilt flourishes.
-    static let gilt = Kaleido.gold
+    static let gilt = PrismetDesign.gold
 
     // Wax seal.
     static let sealCrimson = Color(red: 0.55, green: 0.11, blue: 0.13)
@@ -769,11 +769,11 @@ private enum OracleTheme {
 
     // Verdict inks ON SHELL PANELS (paper-aware: brighter on the dark ground).
     static var laurelOnShell: Color {
-        Kaleido.isDark ? Color(red: 0.56, green: 0.74, blue: 0.46)
+        PrismetDesign.isDark ? Color(red: 0.56, green: 0.74, blue: 0.46)
                        : Color(red: 0.24, green: 0.40, blue: 0.20)
     }
     static var ochreOnShell: Color {
-        Kaleido.isDark ? Color(red: 0.90, green: 0.55, blue: 0.38)
+        PrismetDesign.isDark ? Color(red: 0.90, green: 0.55, blue: 0.38)
                        : Color(red: 0.62, green: 0.26, blue: 0.13)
     }
 

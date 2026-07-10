@@ -1,6 +1,6 @@
 import XCTest
 import SwiftUI
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// Guards the font system: every option must be pickable (non-empty label),
 /// map to a distinct `Font.Design`, and the default must stay the professional serif.

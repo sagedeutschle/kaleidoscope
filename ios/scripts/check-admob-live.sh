@@ -36,7 +36,7 @@ valid_banner_id() {
 }
 
 APP_ID="$(extract_value "GADApplicationIdentifier")"
-BANNER_ID="$(extract_value "KaleidoscopeAdMobBannerUnitID")"
+BANNER_ID="$(extract_value "PrismetAdMobBannerUnitID")"
 blockers=()
 
 if [[ -z "$APP_ID" ]]; then
@@ -58,7 +58,7 @@ fi
 if [[ "${#blockers[@]}" -eq 0 ]]; then
   echo "ADMOB_STATUS=LIVE_READY"
   echo "GADApplicationIdentifier=$APP_ID"
-  echo "KaleidoscopeAdMobBannerUnitID=$BANNER_ID"
+  echo "PrismetAdMobBannerUnitID=$BANNER_ID"
   exit 0
 fi
 

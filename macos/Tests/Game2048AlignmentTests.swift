@@ -1,6 +1,6 @@
 import Testing
 import CoreGraphics
-@testable import Kaleidoscope
+@testable import Prismet
 
 struct Game2048AlignmentTests {
     @Test func boardOutlineMatchesTileMatrix() {

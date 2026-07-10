@@ -1,4 +1,4 @@
-# Kaleidoscope Live AdMob Switch
+# Prismet Live AdMob Switch
 
 Current state: the iOS app builds with Google Mobile Ads and uses Google's test
 banner ids by default. Live ads need a real AdMob account, app id, and banner ad
@@ -21,7 +21,7 @@ https://apps.admob.com/
 2. Create/open the AdMob publisher account if prompted.
 3. Add app:
    - Platform: iOS
-   - App name: Kaleidoscope
+   - App name: Prismet
    - App Store listing: choose the non-listed/not-published path if the app is not live yet.
 4. Copy the AdMob App ID from App settings.
    - Format: `ca-app-pub-0000000000000000~0000000000`
@@ -37,7 +37,7 @@ Edit `project.yml`:
 
 ```yaml
 GADApplicationIdentifier: ca-app-pub-0000000000000000~0000000000
-KaleidoscopeAdMobBannerUnitID: ca-app-pub-0000000000000000/0000000000
+PrismetAdMobBannerUnitID: ca-app-pub-0000000000000000/0000000000
 ```
 
 Check the launch gate:
@@ -53,10 +53,10 @@ Then regenerate and test:
 
 ```bash
 xcodegen generate
-xcodebuild -project Kaleidoscope.xcodeproj -scheme Kaleidoscope \
+xcodebuild -project Prismet.xcodeproj -scheme Prismet \
   -destination 'platform=iOS Simulator,name=iPhone 17' \
   -configuration Debug \
-  -derivedDataPath "$HOME/Library/Caches/Kaleidoscope-admob-live-dd" \
+  -derivedDataPath "$HOME/Library/Caches/Prismet-admob-live-dd" \
   test
 ```
 

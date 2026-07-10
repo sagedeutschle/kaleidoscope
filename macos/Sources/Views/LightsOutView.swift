@@ -19,7 +19,7 @@ struct LightsOutView: View {
             }
             .frame(maxWidth: 460)
 
-            grid.kaleidoCard()
+            grid.prismetCard()
             controls
         }
         .padding(28)
@@ -80,12 +80,12 @@ struct LightsOutView: View {
         } label: {
             ZStack {
                 Circle()
-                    .fill(isLit ? AnyShapeStyle(accent.gradient) : AnyShapeStyle(Kaleido.panelHi))
-                    .overlay(Circle().stroke(isLit ? Color.white.opacity(0.85) : Kaleido.hairline, lineWidth: 2))
+                    .fill(isLit ? AnyShapeStyle(accent.gradient) : AnyShapeStyle(PrismetDesign.panelHi))
+                    .overlay(Circle().stroke(isLit ? Color.white.opacity(0.85) : PrismetDesign.hairline, lineWidth: 2))
                     .shadow(color: isLit ? accent.opacity(0.6) : .clear, radius: 10)
                 Image(systemName: isLit ? "lightbulb.fill" : "lightbulb")
                     .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(isLit ? .white : Kaleido.ink3)
+                    .foregroundStyle(isLit ? .white : PrismetDesign.ink3)
             }
             .frame(width: 60, height: 60)
         }

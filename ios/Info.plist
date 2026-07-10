@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Kaleidoscope</string>
+	<string>Prismet</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIconName</key>
@@ -26,14 +26,14 @@
 	<string>ca-app-pub-3940256099942544~1458002511</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>KaleidoscopeAdMobBannerUnitID</key>
+	<key>PrismetAdMobBannerUnitID</key>
 	<string></string>
-	<key>KaleidoscopeAdUnlockCodeHashes</key>
+	<key>PrismetAdUnlockCodeHashes</key>
 	<array/>
-	<key>KaleidoscopeRemoveAdsProductID</key>
+	<key>PrismetRemoveAdsProductID</key>
 	<string>com.spocksclub.kaleidoscope.removeads</string>
 	<key>NSGKFriendListUsageDescription</key>
-	<string>Kaleidoscope shows your Game Center friends on the friends leaderboard so you can compare scores.</string>
+	<string>Prismet shows your Game Center friends on the friends leaderboard so you can compare scores.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

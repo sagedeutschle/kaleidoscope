@@ -39,4 +39,4 @@ update_project() {
 update_project "$PHONE_PROJECT"
 update_project "$MAC_PROJECT"
 
-echo "Synced Kaleidoscope versions to $MARKETING_VERSION ($CURRENT_PROJECT_VERSION)."
+echo "Synced Prismet versions to $MARKETING_VERSION ($CURRENT_PROJECT_VERSION)."

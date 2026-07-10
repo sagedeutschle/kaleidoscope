@@ -28,7 +28,7 @@ struct ChessThemeColor: Hashable {
 }
 
 /// A complete chess board skin, applied identically to the 2D and 3D renderers.
-/// Palette values match the macOS Kaleidoscope `Theme` (chess.com-style green is
+/// Palette values match the macOS Prismet `Theme` (chess.com-style green is
 /// the default) so the two apps look the same.
 struct ChessBoardTheme: Identifiable, Hashable {
     let id: String

@@ -1,8 +1,8 @@
-# KaleidoscopeShared
+# PrismetShared
 
 Shared Swift package for code and metadata that must stay identical between:
 
-- iOS: `/Users/gtrktscrb/Desktop/GtrktscrBAPPDEV/mobile-development/Kaleidoscope`
+- iOS: `/Users/gtrktscrb/Desktop/GtrktscrBAPPDEV/mobile-development/Prismet`
 - macOS: `/Users/gtrktscrb/Desktop/GtrktscrB/apps/chess-hotswap`
 
 Start small and migrate safely. The first shared layer is the feature manifest:

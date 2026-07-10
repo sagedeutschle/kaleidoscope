@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// End-to-end interaction tests for the shared `GameState` (the object both
 /// boards drive via `tap`). Runs human-vs-human so no AI task interferes.

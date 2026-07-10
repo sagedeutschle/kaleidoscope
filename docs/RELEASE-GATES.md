@@ -1,4 +1,4 @@
-# Kaleidoscope — Release Gates
+# Prismet — Release Gates
 
 ## Launch-Day Update: 2026-07-09
 
@@ -16,10 +16,13 @@ Current next-update gates:
 - **[x] Wordgame broker schedule restored:** local LaunchAgent
   `com.gtrktscrb.wordle-broker.daily` is loaded with 01:15, 02:15, and 10:00
   local runs. Broker source lives in `oracle/wordle-broker/`.
+- **[x] v13 Task 8 local rename:** app/source/package/project/display names now
+  use Prismet; bundle identifiers, IAP product ID, Supabase refs, Game Center IDs,
+  and legacy persistence paths remain frozen.
 - **[ ] Next App Store update:** bump iOS past build 12 before upload. If the
   Prismet rename proceeds, use the current v13/1.1 coordination notes in
   `docs/AGENT-COORDINATION.md`; otherwise ship the next patch as a normal
-  Kaleidescope/Kaleidoscope metadata update.
+  Kaleidescope/Prismet metadata update.
 
 **As of 2026-07-04.** The remaining blockers to (A) a public iOS launch and
 (B) macOS parity. Grouped by area; each item has a status. Companion:
@@ -50,7 +53,7 @@ started.**
 - **[~] Listing metadata.** Draft copy + the polished build-11 metadata (subtitle,
   promo text, keywords, description, What's New) are in
   `ios/docs/APP-STORE-LISTING.md`. Confirm final app **name availability** in ASC
-  (Kaleidoscope may be taken; backups listed there).
+  (Prismet may be taken; backups listed there).
 - **[ ] Age rating + App Privacy answered** in ASC. Target 10+ (mild fantasy
   violence lever). **Do not** declare phone-number collection or AdMob/IDFA while
   those features are off in the shipping build.
@@ -84,7 +87,7 @@ started.**
 - **[ ] Real AdMob account + App ID + banner unit ID.** **Blocked:** the saved
   Google account shows "Account deleted"; need a valid Google account at
   `apps.admob.com`. When ready, put IDs in `project.yml`
-  (`GADApplicationIdentifier`, `KaleidoscopeAdMobBannerUnitID`) and pass
+  (`GADApplicationIdentifier`, `PrismetAdMobBannerUnitID`) and pass
   `scripts/check-admob-live.sh --require-live` (prints `ADMOB_STATUS=LIVE_READY`).
 - **[ ] Re-do App Privacy / IDFA / ATT answers** before submitting any ads-on
   build.
@@ -93,7 +96,7 @@ started.**
 ## D. IAP — Remove Ads (post-v1)
 
 - **[x] Remove-Ads plumbing done.** StoreKit unlock + SHA-256-hashed tester/family
-  codes (`KaleidoscopeAdUnlockCodeHashes`); Remove-Ads UI hidden in v1.
+  codes (`PrismetAdUnlockCodeHashes`); Remove-Ads UI hidden in v1.
 - **[ ] Paid Applications Agreement accepted + banking/tax filled.** **Only Ben
   (account holder) can accept it.** Required before any paid IAP.
 - **[ ] Create the IAP product** in ASC: non-consumable,

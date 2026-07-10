@@ -15,21 +15,21 @@ struct AccountPanelView: View {
         .padding(24)
         .frame(width: 390)
         .frame(minHeight: 360)
-        .background(Kaleido.ground)
+        .background(PrismetDesign.ground)
     }
 
     private var header: some View {
         HStack(spacing: 12) {
             Image(systemName: "gamecontroller.fill")
                 .font(.system(size: 28))
-                .foregroundStyle(AngularGradient(gradient: Gradient(colors: Kaleido.wheel), center: .center))
+                .foregroundStyle(AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center))
             VStack(alignment: .leading, spacing: 2) {
                 Text("Game Center")
-                    .font(Kaleido.title(24))
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.title(24))
+                    .foregroundStyle(PrismetDesign.ink)
                 Text("Shared with the mobile app")
                     .font(.caption)
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
             }
             Spacer()
             Button { dismiss() } label: { Image(systemName: "xmark") }
@@ -53,16 +53,16 @@ struct AccountPanelView: View {
         VStack(spacing: 16) {
             Image(systemName: "checkmark.seal.fill")
                 .font(.system(size: 54))
-                .foregroundStyle(Kaleido.gold)
+                .foregroundStyle(PrismetDesign.gold)
             Text(auth.displayName ?? profiles.me?.displayName ?? "Player")
-                .font(Kaleido.title(28))
-                .foregroundStyle(Kaleido.ink)
+                .font(PrismetDesign.title(28))
+                .foregroundStyle(PrismetDesign.ink)
             Text(auth.isCloudBacked ? "Game Center + cloud sync" : "Game Center")
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
             if let accountID {
                 Text(accountID.uuidString)
                     .font(.caption.monospaced())
-                    .foregroundStyle(Kaleido.ink3)
+                    .foregroundStyle(PrismetDesign.ink3)
                     .lineLimit(1)
                     .truncationMode(.middle)
             }
@@ -75,7 +75,7 @@ struct AccountPanelView: View {
                 Label("Refresh Identity", systemImage: "arrow.clockwise")
             }
             .buttonStyle(.borderedProminent)
-            .tint(Kaleido.gold)
+            .tint(PrismetDesign.gold)
         }
         .frame(maxWidth: .infinity, minHeight: 220)
     }

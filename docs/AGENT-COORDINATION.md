@@ -1,7 +1,7 @@
-# Kaleidoscope — Agent Coordination (monorepo PRISM bus)
+# Prismet — Agent Coordination (monorepo PRISM bus)
 
 This is the **single, unified coordination ledger** for the whole consolidated
-Kaleidoscope monorepo (`ios/`, `macos/`, `oracle/`, `docs/`). Multiple people's AI
+Prismet monorepo (`ios/`, `macos/`, `oracle/`, `docs/`). Multiple people's AI
 agents work this repo at the same time — Sage's agents (Claude/Fable + Codex) and
 now his dad Ben's agents too. This file plus the **PRISM** codeword is how those
 agents talk to each other across machines and lanes so nobody clobbers anyone
@@ -2055,3 +2055,25 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   interrupted it; no assertion/compiler failure was recorded, but do not call the full suite green from
   this run. Next release gates remain: after the Prismet rename lands, bump iOS build >12 (likely build 13
   / marketing 1.1 per Sage decision), refresh What's New/metadata, archive/upload, then submit.
+
+- `PRISM: CLAIM Codex 2026-07-09 (v13 Task 8 takeover: Kaleidoscope -> Prismet rename)` —
+  Claude/Fable appears out of usage again; taking over the active v13 lane from the latest away summary.
+  Scope: execute Task 8 in the canonical quiet main tree, preserving the freeze list exactly: iOS/macOS
+  bundle ids, IAP product id value, Supabase refs, Oracle/gist refs, on-disk persistence paths/UserDefaults
+  keys, facet/card/tile id strings, gitignored secrets, and historical ledger entries. Expected edits:
+  source/package/target/project/display names, living docs/scripts, installable broker/deploy paths as
+  needed. After rename: run xcodegen/build gates before commit; Task 9 build-number bump follows only after
+  Task 8 is stable.
+
+- `PRISM: RELEASE Codex 2026-07-09 (v13 Task 8 Prismet rename)` —
+  DONE: local app/source/package/project/display rename from Kaleidoscope to Prismet across iOS, macOS,
+  shared Swift package, deploy scripts, generated Info.plists, and living docs. Preserved the freeze list:
+  iOS/macOS bundle IDs, test bundle IDs, remove-ads product ID value, Supabase/public storage refs, Game
+  Center leaderboard IDs, account/ad entitlement defaults, Oracle/gist refs, and legacy on-disk
+  `Kaleidoscope` persistence roots. `PRISMET_SHOT` is now the debug screenshot env var, with
+  `KALEIDO_SHOT` kept as a fallback. Verification: `xcodegen generate` in both `ios/` and `macos/`;
+  iOS Debug generic build GREEN; macOS Debug build GREEN; `shared/PrismetShared swift test` GREEN
+  (5/0 after clearing stale generated `.build` cache); `git diff --check` clean; strict parity script
+  resolves `shared/PrismetShared`; iOS focused tests `ShotHarnessTests` + `WordleSessionTests` GREEN;
+  macOS focused tests `DailyWordProviderTests` + `SteamMetricsTests` GREEN. Next: Task 9 build/marketing
+  version bump to v1.1/build 13, then archive/upload/submit.

@@ -322,12 +322,12 @@ struct MinesweeperView: View {
             .disabled(current <= 1.01)
         }
         .font(.system(size: 16, weight: .semibold))
-        .foregroundStyle(Kaleido.ink)
+        .foregroundStyle(PrismetDesign.ink)
         .buttonStyle(.plain)
         .padding(.vertical, 8)
         .padding(.horizontal, 6)
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(Kaleido.outline, lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(PrismetDesign.outline, lineWidth: 1))
         .padding(10)
     }
 
@@ -346,8 +346,8 @@ struct MinesweeperView: View {
     private var customBoardSheet: some View {
         VStack(spacing: 16) {
             Text("Custom Board")
-                .font(Kaleido.rounded(22, .bold))
-                .foregroundStyle(Kaleido.ink)
+                .font(PrismetDesign.rounded(22, .bold))
+                .foregroundStyle(PrismetDesign.ink)
 
             VStack(spacing: 12) {
                 Stepper(value: $customWidth,
@@ -366,10 +366,10 @@ struct MinesweeperView: View {
                     .tint(accent)
                 }
             }
-            .font(Kaleido.rounded(15, .semibold))
-            .foregroundStyle(Kaleido.ink)
+            .font(PrismetDesign.rounded(15, .semibold))
+            .foregroundStyle(PrismetDesign.ink)
             .padding(14)
-            .kaleidoCard()
+            .prismetCard()
 
             Button {
                 difficultyRaw = MinesweeperDifficulty.custom.rawValue
@@ -392,7 +392,7 @@ struct MinesweeperView: View {
             Spacer()
             Text(value)
                 .monospacedDigit()
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
         }
     }
 
@@ -489,10 +489,10 @@ struct MinesweeperView: View {
                             showMine: Bool, count: Int) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill((revealed || showMine) ? Kaleido.panel : Kaleido.panelHi)
+                .fill((revealed || showMine) ? PrismetDesign.panel : PrismetDesign.panelHi)
                 .overlay(
                     RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .strokeBorder(Kaleido.outline, lineWidth: 1)
+                        .strokeBorder(PrismetDesign.outline, lineWidth: 1)
                 )
 
             if flagged && !showMine {
@@ -503,10 +503,10 @@ struct MinesweeperView: View {
             } else if showMine {
                 Image(systemName: "burst.fill")
                     .font(.system(size: size * 0.5, weight: .bold))
-                    .foregroundStyle(Kaleido.ink)
+                    .foregroundStyle(PrismetDesign.ink)
             } else if revealed && count > 0 {
                 Text("\(count)")
-                    .font(Kaleido.rounded(size * 0.52))
+                    .font(PrismetDesign.rounded(size * 0.52))
                     .monospacedDigit()
                     .foregroundStyle(modernNumberColor(count))
                     .transition(.opacity)
@@ -522,9 +522,9 @@ struct MinesweeperView: View {
         case 4: return Color(red: 0.30, green: 0.25, blue: 0.62)
         case 5: return Color(red: 0.60, green: 0.30, blue: 0.20)
         case 6: return Color(red: 0.20, green: 0.55, blue: 0.58)
-        case 7: return Kaleido.ink
-        case 8: return Kaleido.ink2
-        default: return Kaleido.ink
+        case 7: return PrismetDesign.ink
+        case 8: return PrismetDesign.ink2
+        default: return PrismetDesign.ink
         }
     }
 
@@ -724,7 +724,7 @@ private struct BoardChrome: ViewModifier {
     func body(content: Content) -> some View {
         switch style {
         case .modern:
-            content.kaleidoCard()
+            content.prismetCard()
         case .classic:
             content
                 .background(Color(white: 0.75))

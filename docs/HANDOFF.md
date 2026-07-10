@@ -1,4 +1,4 @@
-# Kaleidoscope — Monorepo Handoff
+# Prismet — Monorepo Handoff
 
 **Snapshot date: 2026-07-04.** This is the single current-state doc for the whole
 project. It supersedes the two per-app handoffs (`ios/docs/HANDOFF.md`,
@@ -7,9 +7,18 @@ project. It supersedes the two per-app handoffs (`ios/docs/HANDOFF.md`,
 Companion doc: **`docs/RELEASE-GATES.md`** — the launch blocker checklist. This
 file is the "what it is / what's shipping"; that file is the "what's left."
 
+## Launch-Day Update: 2026-07-09
+
+v1.0 build 12 is live on the App Store at
+`https://apps.apple.com/us/app/kaleidescope/id6785993194`. The older build-8 vs
+build-11 review fork below is historical. Current update lane: ship the first
+post-launch Prismet update as v1.1/build 13 after the rename/build-number gates
+pass. Bundle identifiers, the remove-ads product ID, Supabase refs, Game Center
+leaderboard IDs, and legacy persistence paths stay frozen for continuity.
+
 ---
 
-## 0. What Kaleidoscope is
+## 0. What Prismet is
 
 A calm, parchment-styled home for ~18 classic games (Chess, 2048, Sudoku,
 Minesweeper, Snake, Solitaire, Sea Battle, Gomoku, Reversi, Checkers, Connect
@@ -21,20 +30,20 @@ explicit, enforced release gate, not a nice-to-have.
 
 ## 1. Repo layout (consolidated monorepo)
 
-Root: `/Users/gtrktscrb/Desktop/Kaleidoscope`
+Root: `/Users/gtrktscrb/Desktop/Prismet`
 
 ```
 ios/      Shipping iOS app (SwiftUI, iOS 17, XcodeGen + SPM). The lead app.
-macos/    Desktop Kaleidoscope (formerly "chess-hotswap"). Parity target.
-shared/   KaleidoscopeShared — local Swift package both apps depend on
-          (each project.yml references ../shared/KaleidoscopeShared).
+macos/    Desktop Prismet (formerly "chess-hotswap"). Parity target.
+shared/   PrismetShared — local Swift package both apps depend on
+          (each project.yml references ../shared/PrismetShared).
 oracle/   Wizard King's Decree backend (Python 'wkd'). Feeds both apps.
 docs/     THIS doc, RELEASE-GATES.md, AGENT-COORDINATION.md (lane protocol).
 ```
 
 ### Sync model — read before you touch anything
 - **Canonical = a private GitHub repo.** The NAS shared folder, Sage's desktop
-  (`/Users/gtrktscrb/Desktop/Kaleidoscope`), and Ben's machine are all **clones**
+  (`/Users/gtrktscrb/Desktop/Prismet`), and Ben's machine are all **clones**
   that sync through GitHub.
 - Workflow: **`git pull --rebase` before work, `git push` after.** Always **build
   on your LOCAL clone**, never on the NAS SMB mount (see build rules).
@@ -88,9 +97,9 @@ There are two builds in play and one **open decision that is Sage's to make**:
 
 ### iOS layout
 ```
-Sources/App        KaleidoscopeApp, RootView (auth gate)
+Sources/App        PrismetApp, RootView (auth gate)
 Sources/Backend    Secrets, SupabaseClient, Profile, AuthManager, ProfileStore, GameCloudSyncStore
-Sources/Core       Games/(models + GameSync), Design/(KaleidoDesign, Color+Hex), Ads/*
+Sources/Core       Games/(models + GameSync), Design/(PrismetDesign, Color+Hex), Ads/*
 Sources/Features   Auth/*, Profile/*, Home/HomeView, Games/*
 Tests              per-game model tests + AppSecurityTests, AdEntitlementStoreTests
 docs               APP-STORE-LISTING, MAC-IOS-GAME-PARITY, ADMOB-LIVE-ADS, REMOVE-ADS-CODES, SECURITY-PHASE-1, SETUP
@@ -100,12 +109,12 @@ docs               APP-STORE-LISTING, MAC-IOS-GAME-PARITY, ADMOB-LIVE-ADS, REMOV
 
 ## 3. macOS app (`macos/`) — the parity target
 
-- **What it is:** the desktop Kaleidoscope, formerly **`chess-hotswap`**. SwiftUI,
+- **What it is:** the desktop Prismet, formerly **`chess-hotswap`**. SwiftUI,
   XcodeGen. Launches to a Home "lens grid" of facets.
 - **Identity:** bundle `com.gtrktscrb.kaleidoscope`, team **`YJR3ABV3H4`**
   (Sage's own — different team from iOS).
 - **Deploy:** `macos/scripts/deploy-mac.sh` → builds and installs to
-  `~/Applications/Kaleidoscope.app`.
+  `~/Applications/Prismet.app`.
 - **State:** stable and playable. Chess, Brick Bench (with BrickLink
   import/export), Wordle, Oracle, Rubik's, 2048, Lights Out, Minesweeper, Snake,
   Sliding-15, Sudoku, Nonogram, Reversi and more are ready facets. ~180 model
@@ -128,8 +137,8 @@ decision in the same turn: **mirrored**, **not applicable (with reason)**, or
 **tracked debt (owner + next action)**. Before any iOS tester/review deploy, run
 `ios/scripts/check-mac-ios-parity.sh --strict`. Path mapping and the current
 matrix live in `ios/docs/MAC-IOS-GAME-PARITY.md`. Shared, non-UI contracts belong
-in the `KaleidoscopeShared` SwiftPM package (both apps depend on it; first
-contract is `KaleidoscopeFeatureManifest`).
+in the `PrismetShared` SwiftPM package (both apps depend on it; first
+contract is `PrismetFeatureManifest`).
 
 ---
 
@@ -196,7 +205,7 @@ These apply to the iOS target especially and have each cost a debugging session:
     `docs/AGENT-COORDINATION.md`**: claim a lane, log every file touched, and do a
     grep-marker sweep before building. If a file you need is lane-claimed, don't
     edit through the claim — log it and carry it as tracked debt until released.
-- **Kaleidoscope iOS builds:** prefer delegating build+deploy to the **codex CLI**
+- **Prismet iOS builds:** prefer delegating build+deploy to the **codex CLI**
   (per build rule 5).
 
 ---

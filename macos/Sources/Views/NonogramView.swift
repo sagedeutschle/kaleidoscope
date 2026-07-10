@@ -82,10 +82,10 @@ struct NonogramView: View {
             }
         }
         .padding(16)
-        .background(Kaleido.panelHi)
+        .background(PrismetDesign.panelHi)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Kaleido.outline, lineWidth: 1))
-        .kaleidoCard()
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(PrismetDesign.outline, lineWidth: 1))
+        .prismetCard()
     }
 
     private func clueText(_ clues: [Int], vertical: Bool) -> some View {
@@ -94,7 +94,7 @@ struct NonogramView: View {
             .font(.caption.bold())
             .monospacedDigit()
             .multilineTextAlignment(vertical ? .center : .trailing)
-            .foregroundStyle(Kaleido.ink2)
+            .foregroundStyle(PrismetDesign.ink2)
     }
 
     private func cell(row: Int, col: Int) -> some View {
@@ -106,11 +106,11 @@ struct NonogramView: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 5, style: .continuous)
                     .fill(cellFill(session.game.mark(row: row, col: col)))
-                    .overlay(RoundedRectangle(cornerRadius: 5).stroke(Kaleido.hairline, lineWidth: 1))
+                    .overlay(RoundedRectangle(cornerRadius: 5).stroke(PrismetDesign.hairline, lineWidth: 1))
                 if session.game.mark(row: row, col: col) == .crossed {
                     Image(systemName: "xmark")
                         .font(.headline.bold())
-                        .foregroundStyle(Kaleido.ink3)
+                        .foregroundStyle(PrismetDesign.ink3)
                 }
             }
             .frame(width: cellSide, height: cellSide)
@@ -122,7 +122,7 @@ struct NonogramView: View {
         switch mark {
         case .empty: return Color.white.opacity(0.64)
         case .filled: return accent
-        case .crossed: return Kaleido.panel
+        case .crossed: return PrismetDesign.panel
         }
     }
 }

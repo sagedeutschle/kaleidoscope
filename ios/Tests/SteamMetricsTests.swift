@@ -1,6 +1,6 @@
 // PRISM: RELEASE Agent-Design/Fable 2026-07-04 — SteamRewind fold-in (Lens) engine tests.
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 final class SteamMetricsTests: XCTestCase {
     private let fixture = Fixtures.sage

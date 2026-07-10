@@ -20,7 +20,7 @@ struct ConnectFourView: View {
     @State private var hasSubmittedTerminalResult = false
 
     private let accent = FacetRegistry.accent(for: "connect-four")
-    private let leaderboardService = KaleidoscopeLeaderboardService.shared
+    private let leaderboardService = PrismetLeaderboardService.shared
     private let cellSide: CGFloat = 58
     private let gap: CGFloat = 7
 
@@ -88,9 +88,9 @@ struct ConnectFourView: View {
         .padding(16)
         .background(boardBlue)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(Kaleido.outline, lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(PrismetDesign.outline, lineWidth: 1))
         .shadow(color: Color(red: 0.25, green: 0.16, blue: 0.08).opacity(0.22), radius: 14, y: 8)
-        .kaleidoCard()
+        .prismetCard()
     }
 
     private var controls: some View {
@@ -149,7 +149,7 @@ struct ConnectFourView: View {
         } label: {
             ZStack {
                 Circle()
-                    .fill(Kaleido.panelHi)
+                    .fill(PrismetDesign.panelHi)
                     .shadow(color: .black.opacity(0.22), radius: 2, y: 1)
 
                 if let token {

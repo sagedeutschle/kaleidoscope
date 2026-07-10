@@ -19,7 +19,7 @@ struct SlidingPuzzleView: View {
                        subtitle: session.puzzle.isSolved ? "Solved." : "Slide tiles into order.")
                 .frame(maxWidth: 440)
 
-            board.kaleidoCard()
+            board.prismetCard()
             controls
         }
         .padding(28)

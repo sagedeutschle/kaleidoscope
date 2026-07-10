@@ -78,9 +78,9 @@ struct RubiksCubeView: View {
             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .strokeBorder(Kaleido.outline, lineWidth: 1)
+                    .strokeBorder(PrismetDesign.outline, lineWidth: 1)
             )
-            .kaleidoCard()
+            .prismetCard()
     }
 
     /// The cube now works like the leading cube apps: swipe a sticker to turn
@@ -89,7 +89,7 @@ struct RubiksCubeView: View {
         Label("Swipe a sticker to turn its layer. Drag the background to spin your view.",
               systemImage: "hand.draw")
             .font(.footnote)
-            .foregroundStyle(Kaleido.ink2)
+            .foregroundStyle(PrismetDesign.ink2)
             .frame(maxWidth: .infinity, alignment: .leading)
             .fixedSize(horizontal: false, vertical: true)
     }
@@ -224,12 +224,12 @@ struct RubiksCubeView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text("Turn a face")
-                    .font(Kaleido.rounded(15, .bold))
-                    .foregroundStyle(Kaleido.ink)
+                    .font(PrismetDesign.rounded(15, .bold))
+                    .foregroundStyle(PrismetDesign.ink)
                 Spacer()
                 Text("' = counter-clockwise")
                     .font(.caption2)
-                    .foregroundStyle(Kaleido.ink3)
+                    .foregroundStyle(PrismetDesign.ink3)
             }
 
             // Column captions so the two buttons in each row read clearly.
@@ -243,7 +243,7 @@ struct RubiksCubeView: View {
             }
             .font(.caption2.weight(.bold))
             .tracking(0.6)
-            .foregroundStyle(Kaleido.ink3)
+            .foregroundStyle(PrismetDesign.ink3)
 
             ForEach(RubiksMove.mobileControlRows) { row in
                 HStack(spacing: 8) {
@@ -256,10 +256,10 @@ struct RubiksCubeView: View {
         .padding(14)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Kaleido.panel)
+                .fill(PrismetDesign.panel)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .strokeBorder(Kaleido.outline, lineWidth: 1)
+                        .strokeBorder(PrismetDesign.outline, lineWidth: 1)
                 )
         )
     }
@@ -269,16 +269,16 @@ struct RubiksCubeView: View {
     private func faceTag(_ face: CubeFace) -> some View {
         HStack(spacing: 8) {
             Text(face.rawValue)
-                .font(Kaleido.rounded(18, .bold))
-                .foregroundStyle(Kaleido.ink)
+                .font(PrismetDesign.rounded(18, .bold))
+                .foregroundStyle(PrismetDesign.ink)
                 .frame(width: 30, height: 48)
                 .background(
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(Kaleido.panelHi)
+                        .fill(PrismetDesign.panelHi)
                 )
             Text(face.plainName)
                 .font(.caption)
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
                 .frame(width: 58, alignment: .leading)
@@ -291,7 +291,7 @@ struct RubiksCubeView: View {
             perform(move)
         } label: {
             Text(label)
-                .font(Kaleido.rounded(20, .semibold))
+                .font(PrismetDesign.rounded(20, .semibold))
                 .monospacedDigit()
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)
@@ -387,16 +387,16 @@ private struct RubiksHelpSheet: View {
                             ForEach(CubeFace.allCases, id: \.self) { face in
                                 HStack(spacing: 12) {
                                     Text(face.rawValue)
-                                        .font(Kaleido.rounded(17, .bold))
-                                        .foregroundStyle(Kaleido.ink)
+                                        .font(PrismetDesign.rounded(17, .bold))
+                                        .foregroundStyle(PrismetDesign.ink)
                                         .frame(width: 32, height: 32)
                                         .background(
                                             RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                                .fill(Kaleido.panelHi)
+                                                .fill(PrismetDesign.panelHi)
                                         )
                                     Text(face.plainName)
                                         .font(.subheadline)
-                                        .foregroundStyle(Kaleido.ink2)
+                                        .foregroundStyle(PrismetDesign.ink2)
                                     Spacer()
                                 }
                             }
@@ -456,7 +456,7 @@ private struct RubiksHelpSheet: View {
     ) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             Label(title, systemImage: systemImage)
-                .font(Kaleido.rounded(16, .bold))
+                .font(PrismetDesign.rounded(16, .bold))
                 .foregroundStyle(accent)
             content()
         }
@@ -464,10 +464,10 @@ private struct RubiksHelpSheet: View {
         .padding(14)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Kaleido.panel)
+                .fill(PrismetDesign.panel)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .strokeBorder(Kaleido.outline, lineWidth: 1)
+                        .strokeBorder(PrismetDesign.outline, lineWidth: 1)
                 )
         )
     }
@@ -477,7 +477,7 @@ private struct RubiksHelpSheet: View {
             Text("•").foregroundStyle(accent)
             Text(text)
                 .font(.subheadline)
-                .foregroundStyle(Kaleido.ink2)
+                .foregroundStyle(PrismetDesign.ink2)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }

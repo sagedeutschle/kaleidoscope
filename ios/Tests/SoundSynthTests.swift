@@ -1,6 +1,6 @@
 import AVFoundation
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 final class SoundSynthTests: XCTestCase {
     private let format = AVAudioFormat(standardFormatWithSampleRate: 44_100, channels: 1)!

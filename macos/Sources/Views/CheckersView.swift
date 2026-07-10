@@ -108,7 +108,7 @@ struct CheckersView: View {
         CheckersTheme.theme(for: CheckersSkin(rawValue: skinRaw) ?? .classic)
     }
     private var accent: Color { theme.accent }
-    private let leaderboardService = KaleidoscopeLeaderboardService.shared
+    private let leaderboardService = PrismetLeaderboardService.shared
     private let cellSide: CGFloat = 54
 
     init(session: CheckersSession = CheckersSession()) {
@@ -171,11 +171,11 @@ struct CheckersView: View {
         return VStack(alignment: .trailing, spacing: 4) {
             Text(label.uppercased())
                 .font(.caption2.weight(.bold)).tracking(0.7)
-                .foregroundStyle(Kaleido.ink3)
+                .foregroundStyle(PrismetDesign.ink3)
             HStack(spacing: 5) {
                 if captured == 0 {
                     Circle()
-                        .strokeBorder(Kaleido.ink3.opacity(0.45), style: StrokeStyle(lineWidth: 1, dash: [2.5, 2.5]))
+                        .strokeBorder(PrismetDesign.ink3.opacity(0.45), style: StrokeStyle(lineWidth: 1, dash: [2.5, 2.5]))
                         .frame(width: 18, height: 18)
                 } else {
                     HStack(spacing: -11) {
@@ -184,8 +184,8 @@ struct CheckersView: View {
                         }
                     }
                     Text("\(captured)")
-                        .font(Kaleido.rounded(15, .bold)).monospacedDigit()
-                        .foregroundStyle(Kaleido.ink2)
+                        .font(PrismetDesign.rounded(15, .bold)).monospacedDigit()
+                        .foregroundStyle(PrismetDesign.ink2)
                 }
             }
             .frame(height: 20)
@@ -282,15 +282,15 @@ struct CheckersView: View {
             } label: {
                 Image(systemName: "paintbrush")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 9)
                     .background(
                         RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(Kaleido.panel)
+                            .fill(PrismetDesign.panel)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                    .strokeBorder(Kaleido.outline, lineWidth: 1)
+                                    .strokeBorder(PrismetDesign.outline, lineWidth: 1)
                             )
                     )
             }
@@ -337,9 +337,9 @@ struct CheckersView: View {
                 }
 
                 if selected {
-                    Rectangle().fill(Kaleido.gold.opacity(0.26))
+                    Rectangle().fill(PrismetDesign.gold.opacity(0.26))
                     Rectangle()
-                        .strokeBorder(Kaleido.gold.opacity(0.9), lineWidth: max(2, cellSide * 0.05))
+                        .strokeBorder(PrismetDesign.gold.opacity(0.9), lineWidth: max(2, cellSide * 0.05))
                 }
 
                 if let piece {
@@ -351,13 +351,13 @@ struct CheckersView: View {
                         // Faint gold ring hints which discs can move (no iOS equivalent
                         // because iOS surfaces this on tap; kept for pointer play).
                         Circle()
-                            .strokeBorder(Kaleido.gold.opacity(0.55),
+                            .strokeBorder(PrismetDesign.gold.opacity(0.55),
                                           style: StrokeStyle(lineWidth: max(1.5, cellSide * 0.04), dash: [3, 3]))
                             .frame(width: cellSide * 0.82, height: cellSide * 0.82)
                     }
                 } else if destination {
                     Circle()
-                        .strokeBorder(Kaleido.gold.opacity(0.85), lineWidth: max(1.5, cellSide * 0.045))
+                        .strokeBorder(PrismetDesign.gold.opacity(0.85), lineWidth: max(1.5, cellSide * 0.045))
                         .frame(width: cellSide * 0.46, height: cellSide * 0.46)
                 }
             }
@@ -492,7 +492,7 @@ private struct CheckersDisc: View {
                     CheckersCrownStamp()
                         .fill(
                             LinearGradient(
-                                colors: [Color(red: 0.96, green: 0.82, blue: 0.40), Kaleido.gold],
+                                colors: [Color(red: 0.96, green: 0.82, blue: 0.40), PrismetDesign.gold],
                                 startPoint: .top,
                                 endPoint: .bottom
                             )
@@ -504,7 +504,7 @@ private struct CheckersDisc: View {
                         .shadow(color: Color.black.opacity(0.35), radius: max(0.5, size * 0.012), y: max(0.5, size * 0.015))
                 } else {
                     Circle()
-                        .fill(Kaleido.gold)
+                        .fill(PrismetDesign.gold)
                         .frame(width: size * 0.26, height: size * 0.26)
                 }
             }
@@ -567,7 +567,7 @@ private struct ClubChipStyle: ButtonStyle {
     private var foreground: Color {
         switch kind {
         case .wood: return Color(red: 0.97, green: 0.93, blue: 0.85)
-        case .quiet: return Kaleido.ink
+        case .quiet: return PrismetDesign.ink
         }
     }
 
@@ -578,14 +578,14 @@ private struct ClubChipStyle: ButtonStyle {
                 LinearGradient(colors: [theme.frame, theme.frameEdge], startPoint: .top, endPoint: .bottom)
             )
         case .quiet:
-            return AnyShapeStyle(Kaleido.panel)
+            return AnyShapeStyle(PrismetDesign.panel)
         }
     }
 
     private var border: Color {
         switch kind {
         case .wood: return Color.white.opacity(0.12)
-        case .quiet: return Kaleido.outline
+        case .quiet: return PrismetDesign.outline
         }
     }
 }

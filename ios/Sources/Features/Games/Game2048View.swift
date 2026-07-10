@@ -193,15 +193,15 @@ private struct Glass2048ChipStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.subheadline.weight(.semibold))
-            .foregroundStyle(Kaleido.ink)
+            .foregroundStyle(PrismetDesign.ink)
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Kaleido.panel.opacity(0.85))
+                    .fill(PrismetDesign.panel.opacity(0.85))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .strokeBorder(Kaleido.outline, lineWidth: 1)
+                            .strokeBorder(PrismetDesign.outline, lineWidth: 1)
                     )
             )
             .opacity(configuration.isPressed ? 0.75 : 1)
@@ -249,7 +249,7 @@ struct Game2048View: View {
                        subtitle: subtitle) {
                 HStack(spacing: 16) {
                     StatBadge(label: "Score", value: "\(session.game.score)", accent: accent)
-                    StatBadge(label: "Best", value: "\(session.best)", accent: Kaleido.ink)
+                    StatBadge(label: "Best", value: "\(session.best)", accent: PrismetDesign.ink)
                 }
             }
 
@@ -259,7 +259,7 @@ struct Game2048View: View {
 
             if !hintSeen {
                 Text("Swipe up · down · left · right")
-                    .font(.caption).foregroundStyle(Kaleido.ink3)
+                    .font(.caption).foregroundStyle(PrismetDesign.ink3)
                     .transition(.opacity)
             }
         }
@@ -284,7 +284,7 @@ struct Game2048View: View {
             settingsSheet
                 .presentationDetents([.height(420), .medium])
                 .presentationDragIndicator(.visible)
-                .presentationBackground(Kaleido.ground)
+                .presentationBackground(PrismetDesign.ground)
         }
     }
 
@@ -317,12 +317,12 @@ struct Game2048View: View {
             Button { showSettings = true } label: {
                 Image(systemName: "gearshape.fill")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
                     .frame(width: 40, height: 40)
                     .background(
                         Circle()
-                            .fill(Kaleido.panel.opacity(0.85))
-                            .overlay(Circle().strokeBorder(Kaleido.outline, lineWidth: 1))
+                            .fill(PrismetDesign.panel.opacity(0.85))
+                            .overlay(Circle().strokeBorder(PrismetDesign.outline, lineWidth: 1))
                     )
             }
             .buttonStyle(.plain)
@@ -370,7 +370,7 @@ struct Game2048View: View {
                                 lineWidth: 1
                             )
                     )
-                    .shadow(color: .black.opacity(Kaleido.isDark ? 0.45 : 0.22), radius: 14, y: 8)
+                    .shadow(color: .black.opacity(PrismetDesign.isDark ? 0.45 : 0.22), radius: 14, y: 8)
 
                 VStack(spacing: gap) {
                     ForEach(0..<4, id: \.self) { r in
@@ -467,8 +467,8 @@ struct Game2048View: View {
     private var settingsSheet: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("The Wooden Tray")
-                .font(Kaleido.title(20))
-                .foregroundStyle(Kaleido.ink)
+                .font(PrismetDesign.title(20))
+                .foregroundStyle(PrismetDesign.ink)
                 .padding(.top, 22)
 
             VStack(alignment: .leading, spacing: 10) {
@@ -490,7 +490,7 @@ struct Game2048View: View {
                     )) {
                         Text("Scatter animation")
                             .font(.subheadline.weight(.medium))
-                            .foregroundStyle(Kaleido.ink)
+                            .foregroundStyle(PrismetDesign.ink)
                     }
                     .tint(accent)
                 }
@@ -499,7 +499,7 @@ struct Game2048View: View {
                     HStack {
                         Text("Charges per game")
                             .font(.subheadline.weight(.medium))
-                            .foregroundStyle(Kaleido.ink)
+                            .foregroundStyle(PrismetDesign.ink)
                         Spacer()
                         HStack(spacing: 12) {
                             stepChip("minus", disabled: session.shuffleUsesPerGame <= 0) {
@@ -508,9 +508,9 @@ struct Game2048View: View {
                             .accessibilityLabel("Fewer shuffle charges")
 
                             Text("\(session.shuffleUsesPerGame)")
-                                .font(Kaleido.rounded(18))
+                                .font(PrismetDesign.rounded(18))
                                 .monospacedDigit()
-                                .foregroundStyle(Kaleido.ink)
+                                .foregroundStyle(PrismetDesign.ink)
                                 .frame(minWidth: 22)
 
                             stepChip("plus", disabled: session.shuffleUsesPerGame >= Game2048ShufflePowerUps.maxUsesPerGame) {
@@ -527,14 +527,14 @@ struct Game2048View: View {
         .padding(.horizontal, 20)
         .frame(maxWidth: 520)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(Kaleido.ground)
+        .background(PrismetDesign.ground)
     }
 
     private func sectionLabel(_ text: String) -> some View {
         Text(text.uppercased())
             .font(.caption2.weight(.bold))
             .tracking(0.7)
-            .foregroundStyle(Kaleido.ink3)
+            .foregroundStyle(PrismetDesign.ink3)
     }
 
     private func settingRow<Content: View>(@ViewBuilder content: () -> Content) -> some View {
@@ -543,10 +543,10 @@ struct Game2048View: View {
             .padding(.vertical, 11)
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Kaleido.panel)
+                    .fill(PrismetDesign.panel)
                     .overlay(
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .strokeBorder(Kaleido.hairline, lineWidth: 1)
+                            .strokeBorder(PrismetDesign.hairline, lineWidth: 1)
                     )
             )
     }
@@ -597,12 +597,12 @@ struct Game2048View: View {
                 .frame(width: 68, height: 50)
                 .overlay(
                     RoundedRectangle(cornerRadius: 9, style: .continuous)
-                        .strokeBorder(selected ? accent : Kaleido.outline, lineWidth: selected ? 2 : 1)
+                        .strokeBorder(selected ? accent : PrismetDesign.outline, lineWidth: selected ? 2 : 1)
                 )
 
                 Text(option.rawValue)
                     .font(.caption2.weight(.semibold))
-                    .foregroundStyle(selected ? Kaleido.ink : Kaleido.ink2)
+                    .foregroundStyle(selected ? PrismetDesign.ink : PrismetDesign.ink2)
             }
         }
         .buttonStyle(.plain)

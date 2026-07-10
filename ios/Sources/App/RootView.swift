@@ -2,8 +2,12 @@ import SwiftUI
 
 enum RootLaunchPolicy {
     static func screenshotScreen(environment: [String: String] = ProcessInfo.processInfo.environment) -> String? {
-        guard let shot = environment["KALEIDO_SHOT"], !shot.isEmpty else { return nil }
-        return shot
+        for key in ["PRISMET_SHOT", "KALEIDO_SHOT"] {
+            if let shot = environment[key], !shot.isEmpty {
+                return shot
+            }
+        }
+        return nil
     }
 
     static func shouldRestoreAuth(environment: [String: String] = ProcessInfo.processInfo.environment) -> Bool {
@@ -20,7 +24,7 @@ struct RootView: View {
         Group {
 #if DEBUG
             // Screenshot harness: drop straight into one screen when launched with
-            // KALEIDO_SHOT=<name>. Inert (and compiled out) for normal/Release runs.
+            // PRISMET_SHOT=<name>. Inert (and compiled out) for normal/Release runs.
             if let shot = RootLaunchPolicy.screenshotScreen() {
                 ShotHarness(screen: shot)
             } else {
@@ -58,7 +62,7 @@ struct RootView: View {
     private var splash: some View {
         ProgressView().controlSize(.large)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(FacetBackdrop(accent: Kaleido.gold))
+            .background(FacetBackdrop(accent: PrismetDesign.gold))
     }
 }
 
@@ -66,14 +70,14 @@ struct RootView: View {
 struct SetupNeededView: View {
     var body: some View {
         VStack(spacing: 16) {
-            Image(systemName: "gearshape.2.fill").font(.system(size: 44)).foregroundStyle(Kaleido.gold)
-            Text("Almost there").font(Kaleido.title(28)).foregroundStyle(Kaleido.ink)
+            Image(systemName: "gearshape.2.fill").font(.system(size: 44)).foregroundStyle(PrismetDesign.gold)
+            Text("Almost there").font(PrismetDesign.title(28)).foregroundStyle(PrismetDesign.ink)
             Text("Add your Supabase URL and anon key to Sources/Backend/Secrets.swift, then rebuild. Full steps are in docs/SETUP.md.")
-                .font(.callout).multilineTextAlignment(.center).foregroundStyle(Kaleido.ink2)
+                .font(.callout).multilineTextAlignment(.center).foregroundStyle(PrismetDesign.ink2)
                 .frame(maxWidth: 340)
         }
         .padding(28)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(FacetBackdrop(accent: Kaleido.gold))
+        .background(FacetBackdrop(accent: PrismetDesign.gold))
     }
 }

@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// Guards the 2048 tile palette against the "low tiles are hard to read" regression:
 /// every value must pair its number with a high-contrast background, and the 2 and 4

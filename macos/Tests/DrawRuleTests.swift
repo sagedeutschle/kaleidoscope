@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 /// Draw detection: insufficient material, the fifty-move rule, and (via the
 /// repetition helper) threefold repetition.

@@ -13,13 +13,13 @@ private enum WordleTheme {
     /// Canonical tile palette (classic Wordle homage) — single source of truth.
     static let correct = Color(red: 0.36, green: 0.62, blue: 0.36)
     static let present = Color(red: 0.84, green: 0.66, blue: 0.22)
-    static var absent: Color { Kaleido.isDark ? Color(white: 0.30) : Color(white: 0.55) }
+    static var absent: Color { PrismetDesign.isDark ? Color(white: 0.30) : Color(white: 0.55) }
 
     /// Own-world "classic light" keycap for letters not tried yet.
     static let keyIdle = Color(red: 0.82, green: 0.83, blue: 0.86)
     static let keyIdleInk = Color(red: 0.13, green: 0.14, blue: 0.16)
 
-    static var tileBlank: Color { Kaleido.isDark ? Kaleido.panelHi : Color.white }
+    static var tileBlank: Color { PrismetDesign.isDark ? PrismetDesign.panelHi : Color.white }
 
     static func score(_ score: WordPuzzleLetterScore) -> Color {
         switch score {
@@ -86,14 +86,14 @@ struct WordleView: View {
                     .frame(width: side, height: side)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
-            .kaleidoCard()
+            .prismetCard()
 
             nativeKeyboardInput
 
             if !session.message.isEmpty {
                 Text(session.message)
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Kaleido.ink2)
+                    .foregroundStyle(PrismetDesign.ink2)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .frame(minHeight: 18)
@@ -213,7 +213,7 @@ struct WordleView: View {
             )
             .overlay(
                 Text(info.letter)
-                    .font(Kaleido.rounded(size * 0.46, .heavy))
+                    .font(PrismetDesign.rounded(size * 0.46, .heavy))
                     .foregroundStyle(info.textColor)
                     .minimumScaleFactor(0.5)
             )
@@ -253,7 +253,7 @@ struct WordleView: View {
                     letter: String(letters[col]),
                     fill: tileBlank,
                     border: WordleTheme.accent.opacity(0.55),
-                    textColor: Kaleido.ink
+                    textColor: PrismetDesign.ink
                 )
             }
             return emptyTile()
@@ -285,15 +285,15 @@ struct WordleView: View {
     }
 
     private var tileBlank: Color {
-        Kaleido.isDark ? Kaleido.panelHi : Color.white
+        PrismetDesign.isDark ? PrismetDesign.panelHi : Color.white
     }
 
     private func emptyTile() -> TileInfo {
         TileInfo(
             letter: "",
-            fill: tileBlank.opacity(Kaleido.isDark ? 0.35 : 0.85),
-            border: Kaleido.hairline,
-            textColor: Kaleido.ink
+            fill: tileBlank.opacity(PrismetDesign.isDark ? 0.35 : 0.85),
+            border: PrismetDesign.hairline,
+            textColor: PrismetDesign.ink
         )
     }
 
@@ -301,7 +301,7 @@ struct WordleView: View {
         switch score {
         case .correct: return Color(red: 0.36, green: 0.62, blue: 0.36)
         case .present: return Color(red: 0.84, green: 0.66, blue: 0.22)
-        case .absent:  return Kaleido.isDark ? Color(white: 0.30) : Color(white: 0.55)
+        case .absent:  return PrismetDesign.isDark ? Color(white: 0.30) : Color(white: 0.55)
         }
     }
 
@@ -406,10 +406,10 @@ private struct WordleLetterTracker: View {
         .padding(.vertical, 7)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Kaleido.isDark ? Color(white: 0.12).opacity(0.92) : Color.white.opacity(0.92))
+                .fill(PrismetDesign.isDark ? Color(white: 0.12).opacity(0.92) : Color.white.opacity(0.92))
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .strokeBorder(Kaleido.outline.opacity(0.6), lineWidth: 1)
+                        .strokeBorder(PrismetDesign.outline.opacity(0.6), lineWidth: 1)
                 )
                 .shadow(color: .black.opacity(0.18), radius: 10, y: 4)
         )
@@ -435,7 +435,7 @@ private struct WordleLetterTracker: View {
         switch state {
         case .correct: return WordleTheme.correct
         case .present: return WordleTheme.present
-        case .absent: return WordleTheme.absent.opacity(Kaleido.isDark ? 0.55 : 0.85)
+        case .absent: return WordleTheme.absent.opacity(PrismetDesign.isDark ? 0.55 : 0.85)
         case nil: return WordleTheme.keyIdle
         }
     }

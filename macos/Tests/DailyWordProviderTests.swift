@@ -1,5 +1,5 @@
 import XCTest
-@testable import Kaleidoscope
+@testable import Prismet
 
 final class DailyWordProviderTests: XCTestCase {
     func testLocalFallbackIsStableForSameDate() throws {

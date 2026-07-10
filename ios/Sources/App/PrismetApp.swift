@@ -2,7 +2,7 @@ import SwiftUI
 import GoogleMobileAds
 
 @main
-struct KaleidoscopeApp: App {
+struct PrismetApp: App {
     /// App-wide font choice; cascades to the whole app via `.fontDesign` on the root.
     @AppStorage(AppFont.storageKey) private var fontRaw = AppFont.default.rawValue
 
