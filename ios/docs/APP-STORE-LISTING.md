@@ -7,6 +7,10 @@ tweak voice to taste.
 
 - **Version:** 1.1
 - **Build:** 13
+- **ASC status:** `WAITING_FOR_REVIEW` (submitted 2026-07-10T01:57:16Z)
+- **ASC ids:** version `88c88227-ddc2-4766-a966-cb2d1d703363`, build
+  `4e231958-05cc-4cc2-87d1-6d5123ccf093`, review submission
+  `ba52e847-a300-415f-a111-e0e983ddc443`
 - **Public baseline:** v1.0 build 12 is already live on the App Store.
 - **Name strategy:** in-app/project name is Prismet. The public App Store name can
   remain `Kaleidescope` for the transition if the rename is not ready in ASC.

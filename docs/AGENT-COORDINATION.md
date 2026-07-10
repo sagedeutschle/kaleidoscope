@@ -2088,3 +2088,14 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   `MARKETING_VERSION=1.1`, `CURRENT_PROJECT_VERSION=13`. Verification: `git diff --check` clean;
   iOS Debug generic build GREEN; macOS Debug build GREEN. Next: create/archive/upload the iOS Release
   build, update App Store Connect metadata, and submit.
+
+- `PRISM: RELEASE Codex 2026-07-09/10 (v1.1 build 13 ASC submission)` —
+  DONE: archived iOS Release to `~/Library/Caches/Prismet-asc-v13.xcarchive` and uploaded with
+  `ios/ExportOptions-AppStoreConnect.plist` using ASC key `FLXPLSRBU8`. Upload succeeded; only the
+  known non-blocking GoogleMobileAds/UserMessagingPlatform dSYM warnings appeared. ASC build 13 became
+  VALID/App-Store-eligible as build id `4e231958-05cc-4cc2-87d1-6d5123ccf093` and was attached to new
+  iOS version 1.1 id `88c88227-ddc2-4766-a966-cb2d1d703363`. Updated the en-US v1.1 localization with
+  Prismet description, promotional text, keywords, and What's New while leaving the public app name field
+  alone for the transition. Submitted review submission `ba52e847-a300-415f-a111-e0e983ddc443`; ASC now
+  reports v1.1 and the review submission as `WAITING_FOR_REVIEW` with submittedDate
+  `2026-07-10T01:57:16.713Z`. Public v1.0 build 12 remains `READY_FOR_SALE` until Apple approves v1.1.

@@ -21,8 +21,12 @@ Current next-update gates:
   and legacy persistence paths remain frozen.
 - **[x] v13 Task 9 version bump:** iOS and macOS now resolve to marketing version
   1.1 and build 13 under the `Prismet` schemes.
-- **[ ] Next App Store update:** archive/upload build 13, refresh App Store
-  Connect metadata from `ios/docs/APP-STORE-LISTING.md`, then submit for review.
+- **[x] Next App Store update submitted:** iOS v1.1 build 13 uploaded, attached,
+  metadata refreshed, and submitted to App Review. ASC version id
+  `88c88227-ddc2-4766-a966-cb2d1d703363`; build id
+  `4e231958-05cc-4cc2-87d1-6d5123ccf093`; review submission id
+  `ba52e847-a300-415f-a111-e0e983ddc443`. State:
+  `WAITING_FOR_REVIEW` as of 2026-07-10T01:57:16Z.
 
 **As of 2026-07-04.** The remaining blockers to (A) a public iOS launch and
 (B) macOS parity. Grouped by area; each item has a status. Companion:
