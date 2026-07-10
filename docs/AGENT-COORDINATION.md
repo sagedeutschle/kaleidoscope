@@ -2185,3 +2185,10 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   `ios/scripts/generate-appstore-screenshots.py` so the final images can be reproduced from raw simulator
   captures. Verification: `ShotHarnessTests` GREEN; Debug simulator build GREEN; generator `py_compile`
   GREEN; dimensions checked; full-size hero and contact sheet inspected.
+
+- `PRISM: RELEASE Codex 2026-07-09 (v14 App Store description refresh)` —
+  DONE: refreshed the active App Store listing copy for the current public `Kaleidescope` name, replacing
+  stale fifteen-game language with `20+` framing and an accurate current game/lens list. Also aligned the
+  subtitle, promotional text, keywords, and What's New copy so the metadata no longer contradicts the
+  description. Retired the old build-11 paste block to avoid two competing descriptions in the listing kit.
+  Verification: App Store character-limit check GREEN; `git diff --check` clean.

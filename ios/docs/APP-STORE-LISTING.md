@@ -28,50 +28,54 @@ tweak voice to taste.
 
 ## Subtitle (30 char max)
 
-- `15 classic games, one lens` (26)
+- `20+ classic games, one lens` (26)
 - alt: `Daily puzzles and classics` (26)
 
 ## Promotional text (170 char max — editable anytime without review)
 
-`Fifteen timeless games in one beautiful app — Wordgame, 2048, Chess, Solitaire, Minesweeper and more. Free to play. New games added often.`
+`Twenty+ timeless games in one calm app: Wordgame, Chess, 2048, Sudoku, Sea Battle, Solitaire, Snake, and more. Free to play, no account required.`
 
 ## Keywords (100 char max, comma-separated, no spaces)
 
-`wordgame,2048,sudoku,chess,solitaire,minesweeper,snake,nonogram,reversi,checkers,puzzle,classic,games`
+`wordgame,2048,sudoku,chess,solitaire,minesweeper,snake,nonogram,seabattle,gomoku,spider,puzzle`
 
 ## Description
 
-Prismet is a calm, beautiful home for the games you already love — fifteen
-classics in one app, wrapped in a warm parchment design you can read in any light.
+Kaleidescope is a calm home for classic games and daily puzzles. Open one app
+and jump into Wordgame, Chess, 2048, Sudoku, Solitaire, Snake, Minesweeper, Sea
+Battle, and more - each with its own hand-crafted look.
 
 GAMES INCLUDED
-• Wordgame — guess the five-letter word
-• 2048 — slide and combine to the big tile
-• Sudoku — with row, column, and box highlights
-• Minesweeper — three looks: Modern, Classic '97, and Cyberpunk
-• Snake — smooth, swipe-to-steer
-• Chess — play a built-in AI opponent
-• Solitaire (Klondike)
-• Rubik's Cube — a real 3D cube you can spin
-• Lights Out, Sliding Puzzle, Nonogram
-• Reversi, Checkers, Connect Four — pass-and-play with a friend
-• The Oracle — a daily decree, just for fun
+• Daily Wordgame - guess the five-letter word
+• 2048 - slide, merge, shuffle, and chase your best score
+• Sudoku - clean number grids with helpful highlights
+• Minesweeper - classic boards, custom sizes, and bold visual styles
+• Snake - smooth swipe steering with a modern arcade feel
+• Chess - play a built-in opponent and tune the board style
+• Solitaire and Spider - classic cards on rich table surfaces
+• Sea Battle, Checkers, Reversi, Connect Four, and Gomoku - play solo, pass-and-play, or with a friend where supported
+• Crazy 8 - a quick classic card game
+• Rubik's Cube - a real 3D cube you can spin
+• Lights Out, Sliding Puzzle, and Nonogram - fast puzzle staples
+• Brick Bench - build with 3D bricks
+• Bonus lenses including Oracle, Debt Clock, and Steam Rewind
 
 DESIGNED TO FEEL GOOD
-• No pop-ups, no interstitials, no paywalls
-• Haptics and smooth animation on every move
+• Quick sessions, clean controls, and distinctive game styles
+• Sound, haptics, and smooth animation on every move
 • Light, parchment, and dark reading themes
 • Game Center support for friends and leaderboards
+• No account required to start playing
 
 Free to play. More games and features on the way.
 
 ## What's New (version 1.1)
 
-`Prismet is here. This update refreshes the app identity while preserving existing saves and Game Center continuity, restores the daily Wordgame feed, and brings the latest game polish, sound, haptics, online friend rooms, and launch-day stability fixes.`
+`This update refreshes Kaleidescope while preserving existing saves and Game Center continuity, restores the daily Wordgame feed, and brings the latest game polish, sound, haptics, online friend rooms, and launch-day stability fixes.`
 
 ## What's New draft (version 1.2 / build 14)
 
-`This update makes Prismet easier to share with friends and family, tightens tester-device deployment, keeps online friend rooms resilient, and rolls in build/test warning cleanup across iPhone, iPad, and Mac.`
+`This update makes Kaleidescope easier to share with friends and family, tightens tester-device deployment, keeps online friend rooms resilient, and rolls in build/test warning cleanup across iPhone, iPad, and Mac.`
 
 ## Category
 
@@ -164,40 +168,11 @@ Connect IAP product is live yet. Re-enable this section when the IAP is ready:
 
 ---
 
-## ★ POLISHED FOR BUILD 11 — 2026-07-04 (Agent-Design)
-Refreshed to reflect the CURRENT app (build 11): ~18 games incl. the new ones (Gomoku, Spider, Crazy 8, Sea Battle), online head-to-head, real sound + haptics, and the material-identity redesigns. Paste these when the version is editable.
+## ★ HISTORICAL BUILD 11 METADATA — 2026-07-04 (Agent-Design)
 
-**Subtitle (≤30):** `20+ classic games, one lens`
-
-**Promotional text (≤170, editable anytime):**
-`Twenty+ timeless games in one calm, beautiful app - Chess, 2048, Sudoku, Sea Battle, Gomoku, Solitaire, Minesweeper and more. Free, no ads, play a friend.`
-
-**Keywords (≤100):** `2048,sudoku,chess,solitaire,minesweeper,snake,gomoku,checkers,connect four,battleship,word,puzzle` (97 chars)
-
-**Description:**
-Prismet is a calm, beautiful home for the games you already love - over eighteen classics in one app, each with its own hand-crafted look, plus a 3D brick builder and a daily Oracle. No ads, no pop-ups, no paywalls.
-
-GAMES INCLUDED
-- Chess - a real study board with a built-in engine, 2D or 3D
-- 2048, Sudoku, Minesweeper (up to 30x30), Snake, Nonogram, Lights Out, Sliding Puzzle
-- Solitaire (Klondike) and Spider
-- Sea Battle (Battleship), Connect Four, Reversi, Checkers, Gomoku - play the computer, pass-and-play, or a friend online
-- Crazy 8s - the classic card game
-- Wordgame - guess the five-letter word each day
-- Rubik's Cube - a real 3D cube you can spin
-- The Oracle and a live Debt Clock, just for fun
-
-DESIGNED TO FEEL GOOD
-- Every game has a distinctive material identity - felt tables, walnut trays, neon arcades, newsprint puzzles
-- Real sound effects and haptics on every move (toggle in Settings)
-- Light, parchment, and dark reading themes
-- Game Center sign-in, friends, and leaderboards - no account, no login wall
-- Play head-to-head online with a friend by room code
-
-Free to play. More games and features on the way.
-
-**What's New (first release):**
-`Welcome to Prismet - over eighteen beautifully crafted classic games in one calm app. Play the computer, pass-and-play, or challenge a friend online. Real sound, haptics, and three reading themes. No ads, no login wall. More games coming soon.`
+Retained only as a record that build 11 had a separate metadata pass. Do not
+paste the old build-11 copy into App Store Connect; it used the Prismet public
+name and an older game count. Use the current v14 listing sections above.
 
 **Historical screenshots (6.9in, 1320x2868, staged):** checkers (red/black), sea battle, chess study table, 2048 walnut, snake neon, sudoku newspaper, solitaire baize - superseded by `ios/docs/appstore-screenshots-v14/final/`.
 
@@ -206,8 +181,8 @@ Free to play. More games and features on the way.
 ## ★ HISTORICAL 1.0.1 SHIP RUNBOOK — pre-launch fork, do not use for v1.1
 Chosen historical path: **ride build 8, ship build 11 as 1.0.1.** This is retained
 only as a record of the pre-launch fork; current state is v1.0 live, v1.1
-submitted, and v1.2/build 14 in source. Assets staged at the time: metadata (the
-"POLISHED FOR BUILD 11" section above) + 7 screenshots in
+submitted, and v1.2/build 14 in source. Assets staged at the time: retired
+build-11 metadata + 7 screenshots in
 `docs/appstore-screenshots-1.0.1/` (6.9in 1320x2868). ASC helper:
 `docs/asc-helper.py` (openssl-ES256 JWT; `import` it and call `api(method,path,body)`).
 Ids: app 6785993194, build 11 id `82554947-3f20-469b-a8db-7f0b1b44ce54`, en-US loc
@@ -216,7 +191,7 @@ template.
 STEPS (once v1.0 is Ready for Sale / Pending Developer Release, or Rejected):
 1. Create version: `POST /v1/appStoreVersions` {attributes:{platform:IOS, versionString:"1.0.1"}, relationships:{app:6785993194}} → new version id.
 2. Attach build 11: `PATCH /v1/appStoreVersions/{newId}/relationships/build` {data:{type:builds, id:"82554947-3f20-469b-a8db-7f0b1b44ce54"}}.
-3. Metadata: `PATCH /v1/appStoreVersionLocalizations/{en-US loc id of new ver}` {attributes:{description, keywords, promotionalText, whatsNew}} from the POLISHED section.
+3. Metadata: `PATCH /v1/appStoreVersionLocalizations/{en-US loc id of new ver}` {attributes:{description, keywords, promotionalText, whatsNew}} from the then-current retired build-11 metadata.
 4. Screenshots (6.9in APP_IPHONE_67 set): reserve `POST /v1/appScreenshots` (fileName,fileSize,appScreenshotSet rel) → PUT bytes to returned uploadOperations url(s) → `PATCH /v1/appScreenshots/{id}` {uploaded:true, sourceFileChecksum:<md5>}. (Delete old shots first.) NOTE: this multi-step upload is UNTESTED — verify interactively.
 5. App Privacy: publish in ASC UI (human step, can't API).
 6. Submit: `POST /v1/reviewSubmissions` + items → PATCH submitted:true.
