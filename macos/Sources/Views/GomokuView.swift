@@ -543,6 +543,7 @@ struct GomokuView: View {
         botRequestID += 1
         let requestID = botRequestID
         let snapshot = session.snapshot()
+        let aiPlayer = botPlayer
 
         Task {
             if !reduceMotion {
@@ -550,7 +551,7 @@ struct GomokuView: View {
             }
 
             let move = await Task.detached(priority: .userInitiated) {
-                GomokuAI(player: botPlayer, targetELO: snapshot.aiELO).move(in: snapshot.game)
+                GomokuAI(player: aiPlayer, targetELO: snapshot.aiELO).move(in: snapshot.game)
             }.value
 
             await MainActor.run {
@@ -558,7 +559,7 @@ struct GomokuView: View {
                       session.usesBot,
                       !session.game.isGameOver,
                       session.game == snapshot.game,
-                      session.game.currentPlayer == botPlayer else {
+                      session.game.currentPlayer == aiPlayer else {
                     isBotThinking = false
                     return
                 }

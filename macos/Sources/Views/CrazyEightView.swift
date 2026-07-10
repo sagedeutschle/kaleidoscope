@@ -370,7 +370,6 @@ struct CrazyEightView: View {
 
                 let cardPlayable = canInteract && visiblePlayer == session.game.currentPlayer && session.canPlay(card, as: visiblePlayer)
                 let isHovered = hoveredCardID == card.id
-                let yOffset = CGFloat(6 * d * d)
                 Button {
                     tapCard(card)
                 } label: {

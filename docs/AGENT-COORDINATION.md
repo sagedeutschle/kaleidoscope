@@ -2135,3 +2135,12 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   channel.subscribeWithError()`, preserving the fail-soft behavior so the polling loop remains the safety
   net when realtime cannot subscribe. Verification: iOS Debug generic build GREEN with warning scan clean;
   focused `SettingsViewTests` GREEN; focused `GamePlayModeTests` + `OnlineMatchTests` GREEN.
+
+- `PRISM: RELEASE Codex 2026-07-09 (v14 macOS sharing + warning cleanup)` —
+  DONE: added the live App Store share affordance to the macOS Settings scene and pinned the URL with
+  `PrismetSettingsPaneTests`, matching the iOS friend/family sharing path while the public listing remains
+  `Kaleidescope`. Also cleaned the three macOS Debug warnings surfaced during verification: SceneKit
+  completion Sendable compatibility in `RubiksCubeView`, main-actor bot player capture in `GomokuView`,
+  and a dead `yOffset` local in `CrazyEightView`. Verification: `git diff --check` clean; macOS Debug
+  build GREEN with no `warning:` scan hits; focused `PrismetSettingsPaneTests`, `GomokuGameTests`,
+  `CrazyEightGameTests`, and `RubiksCubeTests` GREEN.

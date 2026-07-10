@@ -16,15 +16,24 @@ struct PrismetApp: App {
     }
 }
 
-/// The app's first macOS settings surface: a single pane linking out to the
-/// prismet.xyz web tools (Steam Rewind explorer + Debt Clock).
-private struct PrismetSettingsPane: View {
+/// The app's first macOS settings surface: Prismet web tools and the live
+/// App Store listing used for easy family/friend sharing.
+struct PrismetSettingsPane: View {
+    static let appStoreURL = URL(string: "https://apps.apple.com/us/app/kaleidescope/id6785993194")!
+
     var body: some View {
         Form {
             Section("Prismet") {
                 Link("prismet.xyz — Steam Rewind & Debt Clock",
                      destination: URL(string: "https://prismet.xyz")!)
                 Text("The web home for the Prismet tools.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                ShareLink(item: Self.appStoreURL) {
+                    Label("Share App Store link", systemImage: "square.and.arrow.up")
+                }
+                Text("Send Prismet to friends and family.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

@@ -1,6 +1,6 @@
 import SwiftUI
 import AppKit
-import SceneKit
+@preconcurrency import SceneKit
 import simd
 
 // PRISM: RELEASE Agent-B 2026-06-27 — persisted session controls and undo.
@@ -567,20 +567,22 @@ private struct RubiksSceneView: NSViewRepresentable {
             let action = SCNAction.rotate(by: angle, around: axisVec, duration: duration)
             action.timingMode = .easeInEaseOut
 
-            let finish: () -> Void = { [weak self] in
-                DispatchQueue.main.async {
-                    guard let self else { return }
-                    self.dissolvePivot(pivot, settleTo: after, keys: affectedKeys)
-                    self.renderedCube = after
-                    self.isTurning = false
-                    self.pump()
-                }
-            }
             if reduceMotion {
                 pivot.simdRotation = simd_float4(Float(axisVec.x), Float(axisVec.y), Float(axisVec.z), Float(angle))
-                finish()
+                dissolvePivot(pivot, settleTo: after, keys: affectedKeys)
+                renderedCube = after
+                isTurning = false
+                pump()
             } else {
-                pivot.runAction(action, completionHandler: finish)
+                pivot.runAction(action) { [weak self] in
+                    DispatchQueue.main.async {
+                        guard let self else { return }
+                        self.dissolvePivot(pivot, settleTo: after, keys: affectedKeys)
+                        self.renderedCube = after
+                        self.isTurning = false
+                        self.pump()
+                    }
+                }
             }
         }
 
