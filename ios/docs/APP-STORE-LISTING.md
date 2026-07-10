@@ -105,18 +105,32 @@ When real AdMob IDs are enabled later, revisit this section and the IDFA/ATT ans
 - **Marketing URL:** optional.
 - Support contact email: `artists@deutschleartistry.com`
 
-## Screenshots (required: 6.7" and 6.5" iPhone)
+## Screenshots (current v14 pack)
 
-Capture these screens (the Home grid is the hero):
-1. Home — the category grid with the iris brand mark
-2. Wordgame mid-game
-3. 2048 mid-game
-4. Chess board with legal-move dots
-5. Minesweeper in a bold skin (Classic '97 or Cyberpunk)
-6. Solitaire or the Rubik's 3D cube
+Apple accepts 1-10 `.png`, `.jpg`, or `.jpeg` screenshots per device family. The
+current staged iPhone set is the highest-resolution 6.9" portrait size
+(`1320x2868`), which App Store Connect can scale down for smaller iPhone displays.
+Use these for the next editable App Store version; the currently submitted v1.1 is
+`WAITING_FOR_REVIEW`, so screenshots may need to wait for the next version/editable
+state if ASC keeps the media locked.
 
-> I can generate these from the simulator once the Screen-Recording grant is on, or
-> you can screenshot on the phone (cleanest, real device frame).
+Final App Store-ready PNGs:
+1. `ios/docs/appstore-screenshots-v14/final/01_home.png`
+2. `ios/docs/appstore-screenshots-v14/final/02_wordgame.png`
+3. `ios/docs/appstore-screenshots-v14/final/03_chess.png`
+4. `ios/docs/appstore-screenshots-v14/final/04_seabattle.png`
+5. `ios/docs/appstore-screenshots-v14/final/05_2048.png`
+6. `ios/docs/appstore-screenshots-v14/final/06_solitaire.png`
+7. `ios/docs/appstore-screenshots-v14/final/07_sudoku.png`
+
+Raw simulator captures live beside them in `ios/docs/appstore-screenshots-v14/`.
+Regenerate the final framed set with:
+
+```sh
+python3 ios/scripts/generate-appstore-screenshots.py
+```
+
+The older `ios/docs/appstore-screenshots-1.0.1/` pack is historical only.
 
 ## In-app purchase — Remove Ads (future, disabled for v1)
 
@@ -185,7 +199,7 @@ Free to play. More games and features on the way.
 **What's New (first release):**
 `Welcome to Prismet - over eighteen beautifully crafted classic games in one calm app. Play the computer, pass-and-play, or challenge a friend online. Real sound, haptics, and three reading themes. No ads, no login wall. More games coming soon.`
 
-**Screenshots (6.9in, 1320x2868, staged):** checkers (red/black), sea battle, chess study table, 2048 walnut, snake neon, sudoku newspaper, solitaire baize — in scratchpad/appstore/. Oracle dropped (dynamic political content).
+**Historical screenshots (6.9in, 1320x2868, staged):** checkers (red/black), sea battle, chess study table, 2048 walnut, snake neon, sudoku newspaper, solitaire baize - superseded by `ios/docs/appstore-screenshots-v14/final/`.
 
 ---
 

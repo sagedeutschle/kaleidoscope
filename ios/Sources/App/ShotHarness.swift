@@ -32,6 +32,7 @@ struct ShotHarness: View {
 
     @ViewBuilder private var content: some View {
         switch screen {
+        case "home":                 HomeView(auth: AuthManager(), profiles: ProfileStore())
         case "chess3d", "chess2d": ChessView(accountID: nil, playMode: .soloBot)
         case "2048":               Game2048View()
         case "wordle":             WordleView()

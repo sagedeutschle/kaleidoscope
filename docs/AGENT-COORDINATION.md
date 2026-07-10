@@ -2176,3 +2176,12 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   guesses + side shelf; focused `WordleSessionTests` GREEN; iOS Debug generic build GREEN with no `warning:`
   scan hits; simulator `PRISMET_SHOT=wordle` screenshot verified side shelf layout at
   `/tmp/prismet-wordle-side-shelf-2.png`.
+
+- `PRISM: RELEASE Codex 2026-07-09 (v14 App Store screenshots refresh)` —
+  DONE: added DEBUG `PRISMET_SHOT=home` harness support, captured raw v14 iPhone 17 Pro Max screenshots,
+  and generated a framed App Store-ready iPhone screenshot set under
+  `ios/docs/appstore-screenshots-v14/final/` at `1320x2868`. The final frames use the current public
+  `Kaleidescope` listing name while the source/in-app rename lane remains Prismet. Added
+  `ios/scripts/generate-appstore-screenshots.py` so the final images can be reproduced from raw simulator
+  captures. Verification: `ShotHarnessTests` GREEN; Debug simulator build GREEN; generator `py_compile`
+  GREEN; dimensions checked; full-size hero and contact sheet inspected.

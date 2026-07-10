@@ -4,6 +4,7 @@ import XCTest
 final class ShotHarnessTests: XCTestCase {
     func testScreenshotHarnessLaunchSkipsAuthRestoreWhenShotIsRequested() {
         XCTAssertFalse(RootLaunchPolicy.shouldRestoreAuth(environment: ["PRISMET_SHOT": "chess3d"]))
+        XCTAssertFalse(RootLaunchPolicy.shouldRestoreAuth(environment: ["PRISMET_SHOT": "home"]))
         XCTAssertFalse(RootLaunchPolicy.shouldRestoreAuth(environment: ["PRISMET_SHOT": "  "]))
         XCTAssertFalse(RootLaunchPolicy.shouldRestoreAuth(environment: ["KALEIDO_SHOT": "chess3d"]))
     }
