@@ -2144,3 +2144,11 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   and a dead `yOffset` local in `CrazyEightView`. Verification: `git diff --check` clean; macOS Debug
   build GREEN with no `warning:` scan hits; focused `PrismetSettingsPaneTests`, `GomokuGameTests`,
   `CrazyEightGameTests`, and `RubiksCubeTests` GREEN.
+
+- `PRISM: RELEASE Codex 2026-07-09 (v14 tester deploy reporting)` —
+  DONE: hardened `ios/scripts/deploy-testers.sh` so tester-device smoke now reports a final per-device
+  summary and treats launch failures as partial failures instead of silently swallowing them after install.
+  This preserves the useful "app installed" signal for locked family devices while keeping the release
+  gate non-green until launch is actually confirmed. Added `TesterDeployScriptTests` to pin the behavior
+  and the known Poopoohead/Benjamin/MommaPhone device IDs. Verification: `bash -n
+  ios/scripts/deploy-testers.sh` clean; `git diff --check` clean; focused `TesterDeployScriptTests` GREEN.

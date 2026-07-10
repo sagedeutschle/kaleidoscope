@@ -58,26 +58,43 @@ TESTERS=(
 )
 
 overall_rc=0
+summary=()
 for tester in "${TESTERS[@]}"; do
   IFS='|' read -r name primary fallback <<< "$tester"
   echo "==> Installing on $name"
 
   installed=0
+  launched=0
+  used_device=""
   for device in "$primary" "$fallback"; do
     [[ -n "$device" ]] || continue
     echo "    trying $device"
     if xcrun devicectl device install app --device "$device" "$APP_PATH"; then
-      echo "    launching $BUNDLE_ID on $name"
-      xcrun devicectl device process launch --device "$device" "$BUNDLE_ID" || true
       installed=1
+      used_device="$device"
+      echo "    launching $BUNDLE_ID on $name"
+      if xcrun devicectl device process launch --device "$device" "$BUNDLE_ID"; then
+        launched=1
+      else
+        echo "WARN: installed on $name, but launch failed. Unlock the device and rerun launch smoke."
+      fi
       break
     fi
   done
 
   if [[ "$installed" -eq 0 ]]; then
     echo "WARN: failed to install on $name"
+    summary+=("FAIL install: $name")
     overall_rc=1
+  elif [[ "$launched" -eq 0 ]]; then
+    summary+=("PARTIAL launch failed: $name ($used_device)")
+    overall_rc=1
+  else
+    summary+=("OK installed+launched: $name ($used_device)")
   fi
 done
+
+echo "==> Tester deploy summary"
+printf '    %s\n' "${summary[@]}"
 
 exit "$overall_rc"
