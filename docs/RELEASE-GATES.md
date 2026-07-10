@@ -136,11 +136,12 @@ started.**
   with no failure lines and no `warning:` scan hits
   (`Prismet-v14-full-ios-tests`, 2026-07-09 23:16 local).
 - **[~] Device install verification.** v14 Debug installed and launched on macOS
-  and Poopoohead. Benjamin's iPhone and MommaPhone installed but launch was
-  blocked by lock state. `deploy-testers.sh` now reports partial launch failures
-  as non-green release-gate results instead of swallowing them. iPad Air was
-  unavailable/asleep. Remaining: unlock family devices, confirm launch, Oracle
-  non-empty UI, and online friend room smoke.
+  and previously launched on Poopoohead. Latest tester smoke with hardened
+  `deploy-testers.sh`: MommaPhone installed+launched, Benjamin's iPhone installed
+  but launch was blocked by lock state, and Poopoohead's install/launch path timed
+  out through CoreDevice / remote install coordination. iPad Air was unavailable/
+  asleep. Remaining: rerun Poopoohead when reachable, unlock Benjamin, confirm
+  Oracle non-empty UI, and online friend room smoke.
 - **[x] Build rules documented** (derived-data location, incremental archive,
   `project.yml`-owned Info.plist, `xcodegen generate` after pull, codex-delegated
   device deploy) — see `docs/HANDOFF.md` §5. Follow them or builds fail.

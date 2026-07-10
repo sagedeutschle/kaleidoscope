@@ -2158,3 +2158,11 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   READY_FOR_SALE / v1.1 WAITING_FOR_REVIEW / v1.2-build-14 source-lane state, and add a v1.2 What's New
   draft. Verification: full iOS `PrismetTests` GREEN against the current v14 tree with no failure lines
   and no `warning:` scan hits; `git diff --check` clean.
+
+- `PRISM: RELEASE Codex 2026-07-09 (v14 tester-device smoke refresh)` —
+  DONE: reran `ios/scripts/deploy-testers.sh` against the existing v14 Debug device app with
+  `KALEIDOSCOPE_SKIP_PARITY=1`. Hardened summary behaved correctly: MommaPhone installed+launched;
+  Benjamin's iPhone installed but launch was denied because the device was locked; Poopoohead's CoreDevice
+  path timed out / failed remote install coordination on this pass, and a direct launch by hardware UDID
+  also timed out. Remaining device gate: rerun Poopoohead when reachable, unlock Benjamin, then do Oracle
+  non-empty UI + online friend room smoke.
