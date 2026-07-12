@@ -21,6 +21,7 @@ enum CanonicalGameID: String, CaseIterable, Codable, Hashable {
     case crazyEight = "crazyeight"
     case brickBench = "brickbench"
     case oracle
+    case catan
 }
 
 enum GameSaveCodec {

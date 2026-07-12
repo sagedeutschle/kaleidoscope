@@ -1,5 +1,6 @@
 // PRISM: RELEASE Agent-Design(shell) 2026-07-03 — v10 design pass
 // PRISM: RELEASE Codex 2026-07-03 — Spider/Crazy 8/Sea Battle registry routes added
+// PRISM: RELEASE Agent-Design/Claude 2026-07-12 — Catan game registry route added (Board)
 import SwiftUI
 
 struct GameCard: Identifiable {
@@ -34,6 +35,7 @@ struct GameCard: Identifiable {
             .init(id: "connectfour", title: "Connect Four", icon: "circle.grid.3x3.fill", accent: Color(red: 0.85, green: 0.55, blue: 0.20), ready: true, category: "Board"),
             .init(id: "gomoku", title: "Gomoku", icon: "circle.grid.3x3.fill", accent: Color(red: 0.42, green: 0.48, blue: 0.34), ready: true, category: "Board"),
             .init(id: "seabattle", title: "Sea Battle", icon: "scope", accent: Color(red: 0.16, green: 0.42, blue: 0.68), ready: true, category: "Board"),
+            .init(id: "catan", title: "Catan", icon: "hexagon.fill", accent: Color(red: 0.80, green: 0.52, blue: 0.24), ready: true, category: "Board"),
             .init(id: "solitaire", title: "Solitaire", icon: "suit.spade.fill", accent: Color(red: 0.20, green: 0.45, blue: 0.30), ready: true, category: "Cards"),
             .init(id: "spider", title: "Spider", icon: "suit.spade.fill", accent: Color(red: 0.42, green: 0.24, blue: 0.18), ready: true, category: "Cards"),
             .init(id: "crazyeight", title: "Crazy 8", icon: "8.circle.fill", accent: Color(red: 0.60, green: 0.28, blue: 0.42), ready: true, category: "Cards"),
@@ -237,6 +239,7 @@ struct HomeView: View {
         case .crazyEight: CrazyEightView(accountID: signedInAccountID, playMode: route.mode, online: nil)
         case .brickBench: BrickBenchView(accountID: signedInAccountID)
         case .oracle: OracleView(accountID: signedInAccountID)
+        case .catan: CatanView(accountID: signedInAccountID)
         }
     }
 

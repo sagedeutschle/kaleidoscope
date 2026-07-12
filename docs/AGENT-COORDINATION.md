@@ -2192,3 +2192,34 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   subtitle, promotional text, keywords, and What's New copy so the metadata no longer contradicts the
   description. Retired the old build-11 paste block to avoid two competing descriptions in the listing kit.
   Verification: App Store character-limit check GREEN; `git diff --check` clean.
+
+- `PRISM: CLAIM+RELEASE Agent-Design/Claude 2026-07-12 (Catan / Settlers — new iOS Board game)` —
+  Sage asked to "put Settlers of Catan in the app." Added a full, playable Catan to the iOS app
+  in the **Board** category (game-registry lane only). NEW FILES:
+  `ios/Sources/Core/Games/CatanBoard.swift` (radius-2 hex topology → 19 hexes / 54 vertices /
+  72 edges, derived by de-duplicating shared corners), `CatanGame.swift` (deterministic rules
+  engine on the repo's `SeededGenerator`: snake-draft setup, dice production, robber on 7 +
+  automatic over-7 discards + steal, roads/settlements/cities, dev cards Knight + Victory Point,
+  Longest Road +2, Largest Army +2, win at 10 VP, bank 4:1 trades), `CatanAI.swift` (heuristic
+  bot), `ios/Sources/Features/Games/CatanView.swift` (Canvas-drawn hex board + tap overlay in
+  the FacetBackdrop/prismetCard/GameHeader house style), and `ios/Tests/CatanGameTests.swift`.
+  EDITS: `.catan` added to `CanonicalGameID` (GameSync.swift), to the solo-only group in
+  `GameModeCatalog` (GamePlayMode.swift), `CatanSnapshot` + registry sample in
+  GameSnapshots.swift, and HomeView's `GameCard.all` (Board) + `soloOrLocalDestination` route.
+  Did NOT touch the ad banner, leaderboard catalog (Catan is intentionally unranked — metric
+  returns nil via the existing `default`), online lobby (both switches have `default`), or
+  `project.yml` (new .swift auto-include under `sources:`).
+  DOCUMENTED SIMPLIFICATIONS (all winnable): dev deck = Knight + Victory Point only; trading =
+  bank 4:1 (no ports / player-to-player trades); discard-on-7 and robber-steal are automatic
+  (largest stacks / richest adjacent opponent).
+  BUILD/TEST STATUS — **NOT built or tested here.** Authored in a headless Linux cloud session
+  with no Xcode/xcodegen, so I could not compile or run anything. Needs a Mac to `xcodegen
+  generate` (no project.yml change required) + build + run `CatanBoardTests`/`CatanGameTests`
+  (incl. `testHeadlessGameReachesALegitimateWinner`, which drives a full 3-AI game to a legit
+  winner) and the full `PrismetTests` suite (`AllGamePersistenceTests` now covers `.catan`;
+  `GamePlayModeTests`/`HomeCatalogTests` still hold). Code was written to match existing
+  patterns (Reversi as the template, `SeededGenerator`/`nextInt` for randomness, exhaustive
+  switches updated) to minimize the chance of a red build, but a Mac build is the real gate.
+  macOS parity: tracked debt logged in `ios/docs/MAC-IOS-GAME-PARITY.md` (owner me; blocker =
+  no Mac in this session; next = mirror model + view into `macos/` after iOS goes green).
+  Branch `claude/prismet-catan-research-l86o6j`.

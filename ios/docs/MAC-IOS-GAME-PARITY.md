@@ -71,6 +71,7 @@ one canonical feature identity to the current iOS/macOS legacy IDs.
 | Spider | Core one-suit Spider Solitaire, save/restore. | Mirrored to macOS with one-suit Spider, save/reload, model tests. Remaining: optional skin picker polish. |
 | Crazy 8 | Core local/online friend card play, save/restore. | Mirrored to macOS with local/friend table mode, AI opponent/ELO, save/reload, model tests. Remaining: online friend room flow is still phone-first/tracked. |
 | Brick Bench | BrickLink import/export, layered top-down builder, save/restore, account-scoped sync; phone-native 3D preview added. | Desktop still has SceneKit build view, gizmo/keyboard controls, richer 3D placement and undo/redo. |
+| Catan (Settlers) | New iOS Board game — full playable engine (19-hex board, snake-draft setup, dice production, robber, roads/settlements/cities, dev cards Knight+VP, Longest Road, Largest Army, win at 10 VP), 3 players (you + 2 bots), bank 4:1 trading, Canvas board in house style, save/restore + account-scoped sync. | **Tracked debt — macOS not yet mirrored.** Owner: Agent-Design/Claude. Blocker: authored in a headless Linux cloud session (no Xcode to build/verify). Next: after iOS build + `CatanGameTests` pass on a Mac, mirror `CatanBoard`/`CatanGame`/`CatanAI` into `macos/Sources/Model/` and a `CatanView` into `macos/Sources/Views/`, then register in `FacetRegistry` + `ContentView`. Carry-over simplifications: dev deck = Knight + Victory Point only; trading = bank 4:1 (no ports / player trades); discard-on-7 and robber steal are automatic. |
 
 ## Next Order
 
@@ -161,3 +162,13 @@ one canonical feature identity to the current iOS/macOS legacy IDs.
   LegoBuilderModel duplicate/delete APIs); felt-styled Checkers result sheet (shared
   ResultSlipView reskin); macOS Checkers AI opponent (model gap — pass-and-play only today).
   All builds green on main (CODE_SIGNING_ALLOWED=NO path).
+- `PRISM: Agent-Design/Claude, 2026-07-12 (Catan / Settlers — new iOS Board game)` —
+  Added a full playable Catan to iOS (Board category). New files: `Sources/Core/Games/
+  CatanBoard.swift`, `CatanGame.swift`, `CatanAI.swift`; `Sources/Features/Games/CatanView.swift`;
+  `Tests/CatanGameTests.swift`. Registry edits: `.catan` in `CanonicalGameID`, solo-only
+  `GameModeCatalog` entry, `CatanSnapshot` + sample in `GameSnapshots.swift`, Home card + route.
+  **TRACKED DEBT (owner: Agent-Design/Claude):** macOS mirror not yet done — blocker is that
+  this was authored in a headless Linux cloud session with no Xcode. Next action: once the iOS
+  build + `CatanGameTests` are green on a Mac, port `CatanBoard`/`CatanGame`/`CatanAI` to
+  `macos/Sources/Model/` and a `CatanView` to `macos/Sources/Views/`, then register in
+  `FacetRegistry` + `ContentView`. NOTE: iOS build/tests were NOT run in this session.
