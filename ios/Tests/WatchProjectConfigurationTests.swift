@@ -47,6 +47,38 @@ final class WatchProjectConfigurationTests: XCTestCase {
         }
     }
 
+    func testWatchInterfaceExposesAccessibleFieldControls() throws {
+        let source = try watchSource([
+            "Views/Pocket2048View.swift",
+            "Views/PocketLightsOutView.swift",
+            "Views/CatanHarvestView.swift",
+            "Views/ProjectPulseDetailView.swift",
+            "Views/PhoneLinkView.swift",
+        ])
+
+        for required in [
+            "Move up",
+            "Move down",
+            "Move left",
+            "Move right",
+            "ForEach(0..<25",
+            "Row \\(row + 1), column \\(column + 1)",
+            "Roll dice",
+            "Bank harvest",
+            ".formatted(date: .abbreviated, time: .shortened)",
+            "Request Update",
+        ] {
+            XCTAssertTrue(source.contains(required), "Missing Watch UI contract: \(required)")
+        }
+    }
+
+    private func watchSource(_ relativePaths: [String]) throws -> String {
+        try relativePaths
+            .map { projectRoot.appendingPathComponent("WatchFieldDeck/\($0)") }
+            .map { try String(contentsOf: $0) }
+            .joined(separator: "\n")
+    }
+
     private var projectRoot: URL {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()

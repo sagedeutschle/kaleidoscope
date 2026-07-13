@@ -1,41 +1,55 @@
 import SwiftUI
-import WatchFieldDeckCore
+
+private enum FieldDeckRoute: Hashable {
+    case games
+    case link
+    case pocket2048
+    case lightsOut
+    case catanHarvest
+}
 
 struct FieldDeckRootView: View {
-    @EnvironmentObject private var store: FieldDeckStore
+    @State private var path = NavigationPath()
 
     var body: some View {
-        NavigationStack {
-            List {
-                Section("Today") {
-                    ForEach(store.snapshot.projects) { project in
-                        NavigationLink {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Label(project.title, systemImage: project.symbol)
-                                    .font(.headline)
-                                Text(project.detail)
-                                    .font(.caption)
-                                Text("Next: \(project.nextAction)")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                            }
-                        } label: {
-                            Label(project.title, systemImage: project.symbol)
-                        }
+        NavigationStack(path: $path) {
+            TodayView()
+                .navigationDestination(for: FieldDeckRoute.self) { route in
+                    switch route {
+                    case .games: GamesHubView()
+                    case .link: PhoneLinkView()
+                    case .pocket2048: Pocket2048View()
+                    case .lightsOut: PocketLightsOutView()
+                    case .catanHarvest: CatanHarvestView()
                     }
                 }
+        }
+        .onOpenURL(perform: open)
+        .onAppear(perform: openLaunchRoute)
+    }
 
-                Section("Pocket Games") {
-                    Text("2048 · Lights Out · Catan Harvest")
-                }
+    private func open(_ url: URL) {
+        guard url.scheme == "fielddeck" else { return }
+        openRoute(url.host)
+    }
 
-                Section("Phone Link") {
-                    Button(store.linkStatus) {
-                        store.requestRefresh()
-                    }
-                }
-            }
-            .navigationTitle("Field Deck")
+    private func openLaunchRoute() {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let keyIndex = arguments.firstIndex(of: "-FieldDeckRoute"),
+              arguments.indices.contains(keyIndex + 1)
+        else { return }
+        openRoute(arguments[keyIndex + 1])
+    }
+
+    private func openRoute(_ route: String?) {
+        path = NavigationPath()
+        switch route {
+        case "games": path.append(FieldDeckRoute.games)
+        case "link": path.append(FieldDeckRoute.link)
+        case "2048": path.append(FieldDeckRoute.pocket2048)
+        case "lights": path.append(FieldDeckRoute.lightsOut)
+        case "harvest": path.append(FieldDeckRoute.catanHarvest)
+        default: break
         }
     }
 }

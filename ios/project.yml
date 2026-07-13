@@ -108,6 +108,10 @@ targets:
         CFBundleDisplayName: Field Deck
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleURLTypes:
+          - CFBundleURLName: com.spocksclub.kaleidoscope.watchkitapp
+            CFBundleURLSchemes:
+              - fielddeck
         WKApplication: true
         WKCompanionAppBundleIdentifier: com.spocksclub.kaleidoscope
     settings:
