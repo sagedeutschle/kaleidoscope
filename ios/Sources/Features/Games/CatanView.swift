@@ -20,14 +20,24 @@ struct CatanView: View {
     @State private var tradeGive: CatanResource = .brick
     @State private var tradeGet: CatanResource = .grain
 
+    // Customization (initialized from CatanPrefs; the customize sheet edits these live).
+    @State private var showCustomize = false
+    @State private var themeID = CatanPrefs.themeID
+    @State private var pieceStyle = CatanPrefs.pieceStyle
+    @State private var playerColorID = CatanPrefs.playerColorID
+    @State private var boardStyle = CatanPrefs.boardStyle
+    @State private var autoRotate = CatanPrefs.autoRotate
+    @State private var reduceMotionPref = CatanPrefs.reduceMotionOverride
+    @State private var difficulty = CatanPrefs.difficulty
+    @State private var newGamePlayerCount = CatanPrefs.playerCount
+
     private let accent = Color(red: 0.80, green: 0.52, blue: 0.24)   // warm Catan amber
 
-    private let playerColors: [Color] = [
-        Color(red: 0.22, green: 0.48, blue: 0.74),   // You — lapis
-        Color(red: 0.87, green: 0.56, blue: 0.20),   // Amber
-        Color(red: 0.24, green: 0.60, blue: 0.42),   // Jade
-        Color(red: 0.74, green: 0.28, blue: 0.34)    // Garnet
-    ]
+    private var theme: CatanTheme { CatanTheme.theme(id: themeID) }
+    private var palette: [CatanRGB] {
+        CatanPlayerColor.palette(humanColorID: playerColorID, playerCount: max(2, game.players.count))
+    }
+    private var boardReduceMotion: Bool { UIAccessibility.isReduceMotionEnabled || reduceMotionPref }
 
     enum BuildMode { case none, road, settlement, city }
 
@@ -38,6 +48,46 @@ struct CatanView: View {
     // MARK: Body
 
     var body: some View {
+        Group {
+            if boardStyle == .threeD { threeDLayout } else { twoDLayout }
+        }
+        .navigationTitle("Catan")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(PrismetDesign.ground, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { showCustomize = true } label: { Image(systemName: "paintpalette.fill") }
+                    .accessibilityLabel("Customize")
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { startNewGame() } label: { Image(systemName: "arrow.counterclockwise") }
+                    .accessibilityLabel("New game")
+            }
+        }
+        .sensoryFeedback(.impact(weight: .light), trigger: moveTick)
+        .sensoryFeedback(.success, trigger: game.winner)
+        .sheet(isPresented: $showTrade) { tradeSheet }
+        .sheet(isPresented: $showCustomize) {
+            CatanCustomizeSheet(
+                themeID: $themeID, pieceStyle: $pieceStyle, playerColorID: $playerColorID,
+                boardStyle: $boardStyle, autoRotate: $autoRotate, reduceMotion: $reduceMotionPref,
+                difficulty: $difficulty, playerCount: $newGamePlayerCount,
+                accent: accent, onStartNewGame: { startNewGame() }
+            )
+        }
+        .onChange(of: themeID) { CatanPrefs.themeID = themeID }
+        .onChange(of: pieceStyle) { CatanPrefs.pieceStyle = pieceStyle }
+        .onChange(of: playerColorID) { CatanPrefs.playerColorID = playerColorID }
+        .onChange(of: boardStyle) { CatanPrefs.boardStyle = boardStyle }
+        .onChange(of: autoRotate) { CatanPrefs.autoRotate = autoRotate }
+        .onChange(of: reduceMotionPref) { CatanPrefs.reduceMotionOverride = reduceMotionPref }
+        .onChange(of: difficulty) { CatanPrefs.difficulty = difficulty }
+        .onChange(of: newGamePlayerCount) { CatanPrefs.playerCount = newGamePlayerCount }
+        .onAppear { setupOnce() }
+        .onDisappear { save(forceCloud: true) }
+    }
+
+    private var twoDLayout: some View {
         ScrollView {
             VStack(spacing: 16) {
                 GameHeader(title: "Catan", systemImage: "hexagon.fill", accent: accent, subtitle: statusText) {
@@ -52,20 +102,57 @@ struct CatanView: View {
             .padding(18)
         }
         .facetBackground(accent, multiHue: true)
-        .navigationTitle("Catan")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(PrismetDesign.ground, for: .navigationBar)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button { startNewGame() } label: { Image(systemName: "arrow.counterclockwise") }
-                    .accessibilityLabel("New game")
+    }
+
+    private var threeDLayout: some View {
+        VStack(spacing: 10) {
+            scoreboard
+                .padding(.horizontal, 12)
+                .padding(.top, 8)
+            board3D
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(PrismetDesign.outline, lineWidth: 1))
+                .padding(.horizontal, 10)
+            VStack(spacing: 8) {
+                HStack(spacing: 10) {
+                    Text(statusText)
+                        .font(.subheadline.weight(.semibold)).foregroundStyle(PrismetDesign.ink2)
+                        .lineLimit(1).minimumScaleFactor(0.7)
+                    Spacer()
+                    diceView
+                }
+                if game.currentPlayer == 0 && game.winner == nil { resourceBar }
+                controls
             }
+            .padding(.horizontal, 14)
+            .padding(.bottom, 10)
         }
-        .sensoryFeedback(.impact(weight: .light), trigger: moveTick)
-        .sensoryFeedback(.success, trigger: game.winner)
-        .sheet(isPresented: $showTrade) { tradeSheet }
-        .onAppear { setupOnce() }
-        .onDisappear { save(forceCloud: true) }
+        .background(FacetBackdrop(accent: accent))
+    }
+
+    private var board3D: some View {
+        CatanBoard3DView(
+            game: game,
+            theme: theme,
+            pieceStyle: pieceStyle,
+            playerColors: palette,
+            autoRotate: autoRotate,
+            reduceMotion: boardReduceMotion,
+            legalVertices: activeVertexTargets,
+            legalEdges: activeEdgeTargets,
+            legalHexes: activeHexTargets,
+            accent: CatanRGB(r: 0.98, g: 0.86, b: 0.30),
+            onTap: { intent in handleBoardTap(intent) }
+        )
+    }
+
+    private func handleBoardTap(_ intent: CatanTapIntent) {
+        switch intent {
+        case .vertex(let v): tapVertex(v)
+        case .edge(let e): tapEdge(e)
+        case .hex(let h): tapHex(h)
+        }
     }
 
     // MARK: Header pieces
@@ -525,11 +612,12 @@ struct CatanView: View {
         guard game.winner == nil, game.currentPlayerIsBot, !isBotWorking else { return }
         isBotWorking = true
         let snapshot = game
+        let diff = difficulty
         Task {
             try? await Task.sleep(nanoseconds: 650_000_000)
             let next = await Task.detached(priority: .userInitiated) { () -> CatanGame in
                 var g = snapshot
-                CatanAI().act(in: &g)
+                CatanAI(difficulty: diff).act(in: &g)
                 return g
             }.value
             await MainActor.run {
@@ -545,7 +633,7 @@ struct CatanView: View {
     private func startNewGame() {
         let seed = UInt64.random(in: 1...UInt64.max)
         withAnimation(.easeInOut(duration: 0.3)) {
-            game = CatanGame.newGame(playerCount: 3, seed: seed)
+            game = CatanGame.newGame(playerCount: newGamePlayerCount, seed: seed)
             buildMode = .none
         }
         save(forceCloud: true)
@@ -561,6 +649,7 @@ struct CatanView: View {
         persistence.configure(accountID: accountID, cloudStore: .shared) { snap in
             restored = true
             game = snap.game
+            difficulty = snap.difficulty
         }
         if restored {
             advanceBotsIfNeeded()
@@ -570,7 +659,7 @@ struct CatanView: View {
     }
 
     private func save(forceCloud: Bool = false) {
-        persistence.save(snapshot: CatanSnapshot(game: game), score: game.publicScore(for: 0), forceCloud: forceCloud)
+        persistence.save(snapshot: CatanSnapshot(game: game, difficulty: difficulty), score: game.publicScore(for: 0), forceCloud: forceCloud)
     }
 
     // MARK: Geometry
@@ -604,7 +693,8 @@ struct CatanView: View {
     // MARK: Colors
 
     private func playerColor(_ p: Int) -> Color {
-        playerColors[p % playerColors.count]
+        let pal = palette
+        return pal[p % pal.count].color
     }
 
     private func resourceColor(_ r: CatanResource?) -> Color {
