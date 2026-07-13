@@ -30,6 +30,11 @@ final class CatanScene3D {
 
     private var renderedTiles: [CatanTile] = []
     private var renderedThemeID: String = ""
+    private var renderedBuildings: [Int: CatanBuildingKind] = [:]
+    private var renderedRoads: Set<Int> = []
+    private var robberNode: SCNNode?
+    private var renderedRobberHex: Int = -1
+    var reduceMotion = false
 
     private let G = CatanSceneGeometry.self
 
@@ -51,26 +56,71 @@ final class CatanScene3D {
         buildBoard(game: game)
         renderedTiles = game.tiles
         renderedThemeID = theme.id
-        syncPieces(game: game)
+        robberNode?.removeFromParentNode(); robberNode = nil; renderedRobberHex = -1
+        syncPieces(game: game, animate: false)
         clearMarkers()
     }
 
     /// Light-touch update after a move: rebuild water/board only if theme or layout changed, then
-    /// always refresh the dynamic pieces.
+    /// refresh the dynamic pieces, popping anything newly placed and hopping the robber.
     func sync(game: CatanGame) {
         if theme.id != renderedThemeID { buildWater(); renderedThemeID = theme.id }
         if game.tiles != renderedTiles { buildBoard(game: game); renderedTiles = game.tiles }
-        syncPieces(game: game)
+        syncPieces(game: game, animate: true)
     }
 
-    private func syncPieces(game: CatanGame) {
+    private func syncPieces(game: CatanGame, animate: Bool) {
+        var roads = Set<Int>()
         rebuild(roadsRoot) { root in
-            for (edge, owner) in game.roads { root.addChildNode(makeRoad(edge: edge, owner: owner)) }
+            for (edge, owner) in game.roads {
+                let node = makeRoad(edge: edge, owner: owner)
+                if animate && !renderedRoads.contains(edge) { pop(node) }
+                root.addChildNode(node)
+                roads.insert(edge)
+            }
         }
+        renderedRoads = roads
+
+        var buildings: [Int: CatanBuildingKind] = [:]
         rebuild(buildingsRoot) { root in
-            for (vertex, b) in game.buildings { root.addChildNode(makeBuilding(vertex: vertex, building: b)) }
+            for (vertex, b) in game.buildings {
+                let node = makeBuilding(vertex: vertex, building: b)
+                if animate && renderedBuildings[vertex] != b.kind { pop(node) }   // new or upgraded
+                root.addChildNode(node)
+                buildings[vertex] = b.kind
+            }
         }
-        rebuild(robberRoot) { root in root.addChildNode(makeRobber(hex: game.robberHex)) }
+        renderedBuildings = buildings
+
+        syncRobber(hex: game.robberHex, animate: animate)
+    }
+
+    private func syncRobber(hex: Int, animate: Bool) {
+        let dest = G.world(board.hexCenters[hex], y: G.topY)
+        if robberNode == nil {
+            let n = makeRobber(hex: hex)
+            robberRoot.addChildNode(n)
+            robberNode = n
+            renderedRobberHex = hex
+            return
+        }
+        guard let node = robberNode, hex != renderedRobberHex else { return }
+        renderedRobberHex = hex
+        if !animate || reduceMotion {
+            node.position = dest
+        } else {
+            let up = SCNAction.moveBy(x: 0, y: 0.55, z: 0, duration: 0.15); up.timingMode = .easeOut
+            let over = SCNAction.move(to: dest, duration: 0.26); over.timingMode = .easeInEaseOut
+            node.runAction(.sequence([up, over]))
+        }
+    }
+
+    private func pop(_ node: SCNNode) {
+        guard !reduceMotion else { return }
+        node.scale = SCNVector3(0.01, 0.01, 0.01)
+        let grow = SCNAction.scale(to: 1.12, duration: 0.16); grow.timingMode = .easeOut
+        let settle = SCNAction.scale(to: 1.0, duration: 0.09); settle.timingMode = .easeInEaseOut
+        node.runAction(.sequence([grow, settle]))
     }
 
     func setMarkers(vertices: [Int], edges: [Int], hexes: [Int], accent: CatanRGB) {
@@ -406,9 +456,11 @@ final class CatanScene3D {
         node.name = G.vertexName(v)
         node.castsShadow = false
         node.position = G.world(board.vertices[v], y: G.topY + 0.05)
-        node.runAction(.repeatForever(.sequence([
-            .scale(to: 1.25, duration: 0.6), .scale(to: 1.0, duration: 0.6)
-        ])))
+        if !reduceMotion {
+            node.runAction(.repeatForever(.sequence([
+                .scale(to: 1.25, duration: 0.6), .scale(to: 1.0, duration: 0.6)
+            ])))
+        }
         return node
     }
     private func makeEdgeMarker(_ e: Int, color rgb: CatanRGB) -> SCNNode {

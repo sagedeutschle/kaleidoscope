@@ -38,6 +38,7 @@ struct CatanBoard3DView: UIViewRepresentable {
         view.scene = scene
 
         let builder = CatanScene3D(theme: theme, pieceStyle: pieceStyle, playerColors: playerColors)
+        builder.reduceMotion = reduceMotion
         coordinator.builder = builder
         scene.rootNode.addChildNode(builder.root)
         builder.fullSync(game: game)
@@ -80,6 +81,7 @@ struct CatanBoard3DView: UIViewRepresentable {
         c.legalEdges = legalEdges
         c.legalHexes = legalHexes
         guard let builder = c.builder, let scene = uiView.scene else { return }
+        builder.reduceMotion = reduceMotion
 
         if c.renderedThemeID != theme.id || c.renderedPiece != pieceStyle {
             builder.theme = theme

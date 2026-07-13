@@ -66,6 +66,11 @@ struct CatanView: View {
         }
         .sensoryFeedback(.impact(weight: .light), trigger: moveTick)
         .sensoryFeedback(.success, trigger: game.winner)
+        .overlay {
+            if game.winner != nil && !boardReduceMotion {
+                CatanConfettiView(colors: palette.map(\.color)).allowsHitTesting(false)
+            }
+        }
         .sheet(isPresented: $showTrade) { tradeSheet }
         .sheet(isPresented: $showCustomize) {
             CatanCustomizeSheet(
@@ -179,6 +184,7 @@ struct CatanView: View {
             }
             .font(.title3)
             .foregroundStyle(accent)
+            .symbolEffect(.bounce, value: roll)
         }
     }
 
