@@ -2223,3 +2223,20 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   macOS parity: tracked debt logged in `ios/docs/MAC-IOS-GAME-PARITY.md` (owner me; blocker =
   no Mac in this session; next = mirror model + view into `macos/` after iOS goes green).
   Branch `claude/prismet-catan-research-l86o6j`.
+
+- `PRISM: CLAIM (PLANNED, not yet started) Fable/Claude 2026-07-13 (Catan→macOS 3D parity + Prismet 1.2 push)` —
+  Sage's order: get Catan onto the macOS app (full 3D parity), deploy the universal iOS build to the
+  iPad Pro 13" sim + Poopoohead iPhone, and STAGE (not submit) a Prismet-branded v1.2 App Store push
+  (Catan-hero screenshots + the missing iPad set + rewritten Catan-forward description). Locked
+  decisions + step-by-step plan live in `docs/superpowers/plans/2026-07-13-catan-macos-and-prismet-1.2.md`.
+  **Files I will own when execution starts** (soft claim — flag me before editing these): NEW
+  `macos/Sources/Model/Catan{Board,Game,AI,SceneGeometry,Theme,Prefs,Scene3D,Session}.swift`,
+  `macos/Sources/Views/Catan{View,Board3DView}.swift`, `macos/Tests/CatanGameTests.swift`; EDIT
+  `macos/Sources/Model/FacetRegistry.swift`, `macos/Sources/App/ContentView.swift`,
+  `ios/Sources/App/ShotHarness.swift`, `ios/project.yml` (build 14→15), `ios/scripts/generate-appstore-screenshots.py`,
+  `ios/docs/APP-STORE-LISTING.md`, `ios/docs/MAC-IOS-GAME-PARITY.md`; NEW dir `ios/docs/appstore-screenshots-1.2/`.
+  I will NOT touch the online-catalog / OnlineLobby lane (that's the remote `706edad` work) or the
+  backend match model. **Release gates flagged (no submit until resolved):** v1.1/build 13 is
+  WAITING_FOR_REVIEW (can't submit 1.2 over it); Catan is on this diverged, unmerged research branch;
+  ASC public-name flip Kaleidescope→Prismet is a manual step. Status: PLAN SET, execution pending
+  Sage's go. Branch `claude/prismet-catan-research-l86o6j`.
