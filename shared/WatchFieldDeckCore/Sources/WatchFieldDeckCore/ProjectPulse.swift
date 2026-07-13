@@ -78,6 +78,7 @@ public struct FieldDeckSnapshot: Codable, Equatable, Sendable {
 
 public enum FieldDeckCodec {
     public static let contextKey = "prismet.fieldDeck.snapshot"
+    public static let refreshRequestKey = "prismet.fieldDeck.refresh"
 
     public static func context(for snapshot: FieldDeckSnapshot) throws -> [String: Any] {
         [contextKey: try JSONEncoder().encode(snapshot)]

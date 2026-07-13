@@ -18,6 +18,10 @@ final class ProjectPulseTests: XCTestCase {
         XCTAssertEqual(try FieldDeckCodec.snapshot(from: context), .july13)
     }
 
+    func testRefreshRequestUsesStableCrossDeviceKey() {
+        XCTAssertEqual(FieldDeckCodec.refreshRequestKey, "prismet.fieldDeck.refresh")
+    }
+
     func testOnlyNewerMatchingSchemaSnapshotIsAccepted() {
         let current = FieldDeckCatalog.july13
         let newer = current.replacingGeneratedAt(current.generatedAt.addingTimeInterval(60))

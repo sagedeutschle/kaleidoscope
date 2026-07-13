@@ -7,6 +7,7 @@ struct PrismetApp: App {
     @AppStorage(AppFont.storageKey) private var fontRaw = AppFont.default.rawValue
 
     init() {
+        PhoneFieldDeckBridge.shared.activate()
         if AdConfig.isLiveAdsConfigured {
             GADMobileAds.sharedInstance().start(completionHandler: nil)
         }

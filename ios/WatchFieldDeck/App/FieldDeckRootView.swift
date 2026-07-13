@@ -2,11 +2,13 @@ import SwiftUI
 import WatchFieldDeckCore
 
 struct FieldDeckRootView: View {
+    @EnvironmentObject private var store: FieldDeckStore
+
     var body: some View {
         NavigationStack {
             List {
                 Section("Today") {
-                    ForEach(FieldDeckCatalog.july13.projects) { project in
+                    ForEach(store.snapshot.projects) { project in
                         NavigationLink {
                             VStack(alignment: .leading, spacing: 8) {
                                 Label(project.title, systemImage: project.symbol)
@@ -28,7 +30,9 @@ struct FieldDeckRootView: View {
                 }
 
                 Section("Phone Link") {
-                    Text("Offline snapshot ready")
+                    Button(store.linkStatus) {
+                        store.requestRefresh()
+                    }
                 }
             }
             .navigationTitle("Field Deck")
