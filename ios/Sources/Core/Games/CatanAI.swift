@@ -7,7 +7,32 @@ import Foundation
 // (roll → resolve robber → greedy build → end turn). The view calls it whenever the
 // current player is a bot and loops until it is the human's turn or the game is over.
 
+/// How hard the bots play. `.cozy` reproduces the original balanced heuristic exactly; `.gentle`
+/// is deliberately softer (kinder robber, no bank-trading, timid dev-buys) so new players can win;
+/// `.clever` is sharper (hunts the leader with the robber, trades and buys development earlier).
+enum CatanBotDifficulty: String, Codable, CaseIterable, Identifiable {
+    case gentle, cozy, clever
+    var id: String { rawValue }
+    var label: String {
+        switch self {
+        case .gentle: return "Gentle"
+        case .cozy: return "Cozy"
+        case .clever: return "Clever"
+        }
+    }
+    var blurb: String {
+        switch self {
+        case .gentle: return "Kind and beatable — great for learning."
+        case .cozy: return "A friendly, balanced game."
+        case .clever: return "Sharp opponents who play to win."
+        }
+    }
+}
+
 struct CatanAI {
+    /// Difficulty tier. `.cozy` is the original balanced heuristic and leaves behavior unchanged.
+    var difficulty: CatanBotDifficulty = .cozy
+
     /// Resolve the current bot player's entire obligation, mutating the game in place.
     func act(in game: inout CatanGame) {
         guard game.winner == nil else { return }
@@ -64,6 +89,8 @@ struct CatanAI {
     }
 
     private func buildPhase(_ game: inout CatanGame) {
+        // Dev-card appetite by difficulty: clever buys earlier, gentle hoards resources longer.
+        let devThreshold = (difficulty == .clever) ? 4 : (difficulty == .gentle ? 7 : 5)
         var guardCount = 0
         while game.phase == .build && game.winner == nil && guardCount < 40 {
             guardCount += 1
@@ -89,11 +116,11 @@ struct CatanAI {
                 game.placeRoad(edge: e); continue
             }
             // 5) Buy a development card when flush.
-            if game.canAfford(CatanGame.devCardCost, player: p), game.totalResources(p) >= 5 {
+            if game.canAfford(CatanGame.devCardCost, player: p), game.totalResources(p) >= devThreshold {
                 game.buyDevCard(); continue
             }
-            // 6) Trade 4:1 toward an affordable build, else stop.
-            if tryTradeTowardGoal(&game, p) { continue }
+            // 6) Trade 4:1 toward an affordable build, else stop. Gentle bots never bank-trade.
+            if difficulty != .gentle, tryTradeTowardGoal(&game, p) { continue }
             break
         }
     }
@@ -104,6 +131,8 @@ struct CatanAI {
         guard game.phase == .moveRobber else { return }
         let me = game.currentPlayer
         let hexes = game.legalRobberHexes()
+        // Clever bots hunt whoever is ahead; gentle bots go easy on the human (player 0).
+        let leader = game.players.indices.max(by: { game.publicScore(for: $0) < game.publicScore(for: $1) })
         func score(_ h: Int) -> Int {
             var s = 0
             var touchesSelf = false
@@ -111,7 +140,12 @@ struct CatanAI {
             for v in game.board.hexVertexIndices[h] {
                 if let b = game.buildings[v] {
                     if b.owner == me { touchesSelf = true }
-                    else { s += (b.kind == .city ? 2 : 1) * pips }
+                    else {
+                        var w = (b.kind == .city ? 2 : 1) * pips
+                        if difficulty == .clever, b.owner == leader { w += 3 * pips }
+                        if difficulty == .gentle, b.owner == 0 { w -= 6 * pips }
+                        s += w
+                    }
                 }
             }
             if touchesSelf { s -= 100 }
@@ -129,6 +163,7 @@ struct CatanAI {
         for v in game.board.hexVertexIndices[game.robberHex] {
             if let b = game.buildings[v], b.owner == p { return true }
         }
+        if difficulty == .gentle { return false }   // gentle bots use knights only defensively
         // Playing would grab (or hold) Largest Army.
         let myKnights = game.players[p].knightsPlayed + 1
         let others = game.players.indices.filter { $0 != p }.map { game.players[$0].knightsPlayed }.max() ?? 0

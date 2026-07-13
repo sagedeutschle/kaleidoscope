@@ -123,3 +123,99 @@ final class CatanGameTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(g.victoryPoints(for: winner, includeHidden: true), CatanGame.winningPoints)
     }
 }
+
+final class CatanDifficultyAndMultiplayerTests: XCTestCase {
+    func testAllPlayerCountsSetUpCorrectly() {
+        for count in 2...4 {
+            var g = CatanGame.newGame(playerCount: count, seed: 24680)
+            XCTAssertEqual(g.players.count, count)
+            XCTAssertEqual(g.players.filter { $0.isBot }.count, count - 1, "seat 0 is the human; the rest are bots")
+            let ai = CatanAI(difficulty: .cozy)
+            var steps = 0
+            while g.isSetupPhase && steps < 400 { ai.act(in: &g); steps += 1 }
+            XCTAssertFalse(g.isSetupPhase, "setup must complete for all seats")
+            XCTAssertEqual(g.phase, .roll)
+        }
+    }
+
+    /// Play stays legal (valid turn order, no negative resources, no crash) across all difficulty
+    /// tiers. No winner is required — some board layouts legitimately can't reach 10 VP under the
+    /// heuristic (board congestion / limited trading), which is a known limitation, not a bug.
+    func testPlayRemainsLegalAcrossDifficulties() {
+        for difficulty in CatanBotDifficulty.allCases {
+            var g = CatanGame.newGame(playerCount: 4, seed: 13579)
+            let ai = CatanAI(difficulty: difficulty)
+            var steps = 0
+            while g.winner == nil && steps < 3000 {
+                ai.act(in: &g)
+                steps += 1
+                if steps % 200 == 0 {
+                    XCTAssertTrue((0..<g.players.count).contains(g.currentPlayer))
+                    for p in g.players {
+                        for r in CatanResource.allCases {
+                            XCTAssertGreaterThanOrEqual(p.resources[r] ?? 0, 0, "resources must never go negative")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// The difficulty tiers actually change play: gentle and clever bots diverge from the same seed.
+    func testDifficultyAffectsPlay() {
+        func play(_ d: CatanBotDifficulty, seed: UInt64) -> CatanGame {
+            var g = CatanGame.newGame(playerCount: 4, seed: seed)
+            let ai = CatanAI(difficulty: d)
+            var s = 0
+            while g.winner == nil && s < 500 { ai.act(in: &g); s += 1 }
+            return g
+        }
+        var diverged = false
+        for seed in stride(from: UInt64(101), through: 108, by: 1) where !diverged {
+            if play(.gentle, seed: seed) != play(.clever, seed: seed) { diverged = true }
+        }
+        XCTAssertTrue(diverged, "gentle and clever bots should produce divergent play")
+    }
+
+    func testCozyDifficultyIsTheDefault() {
+        XCTAssertEqual(CatanAI().difficulty, .cozy)
+    }
+
+    func testSnapshotCarriesDifficulty() throws {
+        let g = CatanGame.newGame(seed: 88)
+        let json = try GameSaveCodec.encodeSnapshot(CatanSnapshot(game: g, difficulty: .clever))
+        let decoded = try GameSaveCodec.decodeSnapshot(CatanSnapshot.self, from: json)
+        XCTAssertEqual(decoded.difficulty, .clever)
+        XCTAssertEqual(decoded.game, g)
+    }
+
+    /// A save written before `difficulty` existed (no key) must still decode, defaulting to .cozy.
+    func testSnapshotDecodesLegacySaveWithoutDifficulty() throws {
+        let g = CatanGame.newGame(seed: 91)
+        let gameJSON = try GameSaveCodec.encodeSnapshot(g)
+        let legacyJSON = "{\"game\":\(gameJSON)}"
+        let decoded = try GameSaveCodec.decodeSnapshot(CatanSnapshot.self, from: legacyJSON)
+        XCTAssertEqual(decoded.difficulty, .cozy)
+        XCTAssertEqual(decoded.game, g)
+    }
+}
+
+final class CatanCustomizationTests: XCTestCase {
+    func testThemeCatalogIsComplete() {
+        XCTAssertEqual(CatanTheme.all.count, 6)
+        XCTAssertEqual(CatanTheme.theme(id: "night").id, "night")
+        XCTAssertEqual(CatanTheme.theme(id: "nonexistent").id, "meadow", "unknown ids fall back to meadow")
+        // Every biome resolves to a fill (desert == nil).
+        for theme in CatanTheme.all {
+            for r in CatanResource.allCases { _ = theme.fill(for: r) }
+            _ = theme.fill(for: nil)
+        }
+    }
+
+    func testPlayerPaletteIsDistinctAndHonorsHumanPick() {
+        let palette = CatanPlayerColor.palette(humanColorID: "jade", playerCount: 4)
+        XCTAssertEqual(palette.count, 4)
+        XCTAssertEqual(palette[0], CatanPlayerColor.color(id: "jade").rgb, "human keeps their chosen color at seat 0")
+        XCTAssertEqual(Set(palette).count, 4, "all four player colors must be distinct")
+    }
+}
