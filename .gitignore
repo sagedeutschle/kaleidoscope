@@ -41,6 +41,7 @@ xcuserdata/
 ModuleCache.noindex/
 SourcePackages/
 .derivedData/
+.worktrees/
 *.ipa
 *.app.dSYM.zip
 
