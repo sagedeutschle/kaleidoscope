@@ -10,9 +10,9 @@ Prismet now embeds a modern SwiftUI Apple Watch companion called **Field Deck**.
 an away-from-laptop day: the Watch keeps the last useful project snapshot locally, exposes a manual
 phone refresh, and includes three deterministic offline games.
 
-The implementation is complete and verified. Physical delivery is the only open boundary: all three
-known iPhones went out of CoreDevice range before the final install, and no paired physical Watch was
-visible to Xcode. The signed app bundle is ready for the next reachable phone.
+The implementation is complete and verified. A later same-day retry delivered the signed companion
+bundle to three reachable iPhones. Physical Watch launch is the only open boundary because no paired
+Watch is visible to Xcode as a development destination.
 
 ## What shipped
 
@@ -37,9 +37,9 @@ visible to Xcode. The signed app bundle is ready for the next reachable phone.
 | Apple Watch simulator | Installed, launched, and visually checked |
 | Games visual pass | 2048 4×4, Lights Out 5×5, and Catan Harvest checked |
 
-Signed local artifact:
+Latest signed local artifact:
 
-`/Users/gtrktscrb/Library/Caches/PrismetWatchSigned/Build/Products/Debug-iphoneos/Prismet.app`
+`/Users/gtrktscrb/Library/Caches/PrismetWatchIPhone8/Build/Products/Debug-iphoneos/Prismet.app`
 
 Visual evidence:
 
@@ -48,14 +48,23 @@ Visual evidence:
 
 ## Physical delivery status
 
-At the final gate, CoreDevice reported Benjamin's iPhone, MommaPhone, and Poopoohead as unavailable.
-An install was attempted against each saved device identifier; each returned `The specified device
-was not found`. `xctrace`/CoreDevice exposed no physical Apple Watch, so a Watch install could not be
-truthfully claimed.
+The first deployment attempt found all known phones unavailable. Later, `iPhone (8)`, Benjamin's
+iPhone, and Poopoohead became reachable. The original profile did not contain `iPhone (8)` and was
+rejected with `0xe8008012`; a device-targeted automatic-signing build refreshed the profile and passed
+deep signature verification.
 
-When a paired iPhone is back on the laptop's reachable network, install the signed Prismet app on that
-phone. The embedded Field Deck will then be eligible for normal paired-Watch installation; if automatic
-app install is disabled, use the iPhone Watch app to install **Prismet Field Deck** manually.
+| Device | Install | Launch |
+| --- | --- | --- |
+| `iPhone (8)` | Confirmed, Prismet 1.2 (14) | Confirmed |
+| Benjamin's iPhone | Confirmed, Prismet 1.2 (14) | Blocked because phone was locked |
+| Poopoohead | Confirmed, Prismet 1.2 (14) | Confirmed |
+
+The embedded Watch app and widget are present in each installed iPhone bundle. The physical Watch is
+still absent from `xctrace`, CoreDevice, and the Watch scheme's destination list. Direct development
+installation therefore needs Developer Mode enabled on both the companion iPhone and the Watch, with
+the Watch paired to this Mac through Xcode Device Hub. If automatic app installation is already enabled,
+the embedded Field Deck may install through the companion phone; otherwise use the iPhone Watch app to
+install it after the Watch becomes available.
 
 ## Scope notes
 

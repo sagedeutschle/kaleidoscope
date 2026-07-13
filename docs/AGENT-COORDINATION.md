@@ -2246,9 +2246,12 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   WidgetKit complications, an eight-project offline pulse, phone-to-Watch refresh, and three pocket
   games (2048, Lights Out, Catan Harvest). Full iOS tests are 322/322 green; portable core tests are
   10/10 green; generic signed iPhone/Watch/widget build verifies cleanly; the final Watch simulator
-  launch and visual pass succeeded. Real-device install was attempted on Benjamin's iPhone,
-  MommaPhone, and Poopoohead, but all three left CoreDevice range before delivery and returned
-  `device not found`; no physical Watch was exposed to Xcode. Handoff:
+  launch and visual pass succeeded. Later same-day device retry: automatic signing successfully
+  refreshed the Prismet profile for newly reachable `iPhone (8)`; the signed bundle then installed
+  on `iPhone (8)`, Benjamin's iPhone, and Poopoohead. Prismet launched on `iPhone (8)` and Poopoohead;
+  Benjamin's launch was denied only because the phone was locked. The embedded Watch app is present
+  on all three phone installs, but no physical Watch is exposed to Xcode, so direct Watch launch is
+  still blocked on Watch Developer Mode/pairing rather than build or phone delivery. Handoff:
   `docs/superpowers/handoffs/2026-07-13-prismet-watch-field-deck.md`. macOS parity decision remains
   platform-specific N/A for Watch UI/complications; the data/game core is portable Swift. No Catan,
   App Store listing, catalog, backend match-model, or Claude/Fable-owned source was changed.
