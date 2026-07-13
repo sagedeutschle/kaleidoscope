@@ -2223,3 +2223,16 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   macOS parity: tracked debt logged in `ios/docs/MAC-IOS-GAME-PARITY.md` (owner me; blocker =
   no Mac in this session; next = mirror model + view into `macos/` after iOS goes green).
   Branch `claude/prismet-catan-research-l86o6j`.
+
+- `PRISM: RELEASE Agent-Design/Claude 2026-07-12 (Catan UI polish — colonist.io feel)` —
+  Follow-up on the Catan view ONLY (`ios/Sources/Features/Games/CatanView.swift`, no model/registry
+  changes). Added: (1) a **2D/3D board toggle** (`@AppStorage("catan.is3D")` + segmented Picker,
+  mirroring Chess's `chess.is3D`); 3D is a colonist.io-style **tilted-perspective** board via
+  `rotation3DEffect` (not SceneKit — deliberately, to stay low-risk while unverified). (2) A
+  card-style **resource hand** replacing the old chip row — chunky colored cards with icon + count.
+  (3) **Gain/loss animations** on every resource change (production, trade, steal, spend): each
+  card pops and shows a +N / −N badge for ~1.3s, driven by an `onChange` diff of the human's
+  holdings. (4) Probability **pips** under the number tokens. Still NOT built/tested here (no Xcode);
+  same Mac build gate applies. macOS parity: unchanged tracked debt. Note: "trading animation" here
+  is gain/loss card feedback, not cross-table card-fly choreography, and 3D is a perspective tilt,
+  not a rotatable SceneKit scene — both can be upgraded on request.

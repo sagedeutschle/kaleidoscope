@@ -20,6 +20,11 @@ struct CatanView: View {
     @State private var tradeGive: CatanResource = .brick
     @State private var tradeGet: CatanResource = .grain
 
+    // Board look + resource-change feedback
+    @AppStorage("catan.is3D") private var is3D = false
+    @State private var flashDeltas: [CatanResource: Int] = [:]
+    @State private var flashToken = 0
+
     private let accent = Color(red: 0.80, green: 0.52, blue: 0.24)   // warm Catan amber
 
     private let playerColors: [Color] = [
@@ -44,8 +49,13 @@ struct CatanView: View {
                     diceView
                 }
                 scoreboard
+                boardModeToggle
                 boardView
-                if game.currentPlayer == 0 && game.winner == nil { resourceBar }
+                    .rotation3DEffect(.degrees(is3D ? 47 : 0),
+                                      axis: (x: 1, y: 0, z: 0),
+                                      anchor: .center, perspective: 0.55)
+                    .animation(.easeInOut(duration: 0.45), value: is3D)
+                if game.currentPlayer == 0 && game.winner == nil { resourceHand }
                 controls
                 logView
             }
@@ -65,6 +75,7 @@ struct CatanView: View {
         .sensoryFeedback(.success, trigger: game.winner)
         .sheet(isPresented: $showTrade) { tradeSheet }
         .onAppear { setupOnce() }
+        .onChange(of: humanResourceSignature) { old, new in flashResourceChange(old: old, new: new) }
         .onDisappear { save(forceCloud: true) }
     }
 
@@ -124,20 +135,81 @@ struct CatanView: View {
             .foregroundStyle(Color.white)
     }
 
-    private var resourceBar: some View {
-        HStack(spacing: 6) {
-            ForEach(CatanResource.allCases, id: \.self) { r in
-                HStack(spacing: 3) {
-                    Image(systemName: r.symbolName).font(.caption2)
-                    Text("\(game.players[0].resources[r] ?? 0)").font(PrismetDesign.rounded(14)).monospacedDigit()
-                }
-                .padding(.horizontal, 7).padding(.vertical, 5)
-                .background(Capsule().fill(resourceColor(r).opacity(0.22)))
-                .overlay(Capsule().strokeBorder(resourceColor(r).opacity(0.6), lineWidth: 1))
-                .foregroundStyle(PrismetDesign.ink)
+    private var boardModeToggle: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "cube.transparent").font(.caption2).foregroundStyle(PrismetDesign.ink3)
+            Picker("Board", selection: $is3D) {
+                Text("2D").tag(false)
+                Text("3D").tag(true)
             }
+            .pickerStyle(.segmented)
+            .frame(width: 132)
+            Spacer()
+        }
+    }
+
+    // A colonist.io-style resource hand: chunky, clearly-labelled cards that pop and
+    // show a +N / −N badge whenever your holdings change (production, trade, steal, spend).
+    private var resourceHand: some View {
+        HStack(spacing: 7) {
+            ForEach(CatanResource.allCases, id: \.self) { r in resourceCard(r) }
         }
         .frame(maxWidth: .infinity)
+    }
+
+    private func resourceCard(_ r: CatanResource) -> some View {
+        let count = game.players[0].resources[r] ?? 0
+        let delta = flashDeltas[r]
+        return VStack(spacing: 2) {
+            Image(systemName: r.symbolName).font(.system(size: 15, weight: .semibold)).foregroundStyle(.white)
+            Spacer(minLength: 0)
+            Text("\(count)").font(PrismetDesign.rounded(20)).monospacedDigit().foregroundStyle(.white)
+        }
+        .padding(.vertical, 8)
+        .frame(maxWidth: .infinity)
+        .frame(height: 64)
+        .background(
+            RoundedRectangle(cornerRadius: 11, style: .continuous)
+                .fill(LinearGradient(colors: [resourceColor(r), resourceColor(r).opacity(0.66)],
+                                     startPoint: .top, endPoint: .bottom))
+        )
+        .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).strokeBorder(Color.white.opacity(0.35), lineWidth: 1))
+        .overlay(alignment: .top) {
+            if let delta, delta != 0 {
+                Text(delta > 0 ? "+\(delta)" : "\(delta)")
+                    .font(.caption2.weight(.heavy)).foregroundStyle(.white)
+                    .padding(.horizontal, 6).padding(.vertical, 2)
+                    .background(Capsule().fill(delta > 0 ? Color(red: 0.20, green: 0.62, blue: 0.34) : Color(red: 0.78, green: 0.26, blue: 0.28)))
+                    .offset(y: -11)
+                    .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .scaleEffect(delta != nil ? 1.1 : 1.0)
+        .shadow(color: resourceColor(r).opacity(0.4), radius: 4, y: 2)
+        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: flashToken)
+    }
+
+    private var humanResourceSignature: [Int] {
+        CatanResource.allCases.map { game.players[0].resources[$0] ?? 0 }
+    }
+
+    private func flashResourceChange(old: [Int], new: [Int]) {
+        guard old.count == new.count, old.count == CatanResource.allCases.count else { return }
+        var d: [CatanResource: Int] = [:]
+        for (i, r) in CatanResource.allCases.enumerated() {
+            let delta = new[i] - old[i]
+            if delta != 0 { d[r] = delta }
+        }
+        guard !d.isEmpty else { return }
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) { flashDeltas = d }
+        flashToken &+= 1
+        let token = flashToken
+        Task {
+            try? await Task.sleep(nanoseconds: 1_300_000_000)
+            if flashToken == token {
+                withAnimation(.easeOut(duration: 0.3)) { flashDeltas = [:] }
+            }
+        }
     }
 
     private var logView: some View {
@@ -209,9 +281,23 @@ struct CatanView: View {
                 ctx.stroke(circle, with: .color(.black.opacity(0.25)), lineWidth: 1)
                 let hot = (n == 6 || n == 8)
                 let label = Text("\(n)")
-                    .font(.system(size: max(10, r), weight: hot ? .heavy : .bold, design: .rounded))
+                    .font(.system(size: max(10, r * 0.95), weight: hot ? .heavy : .bold, design: .rounded))
                     .foregroundColor(hot ? .red : Color(white: 0.12))
-                ctx.draw(label, at: c)
+                ctx.draw(label, at: CGPoint(x: c.x, y: c.y - r * 0.16))
+
+                // Probability pips (·····) beneath the number — more dots = likelier roll.
+                let pipCount = CatanGame.pips(for: n)
+                if pipCount > 0 {
+                    let dotR = max(0.8, r * 0.08)
+                    let gap = dotR * 2.6
+                    let startX = c.x - gap * CGFloat(pipCount - 1) / 2
+                    let y = c.y + r * 0.48
+                    for k in 0..<pipCount {
+                        let dx = startX + gap * CGFloat(k)
+                        let dot = Path(ellipseIn: CGRect(x: dx - dotR, y: y - dotR, width: 2 * dotR, height: 2 * dotR))
+                        ctx.fill(dot, with: .color(hot ? .red : Color(white: 0.25)))
+                    }
+                }
             }
         }
 
