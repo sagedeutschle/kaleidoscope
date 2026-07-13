@@ -2236,3 +2236,22 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   same Mac build gate applies. macOS parity: unchanged tracked debt. Note: "trading animation" here
   is gain/loss card feedback, not cross-table card-fly choreography, and 3D is a perspective tilt,
   not a rotatable SceneKit scene — both can be upgraded on request.
+
+- `PRISM: RELEASE Agent-Design/Claude 2026-07-12 (reusable online-game registry)` —
+  Collapsed the five hardcoded `CanonicalGameID` switches that gated online play into one
+  descriptor list, so the next agent turns a game online with a SINGLE entry. NEW:
+  `ios/Sources/Features/Games/OnlineGameCatalog.swift` (`OnlineGameDescriptor` + `OnlineGameCatalog`:
+  per-game seat range, `isAvailable`, initial-snapshot builder, and view builder; includes an
+  inline "how to add a game" guide) and `ios/Tests/OnlineGameCatalogTests.swift`. REFACTOR:
+  `OnlineLobbyView.swift`'s `supportedGames`, `initialStateJSON(for:)`, and `gameContainer` now
+  all delegate to the catalog — behavior is IDENTICAL for the 7 existing online games
+  (chess/checkers/connectFour/reversi/gomoku/crazyEight/seaBattle), and `OnlineGameLobbyView`'s
+  `.supportedGames`/`.supports(_:)`/`.initialStateJSON(for:)` are kept as the same static surface
+  HomeView's routing gate + `GamePlayModeTests` already use. Catan is registered (seats 3...4) but
+  `isAvailable: false`, with an inline how-to, because the Supabase match envelope is 2-seat
+  (host+guest) and Catan needs N seats. **I did NOT touch the backend match model / Supabase
+  schema / OnlineMatchSession — the N-seat rework + RLS is left for the backend lane (Codex),**
+  documented in the catalog and the Catan online parity debt. No game's online availability
+  changed, so this is not user-visible → macOS parity N/A. NOT built/tested here (no Xcode);
+  `SWIFT_VERSION 5.0` confirmed, so the static-let closure registry is fine.
+  Branch `claude/prismet-catan-research-l86o6j`.
