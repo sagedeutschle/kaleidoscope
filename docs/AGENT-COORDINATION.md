@@ -2240,3 +2240,13 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   WAITING_FOR_REVIEW (can't submit 1.2 over it); Catan is on this diverged, unmerged research branch;
   ASC public-name flip Kaleidescope→Prismet is a manual step. Status: PLAN SET, execution pending
   Sage's go. Branch `claude/prismet-catan-research-l86o6j`.
+
+- `PRISM: CLAIM Codex 2026-07-13 (Apple Watch Field Deck, isolated branch)` —
+  Sage gave a full green light to rebuild his Watch experience for a laptop-away day. Working only
+  on branch `codex/watch-field-deck-20260713` in `.worktrees/codex-watch-field-deck`. Scope: NEW
+  `shared/WatchFieldDeckCore/**`, `ios/WatchFieldDeck/**`, `ios/WatchFieldDeckWidget/**`, focused
+  Watch/core tests, spec/plan docs; EDIT `ios/project.yml` and `ios/Sources/App/PrismetApp.swift`
+  solely to embed/activate the companion. I will not touch the active Catan source, macOS Catan,
+  App Store screenshots/listing, online catalog, backend match model, or any Claude/Fable-owned file.
+  macOS parity decision: Watch UI/complications are platform-specific N/A; the data/game core stays
+  portable Swift. Baseline before edits: full iOS `PrismetTests` 315/315 green.
