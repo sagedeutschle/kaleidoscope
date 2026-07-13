@@ -11,7 +11,7 @@ struct CatanView: View {
     private let accountID: UUID?
     @StateObject private var persistence = PersistedGameSession<CatanSnapshot>(gameID: .catan)
 
-    @State private var game = CatanGame.newGame(seed: 1)
+    @State private var game = CatanGame.newGame(seed: UInt64.random(in: 1...UInt64.max))
     @State private var buildMode: BuildMode = .none
     @State private var isBotWorking = false
     @State private var moveTick = 0
@@ -98,8 +98,8 @@ struct CatanView: View {
     @ViewBuilder private var diceView: some View {
         if let roll = game.lastRoll {
             HStack(spacing: 4) {
-                Image(systemName: "die.face.\(roll.a).fill")
-                Image(systemName: "die.face.\(roll.b).fill")
+                Image(systemName: "die.face.\(roll.a)")
+                Image(systemName: "die.face.\(roll.b)")
             }
             .font(.title3)
             .foregroundStyle(accent)
@@ -643,16 +643,15 @@ struct CatanView: View {
     private func setupOnce() {
         guard !didSetup else { advanceBotsIfNeeded(); return }
         didSetup = true
-        var restored = false
+        // The default `game` is already a fresh random match. `configure` restores a
+        // local save synchronously (and a newer cloud save asynchronously) over it if
+        // one exists. We deliberately do NOT start + force-save a new game here: on a
+        // device with a cloud save but no local copy yet, that would clobber the cloud
+        // save before the async restore runs.
         persistence.configure(accountID: accountID, cloudStore: .shared) { snap in
-            restored = true
             game = snap.game
         }
-        if restored {
-            advanceBotsIfNeeded()
-        } else {
-            startNewGame()
-        }
+        advanceBotsIfNeeded()
     }
 
     private func save(forceCloud: Bool = false) {
