@@ -172,3 +172,20 @@ one canonical feature identity to the current iOS/macOS legacy IDs.
   build + `CatanGameTests` are green on a Mac, port `CatanBoard`/`CatanGame`/`CatanAI` to
   `macos/Sources/Model/` and a `CatanView` to `macos/Sources/Views/`, then register in
   `FacetRegistry` + `ContentView`. NOTE: iOS build/tests were NOT run in this session.
+- `PRISM: Claude (Opus 4.8), 2026-07-13 (Catan 3D overhaul — research branch claude/prismet-catan-research-l86o6j)` —
+  Overhauled the iOS Catan **presentation** into a cozy low-poly 3D board; the rules engine
+  (`CatanGame`/`CatanBoard`) is unchanged. New files: `Sources/Core/Games/CatanTheme.swift`,
+  `CatanPrefs.swift`; `Sources/Features/Games/CatanSceneGeometry.swift`, `CatanScene3D.swift`,
+  `CatanBoard3DView.swift`, `CatanCustomizeSheet.swift`, `CatanConfetti.swift`. Extended `CatanAI`
+  (difficulty tiers gentle/cozy/clever — `.cozy` reproduces the original exactly), `CatanSnapshot`
+  (carries difficulty, decode-safe), and `CatanView` (3D game layout + 2D fallback toggle,
+  customization via `CatanPrefs`, up to 4 players). Features: zoom/orbit SceneKit board, 6 themes,
+  cottage/blocky pieces, player-color pick, auto-rotate, reduce-motion, placement pops, hopping
+  robber, dice bounce, win confetti. Verified: iOS build green + full `PrismetTests` 315/315 on a
+  Mac simulator + on-device Debug deploy to Poopoohead; offscreen `CatanRenderHarnessTests` writes
+  board PNGs for review.
+  **macOS decision — TRACKED DEBT (owner: next agent to mirror Catan):** macOS Catan still does not
+  exist (the 2026-07-12 row remains open). This 3D presentation is iOS-only research; the SceneKit
+  view is `UIViewRepresentable` and would need an AppKit `NSViewRepresentable` port. Next action:
+  first mirror the rules engine + a macOS `CatanView` per the 2026-07-12 plan; the 3D board is a
+  separate, larger follow-up. Not blocking iOS.
