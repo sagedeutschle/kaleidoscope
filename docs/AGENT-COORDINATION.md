@@ -2255,3 +2255,11 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   changed, so this is not user-visible → macOS parity N/A. NOT built/tested here (no Xcode);
   `SWIFT_VERSION 5.0` confirmed, so the static-let closure registry is fine.
   Branch `claude/prismet-catan-research-l86o6j`.
+
+### PRISM — Shared Parity Contracts — 2026-07-14T07:36:52Z
+
+- **Branch/worktree:** `codex/prismet-shared-parity-foundation` / `/Users/gtrktscrb/Desktop/Kaleidoscope/.worktrees/codex-prismet-shared-parity`
+- **Status:** ACTIVE
+- **Owns:** `shared/PrismetShared/Sources/PrismetShared/PrismetFeatureManifest.swift`, `PrismetGameModeContracts.swift`, `PrismetIdentityContracts.swift`, `PrismetSaveEnvelope.swift`; matching package tests; `shared/PrismetShared/README.md`
+- **Excludes:** all iOS/macOS app source, Catan, Illuminated Cabinet facelift, online catalog/lobby, The Long Now
+- **Verification:** focused and full SwiftPM tests, then no-sign iOS/macOS compile smokes
