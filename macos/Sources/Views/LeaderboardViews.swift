@@ -1,5 +1,15 @@
 import SwiftUI
 
+enum LocalLeaderboardPresentation {
+    static let loadingMessage = "Loading local scores…"
+    static let failureMessage = "Scores could not be loaded."
+    static let retryTitle = "Retry"
+    static let emptyTitle = "No scores yet"
+    static let emptyGuidance = "Finish a ranked game to create your first local score."
+    static let loadingAccessibilityLabel = "Loading local scores"
+    static let retryAccessibilityLabel = "Retry loading local scores"
+}
+
 struct ResultSlipView: View {
     let result: GameResult
     let accent: Color
@@ -162,14 +172,16 @@ struct LocalLeaderboardPanel: View {
 
             content
 
-            HStack {
-                Spacer()
-                Button {
-                    Task { await loadEntries() }
-                } label: {
-                    Label("Refresh", systemImage: "arrow.clockwise")
+            if errorText == nil {
+                HStack {
+                    Spacer()
+                    Button {
+                        Task { await loadEntries() }
+                    } label: {
+                        Label("Refresh", systemImage: "arrow.clockwise")
+                    }
+                    .buttonStyle(GlassButtonStyle())
                 }
-                .buttonStyle(GlassButtonStyle())
             }
         }
         .padding(24)
@@ -184,21 +196,36 @@ struct LocalLeaderboardPanel: View {
     @ViewBuilder
     private var content: some View {
         if isLoading {
-            ProgressView()
+            ProgressView(LocalLeaderboardPresentation.loadingMessage)
+                .accessibilityLabel(LocalLeaderboardPresentation.loadingAccessibilityLabel)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if let errorText {
-            Text(errorText)
-                .font(.callout.weight(.semibold))
-                .foregroundStyle(PrismetDesign.ink2)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            HStack(spacing: 12) {
+                Text(errorText)
+                    .font(.callout.weight(.semibold))
+                    .foregroundStyle(PrismetDesign.ink2)
+
+                Button {
+                    Task { await loadEntries() }
+                } label: {
+                    Label(LocalLeaderboardPresentation.retryTitle, systemImage: "arrow.clockwise")
+                }
+                .buttonStyle(GlassButtonStyle())
+                .accessibilityLabel(LocalLeaderboardPresentation.retryAccessibilityLabel)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if entries.isEmpty {
             VStack(spacing: 10) {
                 Image(systemName: "trophy")
                     .font(.system(size: 34, weight: .semibold))
                     .foregroundStyle(accent.opacity(0.65))
-                Text("No Scores Yet")
+                Text(LocalLeaderboardPresentation.emptyTitle)
                     .font(PrismetDesign.rounded(18))
                     .foregroundStyle(PrismetDesign.ink)
+                Text(LocalLeaderboardPresentation.emptyGuidance)
+                    .font(.callout)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(PrismetDesign.ink2)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
@@ -221,7 +248,7 @@ struct LocalLeaderboardPanel: View {
             entries = try await service.entries(facetID: facetID, mode: mode, scope: .local, limit: 10)
         } catch {
             entries = []
-            errorText = "Scores could not be loaded."
+            errorText = LocalLeaderboardPresentation.failureMessage
         }
         isLoading = false
     }
