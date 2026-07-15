@@ -1,7 +1,23 @@
 import Foundation
 
-public enum PrismetStateHashAlgorithm: String, Codable, Hashable, Sendable {
-    case fnv1a64V1 = "fnv1a64-v1"
+public struct PrismetStateHashAlgorithm: Codable, Hashable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    public static let fnv1a64V1 = PrismetStateHashAlgorithm(rawValue: "fnv1a64-v1")
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        self.init(rawValue: try container.decode(String.self))
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
 }
 
 public enum PrismetReplayError: Error, Equatable {
@@ -13,6 +29,8 @@ public enum PrismetReplayError: Error, Equatable {
     case invalidRulesetVersion(Int)
     case invalidRandomizerVersion(Int)
     case nonContiguousSequence(record: String, expected: Int, actual: Int)
+    case nonIncreasingSequence(record: String, previous: Int, actual: Int)
+    case unsupportedHashAlgorithm(PrismetStateHashAlgorithm)
     case finalStateHashMismatch
 }
 
@@ -24,11 +42,13 @@ public struct PrismetStateHash: Codable, Hashable, Sendable {
         algorithm: PrismetStateHashAlgorithm = .fnv1a64V1,
         value: String
     ) throws {
-        guard value.count == 16,
-              value.unicodeScalars.allSatisfy({ scalar in
-                  (48...57).contains(scalar.value) || (97...102).contains(scalar.value)
-              }) else {
-            throw PrismetReplayError.invalidStateHash(value)
+        if algorithm == .fnv1a64V1 {
+            guard value.count == 16,
+                  value.unicodeScalars.allSatisfy({ scalar in
+                      (48...57).contains(scalar.value) || (97...102).contains(scalar.value)
+                  }) else {
+                throw PrismetReplayError.invalidStateHash(value)
+            }
         }
         self.algorithm = algorithm
         self.value = value
@@ -229,6 +249,11 @@ public struct PrismetGameReplay: Codable, Hashable, Sendable {
         guard randomizerVersion > 0 else {
             throw PrismetReplayError.invalidRandomizerVersion(randomizerVersion)
         }
+        if let unsupportedAlgorithm = (events.map(\.stateHash) + [finalStateHash])
+            .map(\.algorithm)
+            .first(where: { $0 != .fnv1a64V1 }) {
+            throw PrismetReplayError.unsupportedHashAlgorithm(unsupportedAlgorithm)
+        }
         try Self.validateSequences(commands.map(\.sequence), record: "command")
         try Self.validateSequences(events.map(\.sequence), record: "event")
         if let lastEvent = events.last, lastEvent.stateHash != finalStateHash {
@@ -246,12 +271,16 @@ public struct PrismetGameReplay: Codable, Hashable, Sendable {
     }
 
     private static func validateSequences(_ sequences: [Int], record: String) throws {
-        for (expected, actual) in sequences.enumerated() where expected != actual {
-            throw PrismetReplayError.nonContiguousSequence(
-                record: record,
-                expected: expected,
-                actual: actual
-            )
+        guard var previous = sequences.first else { return }
+        for actual in sequences.dropFirst() {
+            guard actual > previous else {
+                throw PrismetReplayError.nonIncreasingSequence(
+                    record: record,
+                    previous: previous,
+                    actual: actual
+                )
+            }
+            previous = actual
         }
     }
 
@@ -328,19 +357,19 @@ public enum PrismetGameReplayVerifier {
             return .metadata(field: "randomizerVersion")
         }
         if recorded.seed != reproduced.seed { return .metadata(field: "seed") }
-        if recorded.commands.count != reproduced.commands.count {
-            return .commandCount(expected: recorded.commands.count, actual: reproduced.commands.count)
-        }
-        for index in recorded.commands.indices
+        for index in 0..<min(recorded.commands.count, reproduced.commands.count)
         where recorded.commands[index] != reproduced.commands[index] {
             return .command(index: index)
         }
-        if recorded.events.count != reproduced.events.count {
-            return .eventCount(expected: recorded.events.count, actual: reproduced.events.count)
+        if recorded.commands.count != reproduced.commands.count {
+            return .commandCount(expected: recorded.commands.count, actual: reproduced.commands.count)
         }
-        for index in recorded.events.indices
+        for index in 0..<min(recorded.events.count, reproduced.events.count)
         where recorded.events[index] != reproduced.events[index] {
             return .event(index: index)
+        }
+        if recorded.events.count != reproduced.events.count {
+            return .eventCount(expected: recorded.events.count, actual: reproduced.events.count)
         }
         if recorded.finalOutcome != reproduced.finalOutcome { return .finalOutcome }
         if recorded.finalStateHash != reproduced.finalStateHash { return .finalStateHash }

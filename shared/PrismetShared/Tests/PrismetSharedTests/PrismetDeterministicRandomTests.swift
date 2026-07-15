@@ -15,24 +15,44 @@ final class PrismetDeterministicRandomTests: XCTestCase {
     func testSameSeedIsReproducibleAndDifferentSeedsDiverge() {
         var first = PrismetDeterministicRandom(seed: 42)
         var second = PrismetDeterministicRandom(seed: 42)
-        var reference = PrismetDeterministicRandom(seed: 42)
         var different = PrismetDeterministicRandom(seed: 43)
 
-        XCTAssertEqual((0..<20).map { _ in first.next() }, (0..<20).map { _ in second.next() })
-        XCTAssertNotEqual(reference.next(), different.next())
+        let firstSequence = (0..<20).map { _ in first.next() }
+        let secondSequence = (0..<20).map { _ in second.next() }
+        let differentSequence = (0..<20).map { _ in different.next() }
+
+        XCTAssertEqual(firstSequence, secondSequence)
+        XCTAssertNotEqual(firstSequence, differentSequence)
+        XCTAssertEqual(first.state, second.state)
+        XCTAssertEqual(first.drawCount, 20)
+        XCTAssertEqual(second.drawCount, 20)
+        XCTAssertEqual(different.drawCount, 20)
+    }
+
+    func testStateAlwaysMatchesSeedPlusIncrementTimesDrawCount() {
+        let increment: UInt64 = 0x9E3779B97F4A7C15
+        let seed = UInt64.max - 3
+        var rng = PrismetDeterministicRandom(seed: seed)
+
+        for expectedDrawCount in UInt64(1)...128 {
+            _ = rng.next()
+
+            XCTAssertEqual(rng.drawCount, expectedDrawCount)
+            XCTAssertEqual(rng.state, seed &+ (increment &* expectedDrawCount))
+        }
     }
 
     func testInvalidBoundsDoNotConsumeRandomWords() {
         var rng = PrismetDeterministicRandom(seed: 42)
 
         XCTAssertThrowsError(try rng.next(upperBound: 0)) { error in
-            XCTAssertEqual(error as? PrismetDeterministicRandomError, .invalidUpperBound)
+            XCTAssertEqual(error as? PrismetDeterministicRandomError, .invalidUpperBound(0))
         }
         XCTAssertThrowsError(try rng.nextInt(upperBound: 0)) { error in
-            XCTAssertEqual(error as? PrismetDeterministicRandomError, .invalidUpperBound)
+            XCTAssertEqual(error as? PrismetDeterministicRandomError, .invalidUpperBound(0))
         }
         XCTAssertThrowsError(try rng.nextInt(upperBound: -1)) { error in
-            XCTAssertEqual(error as? PrismetDeterministicRandomError, .invalidUpperBound)
+            XCTAssertEqual(error as? PrismetDeterministicRandomError, .invalidUpperBound(-1))
         }
         XCTAssertEqual(rng.drawCount, 0)
     }
@@ -47,13 +67,20 @@ final class PrismetDeterministicRandomTests: XCTestCase {
     }
 
     func testFisherYatesShuffleHasStableFixtureAndNoTrivialDraws() throws {
-        var values = Array(0...9)
+        let original = Array(0...9)
+        var values = original
+        var matchingValues = original
         var rng = PrismetDeterministicRandom(seed: 42)
+        var matchingRNG = PrismetDeterministicRandom(seed: 42)
 
         try rng.shuffle(&values)
+        try matchingRNG.shuffle(&matchingValues)
 
         XCTAssertEqual(values, [0, 9, 5, 8, 6, 4, 7, 2, 1, 3])
+        XCTAssertEqual(values, matchingValues)
+        XCTAssertEqual(values.sorted(), original)
         XCTAssertEqual(rng.drawCount, 9)
+        XCTAssertEqual(matchingRNG.drawCount, 9)
 
         var empty: [Int] = []
         var one = [1]
@@ -74,5 +101,21 @@ final class PrismetDeterministicRandomTests: XCTestCase {
 
         XCTAssertEqual(original.next(), restored.next())
         XCTAssertEqual(original.drawCount, restored.drawCount)
+    }
+
+    func testDecodingRejectsStateThatDoesNotMatchSeedAndDrawCount() throws {
+        let impossible = try JSONSerialization.data(withJSONObject: [
+            "seed": UInt64(7),
+            "state": UInt64(7),
+            "drawCount": UInt64(2)
+        ])
+
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(PrismetDeterministicRandom.self, from: impossible)
+        ) { error in
+            guard case DecodingError.dataCorrupted = error else {
+                return XCTFail("Expected dataCorrupted, got \(error)")
+            }
+        }
     }
 }

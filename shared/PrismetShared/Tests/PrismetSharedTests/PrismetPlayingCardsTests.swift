@@ -53,4 +53,16 @@ final class PrismetPlayingCardsTests: XCTestCase {
         XCTAssertEqual(roundTripped, card)
         XCTAssertEqual(roundTripped.id, "ace-of-spades")
     }
+
+    func testEveryStandardCardCodableRoundTripPreservesCanonicalIdentity() throws {
+        let standard = PrismetDeckFactory.standard52()
+        let roundTripped = try JSONDecoder().decode(
+            [PrismetPlayingCard].self,
+            from: JSONEncoder().encode(standard)
+        )
+
+        XCTAssertEqual(roundTripped, standard)
+        XCTAssertEqual(roundTripped.map(\.id), standard.map(\.id))
+        XCTAssertEqual(Set(roundTripped.map(\.id)).count, 52)
+    }
 }

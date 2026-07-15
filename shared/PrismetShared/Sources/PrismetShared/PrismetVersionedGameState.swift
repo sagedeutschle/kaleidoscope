@@ -35,6 +35,11 @@ public struct PrismetVersionedGameState: Codable, Hashable, Sendable {
         guard randomizerVersion > 0 else {
             throw PrismetVersionedGameStateError.invalidRandomizerVersion(randomizerVersion)
         }
+        guard stateHash.algorithm == .fnv1a64V1 else {
+            throw PrismetVersionedGameStateError.unsupportedHashAlgorithm(
+                stateHash.algorithm
+            )
+        }
 
         let expectedHash = PrismetStateHash.fnv1a64(payload)
         guard stateHash == expectedHash else {
@@ -62,17 +67,17 @@ public struct PrismetVersionedGameState: Codable, Hashable, Sendable {
         payload: Data,
         modifiedAt: Date = Date()
     ) throws {
-        let stateHash: PrismetStateHash
-        switch hashAlgorithm {
-        case .fnv1a64V1:
-            stateHash = .fnv1a64(payload)
+        guard hashAlgorithm == .fnv1a64V1 else {
+            throw PrismetVersionedGameStateError.unsupportedHashAlgorithm(
+                hashAlgorithm
+            )
         }
         try self.init(
             gameID: gameID,
             rulesVersion: rulesVersion,
             payloadVersion: payloadVersion,
             randomizerVersion: randomizerVersion,
-            stateHash: stateHash,
+            stateHash: .fnv1a64(payload),
             payload: payload,
             modifiedAt: modifiedAt
         )
@@ -113,26 +118,45 @@ public struct PrismetVersionedGameState: Codable, Hashable, Sendable {
     }
 }
 
+public struct PrismetSupportedGameVersion: Hashable, Sendable {
+    public let gameID: String
+    public let rulesVersion: Int
+    public let payloadVersion: Int
+    public let randomizerVersion: Int
+    public let hashAlgorithm: PrismetStateHashAlgorithm
+
+    public init(
+        gameID: String,
+        rulesVersion: Int,
+        payloadVersion: Int,
+        randomizerVersion: Int = 1,
+        hashAlgorithm: PrismetStateHashAlgorithm = .fnv1a64V1
+    ) {
+        self.gameID = gameID.trimmingCharacters(in: .whitespacesAndNewlines)
+        self.rulesVersion = rulesVersion
+        self.payloadVersion = payloadVersion
+        self.randomizerVersion = randomizerVersion
+        self.hashAlgorithm = hashAlgorithm
+    }
+}
+
 public struct PrismetVersionSupport: Hashable, Sendable {
+    public let versions: Set<PrismetSupportedGameVersion>
     public let gameIDs: Set<String>
     public let rulesVersions: Set<Int>
     public let payloadVersions: Set<Int>
     public let randomizerVersions: Set<Int>
     public let hashAlgorithms: Set<PrismetStateHashAlgorithm>
 
-    public init(
-        gameIDs: Set<String>,
-        rulesVersions: Set<Int>,
-        payloadVersions: Set<Int>,
-        randomizerVersions: Set<Int> = [1],
-        hashAlgorithms: Set<PrismetStateHashAlgorithm> = [.fnv1a64V1]
-    ) {
-        self.gameIDs = gameIDs
-        self.rulesVersions = rulesVersions
-        self.payloadVersions = payloadVersions
-        self.randomizerVersions = randomizerVersions
-        self.hashAlgorithms = hashAlgorithms
+    public init(versions: Set<PrismetSupportedGameVersion>) {
+        self.versions = versions
+        self.gameIDs = Set(versions.map(\.gameID))
+        self.rulesVersions = Set(versions.map(\.rulesVersion))
+        self.payloadVersions = Set(versions.map(\.payloadVersion))
+        self.randomizerVersions = Set(versions.map(\.randomizerVersion))
+        self.hashAlgorithms = Set(versions.map(\.hashAlgorithm))
     }
+
 }
 
 public enum PrismetVersionedGameStateError: Error, Equatable {
@@ -167,16 +191,25 @@ public enum PrismetVersionedGameStateCodec {
         guard support.gameIDs.contains(state.gameID) else {
             throw PrismetVersionedGameStateError.unsupportedGameID(state.gameID)
         }
-        guard support.rulesVersions.contains(state.rulesVersion) else {
+
+        let gameVersions = support.versions.filter { $0.gameID == state.gameID }
+        let rulesVersions = gameVersions.filter { $0.rulesVersion == state.rulesVersion }
+        guard !rulesVersions.isEmpty else {
             throw PrismetVersionedGameStateError.unsupportedRulesVersion(state.rulesVersion)
         }
-        guard support.payloadVersions.contains(state.payloadVersion) else {
+        let payloadVersions = rulesVersions.filter { $0.payloadVersion == state.payloadVersion }
+        guard !payloadVersions.isEmpty else {
             throw PrismetVersionedGameStateError.unsupportedPayloadVersion(state.payloadVersion)
         }
-        guard support.randomizerVersions.contains(state.randomizerVersion) else {
+        let randomizerVersions = payloadVersions.filter {
+            $0.randomizerVersion == state.randomizerVersion
+        }
+        guard !randomizerVersions.isEmpty else {
             throw PrismetVersionedGameStateError.unsupportedRandomizerVersion(state.randomizerVersion)
         }
-        guard support.hashAlgorithms.contains(state.stateHash.algorithm) else {
+        guard randomizerVersions.contains(where: {
+            $0.hashAlgorithm == state.stateHash.algorithm
+        }) else {
             throw PrismetVersionedGameStateError.unsupportedHashAlgorithm(state.stateHash.algorithm)
         }
         return state

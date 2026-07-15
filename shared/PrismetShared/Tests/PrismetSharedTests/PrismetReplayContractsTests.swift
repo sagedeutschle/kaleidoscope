@@ -48,7 +48,23 @@ final class PrismetReplayContractsTests: XCTestCase {
         XCTAssertEqual(decoded.stateHashes, decoded.events.map(\.stateHash))
     }
 
-    func testReplayRejectsInvalidMetadataAndNonContiguousSequences() throws {
+    func testReplayCodecReportsUnknownHashAlgorithmWithTypedError() throws {
+        let futureAlgorithm = PrismetStateHashAlgorithm(rawValue: "future-hash-v9")
+        let encoded = try PrismetGameReplayCodec.encode(makeReplay())
+        let futureReplay = try replacingHashAlgorithms(
+            in: encoded,
+            with: futureAlgorithm.rawValue
+        )
+
+        XCTAssertThrowsError(try PrismetGameReplayCodec.decode(futureReplay)) {
+            XCTAssertEqual(
+                $0 as? PrismetReplayError,
+                .unsupportedHashAlgorithm(futureAlgorithm)
+            )
+        }
+    }
+
+    func testReplayRejectsInvalidMetadata() throws {
         let hash = PrismetStateHash.fnv1a64(Data("final".utf8))
         let payload = try PrismetReplayPayload(kind: "stand", data: Data())
 
@@ -74,16 +90,88 @@ final class PrismetReplayContractsTests: XCTestCase {
             )
         ) { XCTAssertEqual($0 as? PrismetReplayError, .invalidRulesetVersion(0)) }
 
-        let skipped = try PrismetGameCommandRecord(sequence: 1, actorSeat: 0, payload: payload)
+    }
+
+    func testReplayAcceptsOffsetAndGappedStrictlyIncreasingSequences() throws {
+        let commandPayload = try PrismetReplayPayload(kind: "stand", data: Data())
+        let eventPayload = try PrismetReplayPayload(kind: "advanced", data: Data())
+        let firstHash = PrismetStateHash.fnv1a64(Data("first".utf8))
+        let finalHash = PrismetStateHash.fnv1a64(Data("final".utf8))
+        let commands = [
+            try PrismetGameCommandRecord(sequence: 4, actorSeat: 0, payload: commandPayload),
+            try PrismetGameCommandRecord(sequence: 9, actorSeat: 0, payload: commandPayload)
+        ]
+        let events = [
+            try PrismetGameEventRecord(sequence: 3, payload: eventPayload, stateHash: firstHash),
+            try PrismetGameEventRecord(sequence: 8, payload: eventPayload, stateHash: finalHash)
+        ]
+
+        let replay = try PrismetGameReplay(
+            gameID: "blackjack",
+            rulesetVersion: 1,
+            randomizerVersion: 1,
+            seed: 1,
+            commands: commands,
+            events: events,
+            finalOutcome: .completed,
+            finalStateHash: finalHash
+        )
+
+        XCTAssertEqual(replay.commands.map(\.sequence), [4, 9])
+        XCTAssertEqual(replay.events.map(\.sequence), [3, 8])
+    }
+
+    func testReplayRejectsDuplicateCommandSequence() throws {
+        let payload = try PrismetReplayPayload(kind: "stand", data: Data())
+        let hash = PrismetStateHash.fnv1a64(Data("final".utf8))
+        let commands = [
+            try PrismetGameCommandRecord(sequence: 7, actorSeat: 0, payload: payload),
+            try PrismetGameCommandRecord(sequence: 7, actorSeat: 0, payload: payload)
+        ]
+
         XCTAssertThrowsError(
             try PrismetGameReplay(
-                gameID: "blackjack", rulesetVersion: 1, randomizerVersion: 1, seed: 1,
-                commands: [skipped], events: [], finalOutcome: .completed, finalStateHash: hash
+                gameID: "blackjack",
+                rulesetVersion: 1,
+                randomizerVersion: 1,
+                seed: 1,
+                commands: commands,
+                events: [],
+                finalOutcome: .completed,
+                finalStateHash: hash
             )
         ) {
             XCTAssertEqual(
                 $0 as? PrismetReplayError,
-                .nonContiguousSequence(record: "command", expected: 0, actual: 1)
+                .nonIncreasingSequence(record: "command", previous: 7, actual: 7)
+            )
+        }
+    }
+
+    func testReplayRejectsDecreasingEventSequence() throws {
+        let payload = try PrismetReplayPayload(kind: "advanced", data: Data())
+        let firstHash = PrismetStateHash.fnv1a64(Data("first".utf8))
+        let finalHash = PrismetStateHash.fnv1a64(Data("final".utf8))
+        let events = [
+            try PrismetGameEventRecord(sequence: 9, payload: payload, stateHash: firstHash),
+            try PrismetGameEventRecord(sequence: 4, payload: payload, stateHash: finalHash)
+        ]
+
+        XCTAssertThrowsError(
+            try PrismetGameReplay(
+                gameID: "blackjack",
+                rulesetVersion: 1,
+                randomizerVersion: 1,
+                seed: 1,
+                commands: [],
+                events: events,
+                finalOutcome: .completed,
+                finalStateHash: finalHash
+            )
+        ) {
+            XCTAssertEqual(
+                $0 as? PrismetReplayError,
+                .nonIncreasingSequence(record: "event", previous: 9, actual: 4)
             )
         }
     }
@@ -113,6 +201,70 @@ final class PrismetReplayContractsTests: XCTestCase {
             .event(index: 1)
         )
         XCTAssertNil(PrismetGameReplayVerifier.firstMismatch(recorded: recorded, reproduced: recorded))
+    }
+
+    func testVerifierComparesSharedCommandPrefixBeforeCount() throws {
+        let base = try makeReplay()
+        let secondCommand = try PrismetGameCommandRecord(
+            sequence: 1,
+            actorSeat: 0,
+            payload: PrismetReplayPayload(kind: "hit", data: Data())
+        )
+        let recorded = try PrismetGameReplay(
+            gameID: base.gameID,
+            rulesetVersion: base.rulesetVersion,
+            randomizerVersion: base.randomizerVersion,
+            seed: base.seed,
+            commands: base.commands + [secondCommand],
+            events: base.events,
+            finalOutcome: base.finalOutcome,
+            finalStateHash: base.finalStateHash
+        )
+        let changedFirstCommand = try PrismetGameCommandRecord(
+            sequence: 0,
+            actorSeat: 0,
+            payload: PrismetReplayPayload(kind: "hit", data: Data())
+        )
+        let reproduced = try PrismetGameReplay(
+            gameID: base.gameID,
+            rulesetVersion: base.rulesetVersion,
+            randomizerVersion: base.randomizerVersion,
+            seed: base.seed,
+            commands: [changedFirstCommand],
+            events: base.events,
+            finalOutcome: base.finalOutcome,
+            finalStateHash: base.finalStateHash
+        )
+
+        XCTAssertEqual(
+            PrismetGameReplayVerifier.firstMismatch(recorded: recorded, reproduced: reproduced),
+            .command(index: 0)
+        )
+    }
+
+    func testVerifierComparesSharedEventPrefixBeforeCount() throws {
+        let recorded = try makeReplay()
+        let changedHash = PrismetStateHash.fnv1a64(Data("changed".utf8))
+        let changedFirstEvent = try PrismetGameEventRecord(
+            sequence: 0,
+            payload: recorded.events[0].payload,
+            stateHash: changedHash
+        )
+        let reproduced = try PrismetGameReplay(
+            gameID: recorded.gameID,
+            rulesetVersion: recorded.rulesetVersion,
+            randomizerVersion: recorded.randomizerVersion,
+            seed: recorded.seed,
+            commands: recorded.commands,
+            events: [changedFirstEvent],
+            finalOutcome: recorded.finalOutcome,
+            finalStateHash: changedHash
+        )
+
+        XCTAssertEqual(
+            PrismetGameReplayVerifier.firstMismatch(recorded: recorded, reproduced: reproduced),
+            .event(index: 0)
+        )
     }
 
     func testEncodedReplaySchemaContainsNoIdentityEconomyOrPressureFields() throws {
@@ -157,5 +309,27 @@ final class PrismetReplayContractsTests: XCTestCase {
             finalOutcome: .completed,
             finalStateHash: finalHash
         )
+    }
+
+    private func replacingHashAlgorithms(
+        in data: Data,
+        with rawValue: String
+    ) throws -> Data {
+        var replay = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: data) as? [String: Any]
+        )
+        var finalStateHash = try XCTUnwrap(replay["finalStateHash"] as? [String: Any])
+        finalStateHash["algorithm"] = rawValue
+        replay["finalStateHash"] = finalStateHash
+
+        var events = try XCTUnwrap(replay["events"] as? [[String: Any]])
+        for index in events.indices {
+            var stateHash = try XCTUnwrap(events[index]["stateHash"] as? [String: Any])
+            stateHash["algorithm"] = rawValue
+            events[index]["stateHash"] = stateHash
+        }
+        replay["events"] = events
+
+        return try JSONSerialization.data(withJSONObject: replay, options: [.sortedKeys])
     }
 }
