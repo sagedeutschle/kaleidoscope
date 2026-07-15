@@ -1,8 +1,7 @@
 import SwiftUI
 
-/// A replaceable seam for the future region-aware age-verification provider.
-/// This temporary policy records nothing; the hub owns the resulting state for
-/// only as long as its view hierarchy remains alive.
+/// This threshold intentionally records nothing; the hub owns the resulting
+/// access state only while this visit's view hierarchy is alive.
 protocol CasinoEntryAccessPolicy {
     var initialStatus: CasinoEntryAccessStatus { get }
     func enterPracticeCasino() -> CasinoEntryAccessStatus
@@ -45,7 +44,7 @@ struct CasinoEntryGateView: View {
                     VStack(spacing: 10) {
                         Text("Casino Practice")
                             .font(.system(size: 38, weight: .bold, design: .serif))
-                        Text("A calm 18+ practice destination")
+                        Text("Adults 18+ only")
                             .font(.title3.weight(.semibold))
                             .foregroundStyle(CasinoTheme.brassSoft)
                     }
@@ -56,8 +55,12 @@ struct CasinoEntryGateView: View {
                             systemImage: "checkmark.shield"
                         )
                         Label(
-                            "Verified-age access is planned before public release.",
-                            systemImage: "clock.badge.exclamationmark"
+                            "This screen does not verify age.",
+                            systemImage: "person.badge.questionmark"
+                        )
+                        Label(
+                            "Choosing \"I'm 18 or older — Enter\" opens Casino Practice for this visit; the access decision is not stored.",
+                            systemImage: "eye.slash"
                         )
                     }
                     .font(.body.weight(.medium))
@@ -76,18 +79,18 @@ struct CasinoEntryGateView: View {
                             .frame(minWidth: 132, minHeight: CasinoTheme.minimumTarget)
                             .accessibilityHint("Leaves the practice casino")
 
-                        Button("Enter Practice Casino", action: onEnter)
+                        Button("I'm 18 or older — Enter", action: onEnter)
                             .buttonStyle(.borderedProminent)
                             .tint(CasinoTheme.brass)
                             .foregroundStyle(CasinoTheme.ink)
                             .keyboardShortcut(.defaultAction)
                             .frame(minWidth: 204, minHeight: CasinoTheme.minimumTarget)
-                            .accessibilityHint("Enters this visit only")
+                            .accessibilityHint("Opens Casino Practice for this visit only; this screen does not verify age")
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityElement(children: .contain)
 
-                    Text("Return enters. Escape chooses Not Now.")
+                    Text("Return enters for this visit. Escape chooses Not Now.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }

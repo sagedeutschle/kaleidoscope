@@ -21,9 +21,12 @@ struct PracticePokerView: View {
                         .font(.system(size: 31, weight: .bold, design: .rounded))
                     Text("Deal five cards, hold any cards, then draw once.")
                         .foregroundStyle(.white.opacity(0.72))
-                    Label("Practice only. No money or transferable value.", systemImage: "checkmark.shield")
+                    Label("Adults 18+ only · Practice only. No money, purchases, wagering, prizes, rewards, or transferable value.", systemImage: "checkmark.shield")
                         .font(.callout.weight(.semibold))
                         .foregroundStyle(CasinoTheme.brassSoft)
+                    Text("Chance, Poker, and Study Lab choices and results are visit state only. Reset clears this visit state; existing Blackjack audit save is preserved.")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.72))
                 }
                 if let state = session.pokerState {
                     cardRow(state)
@@ -137,7 +140,7 @@ struct PracticePokerView: View {
             Button("Reset Session", role: .destructive) { _ = session.resetSession(confirming: true) }
             Button("Cancel", role: .cancel) { }
         } message: {
-            Text("This clears compact and Poker visit state. Existing Blackjack audit save is preserved.")
+            Text("Adults 18+ only. This clears Chance, Poker, and Study Lab visit state; no money, purchases, wagering, prizes, rewards, or transferable value are involved. Existing Blackjack audit save is preserved.")
         }
     }
 

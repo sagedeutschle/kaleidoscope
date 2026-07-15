@@ -2,25 +2,21 @@ import PrismetShared
 import SwiftUI
 
 struct CasinoHubView: View {
-    @StateObject private var blackjackSession: PracticeBlackjackSession
-    @StateObject private var session: PracticeCasinoSession
     @State private var entryStatus: CasinoEntryAccessStatus
     @Environment(\.dismiss) private var dismiss
 
     private let suppliedLeaveAction: (() -> Void)?
     private let entryAccessPolicy: any CasinoEntryAccessPolicy
+    private let previewSeed: UInt64?
+    private let previewBlackjackSession: PracticeBlackjackSession?
 
     init(
         previewSeed: UInt64? = nil,
         onLeave: (() -> Void)? = nil,
         entryAccessPolicy: any CasinoEntryAccessPolicy = PlannedCasinoEntryAccessPolicy()
     ) {
-        _blackjackSession = StateObject(wrappedValue: PracticeBlackjackSession(previewSeed: previewSeed))
-        if let previewSeed {
-            _session = StateObject(wrappedValue: PracticeCasinoSession(seedSource: { previewSeed }))
-        } else {
-            _session = StateObject(wrappedValue: PracticeCasinoSession())
-        }
+        self.previewSeed = previewSeed
+        previewBlackjackSession = nil
         suppliedLeaveAction = onLeave
         self.entryAccessPolicy = entryAccessPolicy
         _entryStatus = State(initialValue: entryAccessPolicy.initialStatus)
@@ -31,8 +27,8 @@ struct CasinoHubView: View {
         onLeave: (() -> Void)? = nil,
         entryAccessPolicy: any CasinoEntryAccessPolicy = PlannedCasinoEntryAccessPolicy()
     ) {
-        _blackjackSession = StateObject(wrappedValue: session)
-        _session = StateObject(wrappedValue: PracticeCasinoSession())
+        previewSeed = nil
+        previewBlackjackSession = session
         suppliedLeaveAction = onLeave
         self.entryAccessPolicy = entryAccessPolicy
         _entryStatus = State(initialValue: entryAccessPolicy.initialStatus)
@@ -44,12 +40,48 @@ struct CasinoHubView: View {
             case .threshold:
                 CasinoEntryGateView(onEnter: enterPracticeCasino, onNotNow: leave)
             case .sessionAccess:
-                casinoExperience
+                // The experience and its sessions do not exist before entry.
+                CasinoExperienceHost(
+                    previewSeed: previewSeed,
+                    previewBlackjackSession: previewBlackjackSession,
+                    onLeave: leave
+                )
             }
         }
     }
 
-    private var casinoExperience: some View {
+    private func enterPracticeCasino() {
+        entryStatus = entryAccessPolicy.enterPracticeCasino()
+    }
+
+    private func leave() {
+        // Revoke the in-memory decision before routing away so returning always
+        // re-presents the honest threshold.
+        entryStatus = .threshold
+        if let suppliedLeaveAction { suppliedLeaveAction() } else { dismiss() }
+    }
+}
+
+/// The complete Casino state tree. This type is intentionally constructed only
+/// after the visitor chooses to enter from `CasinoEntryGateView`.
+private struct CasinoExperienceHost: View {
+    @StateObject private var blackjackSession: PracticeBlackjackSession
+    @StateObject private var session: PracticeCasinoSession
+    let onLeave: () -> Void
+
+    init(
+        previewSeed: UInt64?,
+        previewBlackjackSession: PracticeBlackjackSession?,
+        onLeave: @escaping () -> Void
+    ) {
+        _blackjackSession = StateObject(
+            wrappedValue: previewBlackjackSession ?? PracticeBlackjackSession(previewSeed: previewSeed)
+        )
+        _session = StateObject(wrappedValue: PracticeCasinoSession(previewSeed: previewSeed))
+        self.onLeave = onLeave
+    }
+
+    var body: some View {
         VStack(spacing: 0) {
             hubHeader
             Divider()
@@ -85,18 +117,21 @@ struct CasinoHubView: View {
                 blackjackSession.endHand()
             }
         }
-        .onExitCommand(perform: leave)
+        .onExitCommand(perform: onLeave)
     }
 
     private var hubHeader: some View {
         HStack(spacing: 14) {
             Label("Fair Play Casino", systemImage: "checkmark.shield")
                 .font(.headline)
-            Text("Practice only · no money or transferable value")
+            Text("Adults 18+ only · no money, purchases, wagering, prizes, rewards, or transferable value")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            Text("Chance, Poker, and Study Lab state is visit-only")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
             Spacer(minLength: 12)
-            Button("Leave Game", systemImage: "door.left.hand.open", action: leave)
+            Button("Leave Game", systemImage: "door.left.hand.open", action: onLeave)
                 .buttonStyle(.bordered)
                 .frame(minHeight: CasinoTheme.minimumTarget)
         }
@@ -107,17 +142,20 @@ struct CasinoHubView: View {
 
     @ViewBuilder
     private var tableSurface: some View {
-        switch session.selectedGameID {
+        let descriptor = PrismetPracticeCasinoCatalog[session.selectedGameID]
+        switch descriptor.kind {
         case .blackjack:
-            PracticeBlackjackView(session: blackjackSession, onLeave: leave)
-        case .fiveCardDraw:
-            PracticePokerView(session: session, descriptor: PrismetPracticeCasinoCatalog[.fiveCardDraw], onLeave: leave)
-        default:
+            PracticeBlackjackView(session: blackjackSession, onLeave: onLeave)
+        case .poker:
+            PracticePokerView(session: session, descriptor: descriptor, onLeave: onLeave)
+        case .fairChance:
             PracticeChanceGameView(
                 session: session,
-                descriptor: PrismetPracticeCasinoCatalog[session.selectedGameID],
-                onLeave: leave
+                descriptor: descriptor,
+                onLeave: onLeave
             )
+        case .studyLab:
+            PracticeStudyLabView(session: session, descriptor: descriptor, onLeave: onLeave)
         }
     }
 
@@ -138,7 +176,7 @@ struct CasinoHubView: View {
             }
             .scrollIndicators(.automatic)
 
-            Text("Practice only · no money or transferable value")
+            Text("Adults 18+ only · no money or transferable value · visit state only")
                 .font(.caption2)
                 .foregroundStyle(.secondary)
         }
@@ -207,11 +245,4 @@ struct CasinoHubView: View {
         blackjackSession.loadState != .ready
     }
 
-    private func enterPracticeCasino() {
-        entryStatus = entryAccessPolicy.enterPracticeCasino()
-    }
-
-    private func leave() {
-        if let suppliedLeaveAction { suppliedLeaveAction() } else { dismiss() }
-    }
 }
