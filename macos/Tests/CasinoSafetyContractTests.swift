@@ -1,4 +1,5 @@
 import XCTest
+import PrismetShared
 @testable import Prismet
 
 final class CasinoSafetyContractTests: XCTestCase {
@@ -10,6 +11,9 @@ final class CasinoSafetyContractTests: XCTestCase {
         "CasinoPlayingCardView.swift",
         "CasinoFairPlayView.swift",
         "CasinoTheme.swift",
+        "PracticeCasinoSession.swift",
+        "PracticeChanceGameView.swift",
+        "PracticePokerView.swift",
     ]
 
     func testCasinoSourceContainsEveryIsolatedProductionFile() {
@@ -65,6 +69,38 @@ final class CasinoSafetyContractTests: XCTestCase {
         XCTAssertTrue(source.contains(".onKeyPress(.return"))
         XCTAssertTrue(source.contains(".onExitCommand"))
         XCTAssertTrue(source.contains(".accessibilityLabel"))
+    }
+
+    func testMacCasinoSurfaceContainsAllRoutesAndExplicitSessionActions() throws {
+        let source = try combinedSource()
+        XCTAssertTrue(source.contains("PrismetPracticeCasinoCatalog.all"))
+        XCTAssertTrue(source.contains("PrismetPracticeCasinoCatalog[session.selectedGameID]"))
+        XCTAssertEqual(Set(PrismetPracticeCasinoCatalog.all.map(\.id)), Set(PrismetPracticeCasinoGameID.allCases))
+        XCTAssertTrue(source.contains("Reset Session"))
+        XCTAssertTrue(source.contains("Leave Game"))
+        XCTAssertTrue(source.contains("onExitCommand"))
+        XCTAssertTrue(source.contains("accessibilityReduceMotion"))
+        XCTAssertTrue(source.contains("accessibilityDifferentiateWithoutColor"))
+        XCTAssertTrue(source.contains("ScrollView"))
+        XCTAssertFalse(source.contains("Timer"))
+        XCTAssertFalse(source.contains("onReceive"))
+        XCTAssertFalse(source.contains("DispatchQueue.main.asyncAfter"))
+    }
+
+    func testMacSafetyKeepsTheExactDisclosureAndNoValueMechanics() throws {
+        let source = try combinedSource()
+        XCTAssertTrue(source.contains("Practice only. No money, purchases, wagering, prizes, or rewards."))
+        XCTAssertTrue(source.contains("no money or transferable value"))
+        XCTAssertFalse(source.localizedCaseInsensitiveContains("reward".appending(" balance")))
+    }
+
+    func testMacFairPlaySurfacesResetConfirmationAndNonColorCues() throws {
+        let source = try combinedSource()
+        XCTAssertTrue(source.contains("confirmationDialog"))
+        XCTAssertTrue(source.contains("accessibilityDifferentiateWithoutColor"))
+        XCTAssertTrue(source.contains("accessibilityReduceMotion"))
+        XCTAssertTrue(source.contains("focused("))
+        XCTAssertTrue(source.contains("onExitCommand"))
     }
 
     private var casinoSourceRoot: URL {

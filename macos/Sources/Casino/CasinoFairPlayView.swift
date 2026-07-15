@@ -89,6 +89,9 @@ struct CasinoFairPlayView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Visible-information Hit odds")
                 .font(.title3.bold())
+            Text(PrismetPracticeCasinoCatalog[.blackjack].fairness)
+                .font(.callout)
+                .foregroundStyle(.white.opacity(0.78))
             if let hitOdds {
                 Text(hitOdds.probability, format: .percent.precision(.fractionLength(1)))
                     .font(.system(size: 30, weight: .bold, design: .rounded))

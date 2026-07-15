@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 enum CasinoMacPresentation: Equatable {
@@ -7,6 +8,7 @@ enum CasinoMacPresentation: Equatable {
 
 enum CasinoMacLayoutPolicy {
     static let splitBreakpoint: CGFloat = 860
+    static let tableCanvasMinimumHeight: CGFloat = 560
 
     static func presentation(for width: CGFloat) -> CasinoMacPresentation {
         width < splitBreakpoint ? .stacked : .split
@@ -21,6 +23,104 @@ enum CasinoMacLayoutPolicy {
         default:
             return 280
         }
+    }
+}
+
+enum CasinoProbabilityRosetteStyle: Equatable {
+    case watermark
+    case wheel
+}
+
+private struct CasinoRosetteSegment: Shape {
+    let startAngle: Angle
+    let endAngle: Angle
+
+    func path(in rect: CGRect) -> Path {
+        let center = CGPoint(x: rect.midX, y: rect.midY)
+        let radius = min(rect.width, rect.height) / 2
+        var path = Path()
+        path.move(to: center)
+        path.addArc(
+            center: center,
+            radius: radius,
+            startAngle: startAngle,
+            endAngle: endAngle,
+            clockwise: false
+        )
+        path.closeSubpath()
+        return path
+    }
+}
+
+struct CasinoProbabilityRosette: View {
+    static let segmentCount = 12
+
+    let style: CasinoProbabilityRosetteStyle
+    var highlightedSegment: Int? = nil
+    var diameter: CGFloat = 208
+
+    var body: some View {
+        ZStack {
+            ForEach(0..<Self.segmentCount, id: \.self) { index in
+                let segment = CasinoRosetteSegment(
+                    startAngle: .degrees(Double(index * 30) - 90),
+                    endAngle: .degrees(Double((index + 1) * 30) - 90)
+                )
+                segment
+                    .fill(segmentFill(index))
+                    .overlay {
+                        segment.stroke(
+                            highlightedSegment == index + 1 ? CasinoTheme.brass : segmentBorder,
+                            lineWidth: highlightedSegment == index + 1 ? 3 : 1
+                        )
+                    }
+            }
+
+            if style == .wheel {
+                GeometryReader { proxy in
+                    ForEach(0..<Self.segmentCount, id: \.self) { index in
+                        let angle = (Double(index) * 30 - 75) * Double.pi / 180
+                        Text("\(index + 1)")
+                            .font(.system(.caption2, design: .monospaced).weight(.bold))
+                            .foregroundStyle(index < 6 ? CasinoTheme.ink : CasinoTheme.warmIvory)
+                            .position(
+                                x: proxy.size.width / 2 + cos(angle) * proxy.size.width * 0.35,
+                                y: proxy.size.height / 2 + sin(angle) * proxy.size.height * 0.35
+                            )
+                    }
+                }
+                Circle()
+                    .fill(CasinoTheme.brass)
+                    .frame(width: 17, height: 17)
+            }
+        }
+        .frame(width: diameter, height: diameter)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
+    }
+
+    private var segmentBorder: Color {
+        style == .wheel ? CasinoTheme.brass.opacity(0.72) : CasinoTheme.warmIvory.opacity(0.16)
+    }
+
+    private func segmentFill(_ index: Int) -> Color {
+        switch style {
+        case .watermark:
+            return index.isMultiple(of: 2)
+                ? CasinoTheme.warmIvory.opacity(0.08)
+                : CasinoTheme.brass.opacity(0.08)
+        case .wheel:
+            return index < 6 ? CasinoTheme.warmIvory : CasinoTheme.studyEmerald
+        }
+    }
+
+    private var accessibilityLabel: String {
+        if let highlightedSegment {
+            return "Twelve equal segments. Segment \(highlightedSegment) revealed."
+        }
+        return style == .wheel
+            ? "Fair Wheel with twelve equal numbered segments"
+            : "Twelve-part equal-probability rosette"
     }
 }
 
@@ -51,6 +151,9 @@ enum CasinoMacKeyboardHints {
     static let newHand = "Command-N"
     static let replay = "Command-R"
     static let leave = "Escape"
+    static let primaryAction = "Return"
+    static let resetSession = "Command-R"
+    static let leaveGame = "Escape"
 }
 
 enum CasinoTheme {
@@ -65,6 +168,10 @@ enum CasinoTheme {
     static let panel = Color.white.opacity(0.09)
     static let panelBorder = Color.white.opacity(0.18)
     static let cornerRadius: CGFloat = 16
+    static let minimumTarget: CGFloat = 44
+    static let studyEmerald = Color(red: 0.043, green: 0.239, blue: 0.204)
+    static let mutedIvory = Color(red: 0.91, green: 0.894, blue: 0.847)
+    static let darkBrass = Color(red: 0.541, green: 0.353, blue: 0)
 
     static var feltBackground: LinearGradient {
         LinearGradient(
