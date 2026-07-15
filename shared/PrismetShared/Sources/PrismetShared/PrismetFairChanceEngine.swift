@@ -27,7 +27,25 @@ public struct PrismetProbabilityFraction: Codable, Hashable, Sendable {
 
     public var percentText: String {
         let value = (Double(numerator) / Double(denominator)) * 100
-        return value.rounded() == value ? "\(Int(value))%" : String(format: "%.2f%%", value)
+        return value.rounded() == value ? String(format: "%.0f%%", value) : String(format: "%.2f%%", value)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case numerator
+        case denominator
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let numerator = try container.decode(Int.self, forKey: .numerator)
+        let denominator = try container.decode(Int.self, forKey: .denominator)
+        try self.init(numerator, denominator)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(numerator, forKey: .numerator)
+        try container.encode(denominator, forKey: .denominator)
     }
 
     private static func greatestCommonDivisor(_ lhs: Int, _ rhs: Int) -> Int {
@@ -143,7 +161,7 @@ public enum PrismetFairChanceEngine {
         return PrismetHigherLowerPreview(
             seed: seed,
             randomizerVersion: PrismetDeterministicRandom.algorithmVersion,
-            shownCard: cardToken(shown, selected: false, rankValue: true),
+            shownCard: cardToken(shown, selected: false),
             probabilities: [
                 line("Higher", (14 - rank) * 4, 51),
                 line("Lower", (rank - 2) * 4, 51),
@@ -160,7 +178,7 @@ public enum PrismetFairChanceEngine {
         let shown = cards[0]
         let next = cards[1]
         guard preview.randomizerVersion == PrismetDeterministicRandom.algorithmVersion,
-              preview.shownCard == cardToken(shown, selected: false, rankValue: true),
+              preview.shownCard == cardToken(shown, selected: false),
               preview.probabilities == higherLowerProbabilities(for: shown) else {
             throw PrismetFairChanceEngineError.invalidHigherLowerPreview
         }
@@ -171,7 +189,7 @@ public enum PrismetFairChanceEngine {
             preview.seed,
             relation == choice.probabilityLabel ? "Selected relation revealed" : "\(relation) revealed",
             "The equal-rank outcome is neutral.",
-            [cardToken(shown, selected: false, rankValue: true), cardToken(next, selected: relation == choice.probabilityLabel, rankValue: true)],
+            [cardToken(shown, selected: false), cardToken(next, selected: relation == choice.probabilityLabel)],
             higherLowerProbabilities(for: shown)
         )
     }
@@ -284,6 +302,14 @@ public enum PrismetFairChanceEngine {
     private static func die(_ random: inout PrismetDeterministicRandom) throws -> Int { try random.nextInt(upperBound: 6) + 1 }
     private static func line(_ label: String, _ numerator: Int, _ denominator: Int) -> PrismetPracticeProbabilityLine { PrismetPracticeProbabilityLine(label: label, fraction: try! PrismetProbabilityFraction(numerator, denominator)) }
     private static func token(_ id: String, _ primary: String, _ secondary: String?, _ symbol: String, _ isSelected: Bool) -> PrismetPracticeRevealToken { PrismetPracticeRevealToken(id: id, primary: primary, secondary: secondary, symbol: symbol, isSelected: isSelected) }
-    private static func cardToken(_ card: PrismetPlayingCard, selected: Bool, rankValue: Bool = false) -> PrismetPracticeRevealToken { token(card.id, card.rank.displayName, rankValue ? String(card.rank.rawValue) : card.suit.displayName, "suit.\(card.suit.rawValue).fill", selected) }
+    private static func cardToken(_ card: PrismetPlayingCard, selected: Bool) -> PrismetPracticeRevealToken { token(card.id, card.rank.displayName, card.suit.displayName, suitSymbol(for: card.suit), selected) }
+    private static func suitSymbol(for suit: PrismetCardSuit) -> String {
+        switch suit {
+        case .clubs: return "suit.club.fill"
+        case .diamonds: return "suit.diamond.fill"
+        case .hearts: return "suit.heart.fill"
+        case .spades: return "suit.spade.fill"
+        }
+    }
     private static func result(_ gameID: PrismetPracticeCasinoGameID, _ seed: UInt64, _ title: String, _ detail: String, _ tokens: [PrismetPracticeRevealToken], _ probabilities: [PrismetPracticeProbabilityLine]) -> PrismetPracticeRoundResult { PrismetPracticeRoundResult(gameID: gameID, seed: seed, randomizerVersion: PrismetDeterministicRandom.algorithmVersion, title: title, detail: detail, tokens: tokens, probabilities: probabilities) }
 }
