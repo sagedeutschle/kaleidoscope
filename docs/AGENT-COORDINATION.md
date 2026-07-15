@@ -2263,3 +2263,13 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
 - **Owns:** `shared/PrismetShared/Sources/PrismetShared/PrismetFeatureManifest.swift`, `PrismetGameModeContracts.swift`, `PrismetIdentityContracts.swift`, `PrismetSaveEnvelope.swift`; matching package tests; `shared/PrismetShared/README.md`
 - **Excludes:** all iOS/macOS app source, Catan, Illuminated Cabinet facelift, online catalog/lobby, The Long Now
 - **Verification:** focused and full SwiftPM tests, then no-sign iOS/macOS compile smokes
+
+### PRISM — Fair Play Phase 1 — 2026-07-15T03:26:55Z
+
+- **Branch/worktree:** `codex/prismet-shared-parity-foundation` / `/Users/gtrktscrb/Desktop/Kaleidoscope/.worktrees/codex-prismet-shared-parity`
+- **Status:** ACTIVE
+- **Owns:** NEW `shared/PrismetShared/Sources/PrismetShared/PrismetPlayingCards.swift`, `PrismetDeterministicRandom.swift`, `PrismetReplayContracts.swift`, `PrismetVersionedGameState.swift` and matching new package tests; EDIT `ios/Sources/Features/Profile/ProfileSetupView.swift`, `ios/Sources/Features/Games/WordleView.swift`, `ios/Tests/WordleSessionTests.swift`, `macos/Sources/Views/LeaderboardViews.swift`, `macos/Tests/GameLeaderboardTests.swift`; NEW `ios/Tests/ProfileSetupAccessibilityTests.swift`
+- **Excludes:** Catan and its registration, Home/catalog/root navigation, shared design-system and Illuminated Cabinet files, App Store/release files, both `project.yml` files, generated projects, `PrismetFeatureManifest.swift`, existing save/identity/launch contracts, and all unrelated source
+- **Method:** one shared, one iOS, and one macOS Legion cohort; tests must fail for the intended reason before each production edit; workers do not stage or commit
+- **Product boundary:** no money, currency, chips, balances, wagering, stakes, payouts, rewards, streaks, urgency, automatic next hands, or outcome manipulation
+- **Verification:** full SwiftPM tests, focused iOS/macOS tests, iPhone and iPad compile smokes, macOS no-sign build, and targeted accessibility review

@@ -2,6 +2,8 @@
 
 **Status:** Approved by Sage on 2026-07-14
 
+**Supersession notice:** The later `2026-07-14-prismet-fair-play-expansion-design.md` replaces this document's Parlor Tokens, balances, stakes, payouts, wagering, retention loops, Casino table roster, and related ledger/history/settlement requirements. Retain this document only for its parity, shared-engine, native-platform, accessibility, Catan-boundary, and release-discipline guidance where it does not conflict with the Fair Play design.
+
 **Platforms:** iOS, iPadOS, macOS
 
 **Source products:** Prismet and The Long Now's Gaming/Casino Parlor
