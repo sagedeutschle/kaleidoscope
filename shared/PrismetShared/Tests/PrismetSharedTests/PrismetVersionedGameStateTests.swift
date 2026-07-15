@@ -112,12 +112,13 @@ final class PrismetVersionedGameStateTests: XCTestCase {
         XCTAssertThrowsError(
             try PrismetVersionedGameStateCodec.decodeSupported(
                 encoded,
-                support: PrismetVersionSupport(
-                    gameIDs: ["blackjack"],
-                    rulesVersions: [2],
-                    payloadVersions: [3],
-                    randomizerVersions: [4],
-                    hashAlgorithms: []
+                support: versionSupport(
+                    rulesVersion: 2,
+                    payloadVersion: 3,
+                    randomizerVersion: 4,
+                    hashAlgorithm: PrismetStateHashAlgorithm(
+                        rawValue: "different-known-algorithm"
+                    )
                 )
             )
         ) {
