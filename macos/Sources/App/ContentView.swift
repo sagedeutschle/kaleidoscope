@@ -594,6 +594,12 @@ struct ContentView: View {
     private func handleChessImport(_ result: Result<[URL], Error>) {
         do {
             guard let url = try result.get().first else { return }
+            let didAccess = url.startAccessingSecurityScopedResource()
+            defer {
+                if didAccess {
+                    url.stopAccessingSecurityScopedResource()
+                }
+            }
             let snapshot = try GamePersistenceStore.shared.importChess(from: url)
             game.restore(from: snapshot)
         } catch {
