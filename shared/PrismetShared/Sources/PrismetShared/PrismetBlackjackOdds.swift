@@ -1,3 +1,7 @@
+public enum PrismetBlackjackHitOddsError: Error, Equatable, Sendable {
+    case duplicateVisibleCard(PrismetPlayingCard)
+}
+
 public struct PrismetBlackjackHitOdds: Codable, Hashable, Sendable {
     public static let visibleInformationAssumption =
         "Uses only your cards and the dealer’s face-up card; the hole card and draw pile are treated as unseen."
@@ -13,6 +17,23 @@ public struct PrismetBlackjackHitOdds: Codable, Hashable, Sendable {
     }
 
     public init(
+        validatingPlayerCards playerCards: [PrismetPlayingCard],
+        dealerFaceUpCard: PrismetPlayingCard
+    ) throws {
+        var seenCards: Set<PrismetPlayingCard> = []
+        for visibleCard in playerCards + [dealerFaceUpCard] {
+            guard seenCards.insert(visibleCard).inserted else {
+                throw PrismetBlackjackHitOddsError.duplicateVisibleCard(visibleCard)
+            }
+        }
+
+        self.init(
+            playerCards: playerCards,
+            dealerFaceUpCard: dealerFaceUpCard
+        )
+    }
+
+    init(
         playerCards: [PrismetPlayingCard],
         dealerFaceUpCard: PrismetPlayingCard
     ) {

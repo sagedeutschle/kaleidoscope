@@ -48,6 +48,25 @@ final class PrismetBlackjackEngineTests: XCTestCase {
         XCTAssertEqual(hit.events.last, .handCompleted(try XCTUnwrap(observation.resolution)))
     }
 
+    func testHitToTwentyOneFinishesTheHandWithoutOfferingAnotherHit() throws {
+        let started = try start(
+            PrismetBlackjackFixtures.cards(.ten, .five, .five, .ten, .six, .three)
+        )
+
+        let hit = try PrismetBlackjackEngine.applying(.hit, to: started.state)
+        let observation = PrismetBlackjackEngine.observation(for: hit.state)
+
+        XCTAssertEqual(observation.playerValue.total, 21)
+        XCTAssertEqual(observation.dealerFinalValue?.total, 18)
+        XCTAssertEqual(observation.phase, .completed)
+        XCTAssertEqual(observation.legalCommands, [])
+        XCTAssertEqual(observation.resolution?.outcome, .playerWins)
+        XCTAssertEqual(observation.resolution?.reason, .playerHigherTotal)
+        XCTAssertEqual(hit.events.first, .playerHit)
+        XCTAssertTrue(hit.events.contains(.dealerHit))
+        XCTAssertEqual(hit.events.last, .handCompleted(try XCTUnwrap(observation.resolution)))
+    }
+
     func testStandDrivesDealerUntilHardThresholdAndCanBust() throws {
         let started = try start(PrismetBlackjackFixtures.cards(.ten, .ten, .six, .six, .king))
 

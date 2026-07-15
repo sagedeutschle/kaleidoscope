@@ -216,7 +216,8 @@ public enum PrismetBlackjackEngine {
         next.playerCards.append(try draw(from: &next))
         var events: [PrismetBlackjackEvent] = [.playerHit]
 
-        if PrismetBlackjackHandValue(cards: next.playerCards).isBust {
+        let playerValue = PrismetBlackjackHandValue(cards: next.playerCards)
+        if playerValue.isBust {
             let resolution = PrismetBlackjackResolution.resolve(
                 playerCards: next.playerCards,
                 dealerCards: next.dealerCards
@@ -224,6 +225,8 @@ public enum PrismetBlackjackEngine {
             next.phase = .completed
             next.resolution = resolution
             events.append(.handCompleted(resolution))
+        } else if playerValue.total == 21 {
+            return try completeDealerTurn(from: next, events: events)
         }
 
         return PrismetBlackjackTransition(state: next, events: events)
@@ -232,9 +235,16 @@ public enum PrismetBlackjackEngine {
     private static func applyStand(
         to state: PrismetBlackjackState
     ) throws -> PrismetBlackjackTransition {
+        try completeDealerTurn(from: state, events: [.playerStood])
+    }
+
+    private static func completeDealerTurn(
+        from state: PrismetBlackjackState,
+        events initialEvents: [PrismetBlackjackEvent]
+    ) throws -> PrismetBlackjackTransition {
         var next = state
         next.phase = .dealerTurn
-        var events: [PrismetBlackjackEvent] = [.playerStood]
+        var events = initialEvents
 
         while PrismetBlackjackHandValue(cards: next.dealerCards).total < 17 {
             next.dealerCards.append(try draw(from: &next))

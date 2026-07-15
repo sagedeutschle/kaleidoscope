@@ -5,9 +5,9 @@ import XCTest
 final class PrismetBlackjackOddsTests: XCTestCase {
     private let assumption = "Uses only your cards and the dealer’s face-up card; the hole card and draw pile are treated as unseen."
 
-    func testHardSixteenHasThirtyBustingCardsAmongFortyNineUnseen() {
-        let odds = PrismetBlackjackHitOdds(
-            playerCards: [
+    func testHardSixteenHasThirtyBustingCardsAmongFortyNineUnseen() throws {
+        let odds = try PrismetBlackjackHitOdds(
+            validatingPlayerCards: [
                 PrismetBlackjackFixtures.card(.ten, .clubs),
                 PrismetBlackjackFixtures.card(.six, .hearts)
             ],
@@ -21,9 +21,9 @@ final class PrismetBlackjackOddsTests: XCTestCase {
         XCTAssertEqual(odds.assumption, assumption)
     }
 
-    func testSoftSeventeenHasNoOneCardBusts() {
-        let odds = PrismetBlackjackHitOdds(
-            playerCards: [
+    func testSoftSeventeenHasNoOneCardBusts() throws {
+        let odds = try PrismetBlackjackHitOdds(
+            validatingPlayerCards: [
                 PrismetBlackjackFixtures.card(.ace, .clubs),
                 PrismetBlackjackFixtures.card(.six, .hearts)
             ],
@@ -35,9 +35,9 @@ final class PrismetBlackjackOddsTests: XCTestCase {
         XCTAssertEqual(odds.probability, 0)
     }
 
-    func testHardTwentyHasFortyFiveBustingCards() {
-        let odds = PrismetBlackjackHitOdds(
-            playerCards: [
+    func testHardTwentyHasFortyFiveBustingCards() throws {
+        let odds = try PrismetBlackjackHitOdds(
+            validatingPlayerCards: [
                 PrismetBlackjackFixtures.card(.ten, .clubs),
                 PrismetBlackjackFixtures.card(.king, .hearts)
             ],
@@ -50,8 +50,8 @@ final class PrismetBlackjackOddsTests: XCTestCase {
     }
 
     func testOddsRoundTripWithoutChangingRankCounts() throws {
-        let odds = PrismetBlackjackHitOdds(
-            playerCards: PrismetBlackjackFixtures.cards(.ten, .six),
+        let odds = try PrismetBlackjackHitOdds(
+            validatingPlayerCards: PrismetBlackjackFixtures.cards(.ten, .six),
             dealerFaceUpCard: PrismetBlackjackFixtures.card(.five, .spades)
         )
 
@@ -61,6 +61,60 @@ final class PrismetBlackjackOddsTests: XCTestCase {
                 from: JSONEncoder().encode(odds)
             ),
             odds
+        )
+    }
+
+    func testDuplicatePhysicalVisibleCardIsRejectedWithTypedError() {
+        let duplicate = PrismetBlackjackFixtures.card(.ten, .clubs)
+
+        XCTAssertThrowsError(
+            try PrismetBlackjackHitOdds(
+                validatingPlayerCards: [
+                    duplicate,
+                    PrismetBlackjackFixtures.card(.six, .hearts)
+                ],
+                dealerFaceUpCard: duplicate
+            )
+        ) { error in
+            XCTAssertEqual(
+                error as? PrismetBlackjackHitOddsError,
+                .duplicateVisibleCard(duplicate)
+            )
+        }
+    }
+
+    func testOddsDoNotDependOnDealerHoleCardOrDrawPile() {
+        let playerCards = PrismetBlackjackFixtures.cards(.ten, .six)
+        let dealerFaceUpCard = PrismetBlackjackFixtures.card(.five, .diamonds)
+        let baseDeck = PrismetDeckFactory.standard52()
+        let firstState = PrismetBlackjackState(
+            seed: 1,
+            shuffledDeck: baseDeck,
+            drawIndex: 4,
+            playerCards: playerCards,
+            dealerCards: [
+                dealerFaceUpCard,
+                PrismetBlackjackFixtures.card(.ace, .spades)
+            ],
+            phase: .playerTurn,
+            resolution: nil
+        )
+        let secondState = PrismetBlackjackState(
+            seed: 2,
+            shuffledDeck: baseDeck.reversed(),
+            drawIndex: 17,
+            playerCards: playerCards,
+            dealerCards: [
+                dealerFaceUpCard,
+                PrismetBlackjackFixtures.card(.king, .hearts)
+            ],
+            phase: .playerTurn,
+            resolution: nil
+        )
+
+        XCTAssertEqual(
+            PrismetBlackjackEngine.observation(for: firstState).hitOdds,
+            PrismetBlackjackEngine.observation(for: secondState).hitOdds
         )
     }
 }
