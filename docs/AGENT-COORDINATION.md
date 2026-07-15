@@ -2273,3 +2273,12 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
 - **Method:** one shared, one iOS, and one macOS Legion cohort; tests must fail for the intended reason before each production edit; workers do not stage or commit
 - **Product boundary:** no money, currency, chips, balances, wagering, stakes, payouts, rewards, streaks, urgency, automatic next hands, or outcome manipulation
 - **Verification:** full SwiftPM tests, focused iOS/macOS tests, iPhone and iPad compile smokes, macOS no-sign build, and targeted accessibility review
+
+### PRISM — Practice Casino Blackjack vertical slice — 2026-07-15T03:41:56Z
+
+- **Branch/worktree:** `codex/prismet-shared-parity-foundation` / `/Users/gtrktscrb/Desktop/Kaleidoscope/.worktrees/codex-prismet-shared-parity`
+- **Status:** PLANNED; implementation starts when the Fair Play Phase 1 contracts are green
+- **Owns:** NEW `shared/PrismetShared/Sources/PrismetShared/PrismetBlackjackModels.swift`, `PrismetBlackjackEngine.swift`, `PrismetBlackjackOdds.swift`, `PrismetBlackjackAudit.swift` and matching package tests; NEW `ios/Sources/Features/Casino/` plus focused iOS tests; NEW `macos/Sources/Casino/` plus focused macOS tests; NEW isolated `tools/PracticeCasinoHarness/`
+- **Excludes:** Catan, Home/catalog, `RootView`, `ShotHarness`, `ContentView`, `FacetRegistry`, cabinet/sidebar shell, shared design tokens, both main `project.yml` files, generated main projects, and App Store/release files
+- **Rules:** one deck; independent hands; player Hit/Stand; dealer stands on hard and soft 17; a natural beats non-natural 21; equal final values tie; no split, double, insurance, surrender, money, chips, balances, wagers, stakes, payouts, rewards, streaks, urgency, automatic next hand, or outcome tuning
+- **Launch gate:** every completed slice must build and launch on iPhone 17 Pro, iPad Pro 13-inch, and macOS before release
