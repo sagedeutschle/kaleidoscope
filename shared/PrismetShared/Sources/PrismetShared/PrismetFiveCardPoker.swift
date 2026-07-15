@@ -6,6 +6,23 @@ public enum PrismetPokerCategory: Int, CaseIterable, Codable, Comparable, Hashab
     }
 }
 
+private extension PrismetPokerCategory {
+    var exactFiveCardHandCount: Int {
+        switch self {
+        case .highCard: return 1_302_540
+        case .onePair: return 1_098_240
+        case .twoPair: return 123_552
+        case .threeOfAKind: return 54_912
+        case .straight: return 10_200
+        case .flush: return 5_108
+        case .fullHouse: return 3_744
+        case .fourOfAKind: return 624
+        case .straightFlush: return 36
+        case .royalFlush: return 4
+        }
+    }
+}
+
 public struct PrismetPokerCategoryCount: Codable, Hashable, Sendable {
     public let category: PrismetPokerCategory
     public let count: Int
@@ -20,6 +37,17 @@ public enum PrismetFiveCardPokerPhase: String, Codable, Hashable, Sendable {
     case choosingHolds, complete
 }
 
+public enum PrismetFiveCardPokerStateValidationError: Error, Equatable {
+    case unsupportedRandomizerVersion(Int)
+    case shuffledDeckMismatch
+    case invalidCardCount(Int)
+    case duplicateCards
+    case invalidHoldIndex(Int)
+    case invalidDrawIndex(expected: Int, actual: Int)
+    case cardsDoNotMatchDrawHistory
+    case invalidCategory(expected: PrismetPokerCategory?, actual: PrismetPokerCategory?)
+}
+
 public struct PrismetFiveCardPokerState: Codable, Hashable, Sendable {
     public let seed: UInt64
     public let randomizerVersion: Int
@@ -29,6 +57,17 @@ public struct PrismetFiveCardPokerState: Codable, Hashable, Sendable {
     public let category: PrismetPokerCategory?
     fileprivate let shuffledDeck: [PrismetPlayingCard]
     fileprivate let drawIndex: Int
+
+    private enum CodingKeys: String, CodingKey {
+        case seed
+        case randomizerVersion
+        case cards
+        case heldIndices
+        case phase
+        case category
+        case shuffledDeck
+        case drawIndex
+    }
 
     private init(
         seed: UInt64,
@@ -48,6 +87,126 @@ public struct PrismetFiveCardPokerState: Codable, Hashable, Sendable {
         self.category = category
         self.shuffledDeck = shuffledDeck
         self.drawIndex = drawIndex
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let seed = try container.decode(UInt64.self, forKey: .seed)
+        let randomizerVersion = try container.decode(Int.self, forKey: .randomizerVersion)
+        let cards = try container.decode([PrismetPlayingCard].self, forKey: .cards)
+        let heldIndices = try container.decode(Set<Int>.self, forKey: .heldIndices)
+        let phase = try container.decode(PrismetFiveCardPokerPhase.self, forKey: .phase)
+        let category = try container.decodeIfPresent(PrismetPokerCategory.self, forKey: .category)
+        let shuffledDeck = try container.decode([PrismetPlayingCard].self, forKey: .shuffledDeck)
+        let drawIndex = try container.decode(Int.self, forKey: .drawIndex)
+
+        try Self.validate(
+            seed: seed,
+            randomizerVersion: randomizerVersion,
+            cards: cards,
+            heldIndices: heldIndices,
+            phase: phase,
+            category: category,
+            shuffledDeck: shuffledDeck,
+            drawIndex: drawIndex
+        )
+
+        self.init(
+            seed: seed,
+            randomizerVersion: randomizerVersion,
+            cards: cards,
+            heldIndices: heldIndices,
+            phase: phase,
+            category: category,
+            shuffledDeck: shuffledDeck,
+            drawIndex: drawIndex
+        )
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(seed, forKey: .seed)
+        try container.encode(randomizerVersion, forKey: .randomizerVersion)
+        try container.encode(cards, forKey: .cards)
+        try container.encode(heldIndices, forKey: .heldIndices)
+        try container.encode(phase, forKey: .phase)
+        try container.encodeIfPresent(category, forKey: .category)
+        try container.encode(shuffledDeck, forKey: .shuffledDeck)
+        try container.encode(drawIndex, forKey: .drawIndex)
+    }
+
+    fileprivate static func canonicalShuffledDeck(seed: UInt64) throws -> [PrismetPlayingCard] {
+        var deck = PrismetDeckFactory.standard52()
+        var random = PrismetDeterministicRandom(seed: seed)
+        try random.shuffle(&deck)
+        return deck
+    }
+
+    private static func validate(
+        seed: UInt64,
+        randomizerVersion: Int,
+        cards: [PrismetPlayingCard],
+        heldIndices: Set<Int>,
+        phase: PrismetFiveCardPokerPhase,
+        category: PrismetPokerCategory?,
+        shuffledDeck: [PrismetPlayingCard],
+        drawIndex: Int
+    ) throws {
+        guard randomizerVersion == PrismetDeterministicRandom.algorithmVersion else {
+            throw PrismetFiveCardPokerStateValidationError.unsupportedRandomizerVersion(
+                randomizerVersion
+            )
+        }
+        guard shuffledDeck == (try canonicalShuffledDeck(seed: seed)) else {
+            throw PrismetFiveCardPokerStateValidationError.shuffledDeckMismatch
+        }
+        guard cards.count == 5 else {
+            throw PrismetFiveCardPokerStateValidationError.invalidCardCount(cards.count)
+        }
+        guard Set(cards).count == cards.count else {
+            throw PrismetFiveCardPokerStateValidationError.duplicateCards
+        }
+        if let invalidHoldIndex = heldIndices
+            .filter({ !(0..<5).contains($0) })
+            .sorted()
+            .first {
+            throw PrismetFiveCardPokerStateValidationError.invalidHoldIndex(invalidHoldIndex)
+        }
+
+        var expectedCards = Array(shuffledDeck.prefix(5))
+        let expectedDrawIndex: Int
+        let expectedCategory: PrismetPokerCategory?
+
+        switch phase {
+        case .choosingHolds:
+            expectedDrawIndex = 5
+            expectedCategory = nil
+
+        case .complete:
+            var nextDrawIndex = 5
+            for index in expectedCards.indices where !heldIndices.contains(index) {
+                expectedCards[index] = shuffledDeck[nextDrawIndex]
+                nextDrawIndex += 1
+            }
+            expectedDrawIndex = nextDrawIndex
+            expectedCategory = try PrismetFiveCardPokerEngine.evaluate(expectedCards)
+        }
+
+        guard drawIndex == expectedDrawIndex else {
+            throw PrismetFiveCardPokerStateValidationError.invalidDrawIndex(
+                expected: expectedDrawIndex,
+                actual: drawIndex
+            )
+        }
+        guard cards == expectedCards else {
+            throw PrismetFiveCardPokerStateValidationError.cardsDoNotMatchDrawHistory
+        }
+        guard category == expectedCategory else {
+            throw PrismetFiveCardPokerStateValidationError.invalidCategory(
+                expected: expectedCategory,
+                actual: category
+            )
+        }
     }
 
     fileprivate func withHeldIndices(_ heldIndices: Set<Int>) -> Self {
@@ -100,30 +259,22 @@ public enum PrismetFiveCardPokerEngineError: Error, Equatable {
 
 public enum PrismetFiveCardPokerEngine {
     /// Mutually exclusive five-card hand counts; straight flush excludes royal flush.
-    public static let exactCategoryCounts: [PrismetPokerCategoryCount] = [
-        .init(category: .highCard, count: 1_302_540),
-        .init(category: .onePair, count: 1_098_240),
-        .init(category: .twoPair, count: 123_552),
-        .init(category: .threeOfAKind, count: 54_912),
-        .init(category: .straight, count: 10_200),
-        .init(category: .flush, count: 5_108),
-        .init(category: .fullHouse, count: 3_744),
-        .init(category: .fourOfAKind, count: 624),
-        .init(category: .straightFlush, count: 36),
-        .init(category: .royalFlush, count: 4),
-    ]
+    public static let exactCategoryCounts: [PrismetPokerCategoryCount] =
+        PrismetPokerCategory.allCases.map {
+            PrismetPokerCategoryCount(category: $0, count: $0.exactFiveCardHandCount)
+        }
 
     public static let exactTotalHandCount = 2_598_960
 
     public static func exactCount(for category: PrismetPokerCategory) -> Int {
-        exactCategoryCounts.first(where: { $0.category == category })!.count
+        category.exactFiveCardHandCount
     }
 
     public static func deal(seed: UInt64) throws -> PrismetFiveCardPokerState {
-        var shuffledDeck = PrismetDeckFactory.standard52()
-        var random = PrismetDeterministicRandom(seed: seed)
-        try random.shuffle(&shuffledDeck)
-        return .dealt(seed: seed, shuffledDeck: shuffledDeck)
+        try .dealt(
+            seed: seed,
+            shuffledDeck: PrismetFiveCardPokerState.canonicalShuffledDeck(seed: seed)
+        )
     }
 
     public static func togglingHold(
@@ -152,7 +303,7 @@ public enum PrismetFiveCardPokerEngine {
         var finalCards = state.cards
         var drawIndex = state.drawIndex
         for index in finalCards.indices where !state.heldIndices.contains(index) {
-            guard drawIndex < state.shuffledDeck.count else {
+            guard state.shuffledDeck.indices.contains(drawIndex) else {
                 throw PrismetFiveCardPokerEngineError.deckExhausted
             }
             finalCards[index] = state.shuffledDeck[drawIndex]
