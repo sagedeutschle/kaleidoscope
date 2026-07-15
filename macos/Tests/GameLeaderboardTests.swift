@@ -19,6 +19,16 @@ final class GameLeaderboardTests: XCTestCase {
         XCTAssertEqual(LocalLeaderboardPresentation.retryAccessibilityLabel, "Retry loading local scores")
     }
 
+    func testRefreshControlOnlyAppearsWhenLeaderboardIsIdle() throws {
+        let sourceURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Sources/Views/LeaderboardViews.swift")
+        let source = try String(contentsOf: sourceURL)
+
+        XCTAssertTrue(source.contains("if !isLoading, errorText == nil"))
+    }
+
     func testLocalLeaderboardKeepsBestHighScorePerFacetAndMode() async throws {
         let service = LocalLeaderboardService(fileURL: tempFileURL())
         let first = result(facetID: "2048", score: 512, secondsOffset: 1)

@@ -172,7 +172,7 @@ struct LocalLeaderboardPanel: View {
 
             content
 
-            if errorText == nil {
+            if !isLoading, errorText == nil {
                 HStack {
                     Spacer()
                     Button {
