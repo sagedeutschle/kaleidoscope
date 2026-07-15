@@ -27,18 +27,30 @@ struct ProfileSetupView: View {
 
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 46))], spacing: 10) {
                     ForEach(emojis, id: \.self) { e in
-                        Text(e).font(.title).padding(6)
-                            .background(Circle().fill(emoji == e ? PrismetDesign.gold.opacity(0.25) : .clear))
-                            .onTapGesture { emoji = e }
+                        Button { emoji = e } label: {
+                            Text(e).font(.title)
+                                .frame(minWidth: 44, minHeight: 44)
+                                .background(Circle().fill(emoji == e ? PrismetDesign.gold.opacity(0.25) : .clear))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Avatar \(emojiName(for: e))")
+                        .accessibilityValue(emoji == e ? "Selected" : "Not selected")
+                        .accessibilityAddTraits(emoji == e ? .isSelected : [])
                     }
                 }
                 .frame(maxWidth: 320)
 
                 HStack(spacing: 12) {
                     ForEach(colorChoices, id: \.self) { c in
-                        Circle().fill(Color(hex: c)).frame(width: 34, height: 34)
-                            .overlay(Circle().strokeBorder(Color.white, lineWidth: colorHex == c ? 3 : 0))
-                            .onTapGesture { colorHex = c }
+                        Button { colorHex = c } label: {
+                            Circle().fill(Color(hex: c))
+                                .frame(width: 44, height: 44)
+                                .overlay(Circle().strokeBorder(Color.white, lineWidth: colorHex == c ? 3 : 0))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(colorName(for: c))
+                        .accessibilityValue(colorHex == c ? "Selected" : "Not selected")
+                        .accessibilityAddTraits(colorHex == c ? .isSelected : [])
                     }
                 }
 
@@ -65,5 +77,35 @@ struct ProfileSetupView: View {
                               avatarEmoji: emoji, avatarColor: colorHex)
         _ = await profiles.upsert(profile)
         saving = false
+    }
+
+    private func emojiName(for value: String) -> String {
+        switch value {
+        case "🎴": return "card avatar"
+        case "🦊": return "fox avatar"
+        case "🐉": return "dragon avatar"
+        case "🌙": return "moon avatar"
+        case "⚡️": return "lightning avatar"
+        case "🎲": return "dice avatar"
+        case "🔮": return "crystal ball avatar"
+        case "🦉": return "owl avatar"
+        case "🌸": return "blossom avatar"
+        case "🛡️": return "shield avatar"
+        case "👾": return "alien avatar"
+        case "🎯": return "target avatar"
+        default: return "avatar"
+        }
+    }
+
+    private func colorName(for value: String) -> String {
+        switch value {
+        case "B88A2E": return "Gold"
+        case "B0494C": return "Ruby red"
+        case "4C8C6B": return "Emerald green"
+        case "3C76A8": return "Sapphire blue"
+        case "75569E": return "Amethyst purple"
+        case "C76B3A": return "Copper orange"
+        default: return "Color"
+        }
     }
 }
