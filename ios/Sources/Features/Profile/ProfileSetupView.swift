@@ -12,6 +12,9 @@ struct ProfileSetupView: View {
 
     private let emojis = ["🎴", "🦊", "🐉", "🌙", "⚡️", "🎲", "🔮", "🦉", "🌸", "🛡️", "👾", "🎯"]
     private let colorChoices = ["B88A2E", "B0494C", "4C8C6B", "3C76A8", "75569E", "C76B3A"]
+    private let colorChoiceColumns = [
+        GridItem(.adaptive(minimum: 44, maximum: 44), spacing: 10),
+    ]
 
     var body: some View {
         ScrollView {
@@ -33,14 +36,14 @@ struct ProfileSetupView: View {
                                 .background(Circle().fill(emoji == e ? PrismetDesign.gold.opacity(0.25) : .clear))
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("Avatar \(emojiName(for: e))")
+                        .accessibilityLabel("\(emojiName(for: e)) avatar")
                         .accessibilityValue(emoji == e ? "Selected" : "Not selected")
                         .accessibilityAddTraits(emoji == e ? .isSelected : [])
                     }
                 }
                 .frame(maxWidth: 320)
 
-                HStack(spacing: 12) {
+                LazyVGrid(columns: colorChoiceColumns, spacing: 10) {
                     ForEach(colorChoices, id: \.self) { c in
                         Button { colorHex = c } label: {
                             Circle().fill(Color(hex: c))
@@ -53,6 +56,7 @@ struct ProfileSetupView: View {
                         .accessibilityAddTraits(colorHex == c ? .isSelected : [])
                     }
                 }
+                .frame(maxWidth: 320)
 
                 Button { Task { await save() } } label: {
                     HStack { if saving { ProgressView() }; Text("Start playing") }.frame(maxWidth: 320)
@@ -81,19 +85,19 @@ struct ProfileSetupView: View {
 
     private func emojiName(for value: String) -> String {
         switch value {
-        case "🎴": return "card avatar"
-        case "🦊": return "fox avatar"
-        case "🐉": return "dragon avatar"
-        case "🌙": return "moon avatar"
-        case "⚡️": return "lightning avatar"
-        case "🎲": return "dice avatar"
-        case "🔮": return "crystal ball avatar"
-        case "🦉": return "owl avatar"
-        case "🌸": return "blossom avatar"
-        case "🛡️": return "shield avatar"
-        case "👾": return "alien avatar"
-        case "🎯": return "target avatar"
-        default: return "avatar"
+        case "🎴": return "Card"
+        case "🦊": return "Fox"
+        case "🐉": return "Dragon"
+        case "🌙": return "Moon"
+        case "⚡️": return "Lightning"
+        case "🎲": return "Dice"
+        case "🔮": return "Crystal ball"
+        case "🦉": return "Owl"
+        case "🌸": return "Blossom"
+        case "🛡️": return "Shield"
+        case "👾": return "Alien"
+        case "🎯": return "Target"
+        default: return "Custom"
         }
     }
 
