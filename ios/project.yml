@@ -81,7 +81,7 @@ targets:
         ENABLE_PREVIEWS: "YES"
         TARGETED_DEVICE_FAMILY: "1,2"
         CODE_SIGN_ENTITLEMENTS: Prismet.entitlements
-        CURRENT_PROJECT_VERSION: "14"
+        CURRENT_PROJECT_VERSION: "17"
         MARKETING_VERSION: "1.2"
         OTHER_SWIFT_FLAGS: "$(inherited) -cxx-interoperability-mode=default"
 

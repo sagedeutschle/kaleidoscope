@@ -5,7 +5,7 @@ final class HomeCatalogTests: XCTestCase {
     func testHomeCategoryOrderMatchesLaunchGrouping() {
         // v10: "Oracle" catch-all split into Workshop (builders) + Lenses (live data),
         // per outside design feedback — Sage-approved 2026-07-03.
-        XCTAssertEqual(GameCard.categoryOrder, ["Daily", "Puzzles", "Board", "Cards", "Workshop", "Lenses"])
+        XCTAssertEqual(GameCard.categoryOrder, ["Daily", "Puzzles", "Board", "Cards", "Casino", "Workshop", "Lenses"])
     }
 
     func testHomeCardsUseRequestedLaunchCategories() throws {
@@ -18,6 +18,7 @@ final class HomeCatalogTests: XCTestCase {
         XCTAssertEqual(cardsByID["solitaire"]?.category, "Cards")
         XCTAssertEqual(cardsByID["spider"]?.category, "Cards")
         XCTAssertEqual(cardsByID["crazyeight"]?.category, "Cards")
+        XCTAssertEqual(cardsByID[GameCard.casinoID]?.category, "Casino")
         XCTAssertEqual(cardsByID["brickbench"]?.category, "Workshop")
         XCTAssertEqual(cardsByID["oracle"]?.category, "Lenses")
         XCTAssertEqual(cardsByID[GameCard.debtClockID]?.category, "Lenses")

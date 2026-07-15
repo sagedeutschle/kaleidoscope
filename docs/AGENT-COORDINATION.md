@@ -2292,3 +2292,12 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
 - **Verification:** SwiftPM `103/103`; focused iOS `21/21`; focused macOS `25/25`; final no-sign preview builds succeeded for iPhone 17 Pro, iPad Pro 13-inch, and macOS; visual screenshots inspected for all three form factors; live active-hand Command-N test held the Mac preview at one window
 - **Launch evidence:** simulator processes `27593` (iPhone) and `27608` (iPad); installed macOS preview `/Users/gtrktscrb/Applications/Prismet Practice Casino.app` process `27625`; freshest main `/Users/gtrktscrb/Applications/Prismet.app` also open as process `99221`
 - **Next safe integration:** selectively merge this branch after current shell/release owners release Home/root-navigation files, then add the real Casino tab route without crossing their active edits
+
+### PRISM — Casino main-app release integration — 2026-07-15T09:18:00Z
+
+- **Branch/worktree:** `codex/prismet-shared-parity-foundation` / `/Users/gtrktscrb/Desktop/Kaleidoscope/.worktrees/codex-prismet-shared-parity`
+- **Status:** RELEASED / SUBMITTED FOR IOS REVIEW
+- **Delivered:** Practice Casino is now registered in the real iOS/iPadOS Home catalog and the real macOS facet registry/sidebar, with routes into `CasinoHubView()` on both app shells. Version bumped to `1.2 (17)` for iOS/iPadOS and macOS.
+- **Release evidence:** iOS focused tests passed after the bump (`HomeCatalogTests`, `CasinoSafetyContractTests`); iPhone simulator build passed; iPad simulator build passed; macOS no-sign build passed; signed iOS archive `/Users/gtrktscrb/Library/Caches/Prismet-asc-v17.xcarchive` succeeded; upload succeeded and App Store Connect marked build `16502d89-f0c2-414e-9890-d272cb2c0dcb` / build `17` `VALID`; build 17 attached to App Store version `1.2`; review submission `ad04d070-6b8a-4355-b8d0-31c53ee54a1b` moved to `WAITING_FOR_REVIEW` at `2026-07-15T15:55:32.565Z`.
+- **macOS release state:** fresh macOS app was built, installed, and launched at `/Users/gtrktscrb/Applications/Prismet.app`. Mac App Store submission is blocked because App Store Connect has no app record for bundle `com.gtrktscrb.kaleidoscope`; create/verify the Mac app record and store signing/export path before attempting MAS upload.
+- **Legion:** read-only `legion.sh` release scout run `20260715-114516-aquila-legion` completed; its risk finding matched the final state: iOS/iPadOS submission feasible after live ASC verification, macOS MAS path unresolved.

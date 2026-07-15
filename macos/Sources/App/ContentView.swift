@@ -219,6 +219,7 @@ struct ContentView: View {
             case "sea-battle": SeaBattleView(session: seaBattleSession)
             case "crazy-8": CrazyEightView(session: crazyEightSession)
             case "spider": SpiderView(session: spiderSession)
+            case "casino": CasinoHubView(onLeave: { selection = nil })
             default: welcomeDetail
             }
         }
