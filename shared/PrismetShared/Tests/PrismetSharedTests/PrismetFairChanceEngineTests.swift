@@ -51,6 +51,51 @@ final class PrismetFairChanceEngineTests: XCTestCase {
         )
     }
 
+    func testEveryStudyLabIsExplicitlyRejectedByFairChanceEngine() {
+        for gameID in studyLabIDs {
+            assertThrowsFairChanceError(
+                .unsupportedGame(gameID),
+                try PrismetFairChanceEngine.play(
+                    .init(gameID: gameID, choiceIDs: []),
+                    seed: 42
+                )
+            )
+        }
+    }
+
+    func testOnlyTheOriginalNineGamesAreFairChanceCompactGames() {
+        let compactGames: Set<PrismetPracticeCasinoGameID> = [
+            .redBlack, .higherLower, .highCard, .coinCall, .diceDuel,
+            .overUnderSeven, .oddEven, .fairWheel, .numberDraw,
+        ]
+        XCTAssertEqual(compactGames.count, 9)
+        XCTAssertEqual(compactGames, Set(PrismetPracticeCasinoGameID.allCases).intersection(compactGames))
+
+        let explicitlyUnsupported = Set(PrismetPracticeCasinoGameID.allCases).subtracting(compactGames)
+        XCTAssertEqual(explicitlyUnsupported, Set([.blackjack, .fiveCardDraw] + studyLabIDs))
+    }
+
+    func testEqualProbabilityBehaviorIsLimitedToGenuinelyEqualGames() throws {
+        try assertFractions(game: .redBlack, choices: ["red"], expected: ["Red": (1, 2), "Black": (1, 2)])
+        try assertFractions(game: .coinCall, choices: ["heads"], expected: ["Heads": (1, 2), "Tails": (1, 2)])
+        try assertFractions(game: .oddEven, choices: ["odd"], expected: ["Odd": (1, 2), "Even": (1, 2)])
+
+        let unequalGames: [(PrismetPracticeCasinoGameID, [String])] = [
+            (.highCard, []),
+            (.diceDuel, []),
+            (.overUnderSeven, ["below"]),
+            (.fairWheel, ["ivory"]),
+            (.numberDraw, ["1", "2", "3"]),
+        ]
+        for (gameID, choices) in unequalGames {
+            let fractions = try PrismetFairChanceEngine.play(
+                .init(gameID: gameID, choiceIDs: choices),
+                seed: 17
+            ).probabilities.map(\.fraction)
+            XCTAssertGreaterThan(Set(fractions).count, 1, "\(gameID) must not be represented as 50/50")
+        }
+    }
+
     func testCompactGamesPublishTheirExactFractions() throws {
         try assertFractions(game: .redBlack, choices: ["red"], expected: ["Red": (1, 2), "Black": (1, 2)])
         let higherLower = try PrismetFairChanceEngine.previewHigherLower(seed: 17)
@@ -417,5 +462,20 @@ final class PrismetFairChanceEngineTests: XCTestCase {
         let seed: UInt64
         let title: String
         let tokens: [PrismetPracticeRevealToken]
+    }
+
+    private var studyLabIDs: [PrismetPracticeCasinoGameID] {
+        [
+            .threeCardPokerLab,
+            .texasHoldemLab,
+            .caribbeanStudQualificationLab,
+            .paiGowSplitLab,
+            .omahaHandLab,
+            .miniBaccaratPractice,
+            .casinoWarPractice,
+            .crapsPointLab,
+            .sicBoOutcomeLab,
+            .europeanRouletteLab,
+        ]
     }
 }

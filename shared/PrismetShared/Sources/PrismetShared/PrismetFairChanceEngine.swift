@@ -151,7 +151,12 @@ public enum PrismetFairChanceEngine {
         case .oddEven: return try oddEven(request, seed: seed, random: &random)
         case .fairWheel: return try fairWheel(request, seed: seed, random: &random)
         case .numberDraw: return try numberDraw(request, seed: seed, random: &random)
-        case .blackjack, .fiveCardDraw: throw PrismetFairChanceEngineError.unsupportedGame(request.gameID)
+        case .blackjack, .fiveCardDraw,
+             .threeCardPokerLab, .texasHoldemLab, .caribbeanStudQualificationLab,
+             .paiGowSplitLab, .omahaHandLab, .miniBaccaratPractice,
+             .casinoWarPractice, .crapsPointLab, .sicBoOutcomeLab,
+             .europeanRouletteLab:
+            throw PrismetFairChanceEngineError.unsupportedGame(request.gameID)
         }
     }
 
@@ -195,7 +200,15 @@ public enum PrismetFairChanceEngine {
     }
 
     private static func validate(_ request: PrismetPracticeRoundRequest) throws {
-        guard request.gameID != .blackjack, request.gameID != .fiveCardDraw else {
+        switch request.gameID {
+        case .redBlack, .higherLower, .highCard, .coinCall, .diceDuel,
+             .overUnderSeven, .oddEven, .fairWheel, .numberDraw:
+            break
+        case .blackjack, .fiveCardDraw,
+             .threeCardPokerLab, .texasHoldemLab, .caribbeanStudQualificationLab,
+             .paiGowSplitLab, .omahaHandLab, .miniBaccaratPractice,
+             .casinoWarPractice, .crapsPointLab, .sicBoOutcomeLab,
+             .europeanRouletteLab:
             throw PrismetFairChanceEngineError.unsupportedGame(request.gameID)
         }
         let descriptor = PrismetPracticeCasinoCatalog[request.gameID]
