@@ -38,17 +38,59 @@ public struct PrismetCasinoStudyLabWheelSnapshot: Equatable, Hashable, Sendable 
     public let color: String
 }
 
+public enum PrismetCasinoStudyLabLedgerValue: Equatable, Hashable, Sendable {
+    case probability(numerator: Int, denominator: Int)
+    case count(Int)
+    case formula(String)
+
+    /// The sole display formatter for Study Lab exact values.
+    public var displayText: String {
+        switch self {
+        case .probability(let numerator, let denominator): return "\(numerator)/\(denominator)"
+        case .count(let count): return "\(count)"
+        case .formula(let formula): return formula
+        }
+    }
+}
+
 public struct PrismetCasinoStudyLabLedgerRow: Equatable, Hashable, Sendable {
     public let label: String
-    public let numerator: Int?
-    public let denominator: Int?
-    public let exactText: String?
+    public let value: PrismetCasinoStudyLabLedgerValue
+
+    public init(label: String, value: PrismetCasinoStudyLabLedgerValue) {
+        self.label = label
+        self.value = value
+    }
+
+    /// Compatibility accessors for existing consumers; new rendering must use `displayText`.
+    public var numerator: Int? {
+        guard case .probability(let numerator, _) = value else { return nil }
+        return numerator
+    }
+
+    public var denominator: Int? {
+        guard case .probability(_, let denominator) = value else { return nil }
+        return denominator
+    }
+
+    public var exactText: String? {
+        switch value {
+        case .probability: return nil
+        case .count, .formula: return displayText
+        }
+    }
+
+    public var displayText: String { value.displayText }
 
     public init(label: String, numerator: Int? = nil, denominator: Int? = nil, exactText: String? = nil) {
         self.label = label
-        self.numerator = numerator
-        self.denominator = denominator
-        self.exactText = exactText
+        if let exactText {
+            self.value = .formula(exactText)
+        } else if let numerator, let denominator {
+            self.value = .probability(numerator: numerator, denominator: denominator)
+        } else {
+            self.value = .formula("")
+        }
     }
 }
 
@@ -62,15 +104,31 @@ public struct PrismetCasinoStudyLabSummaryRow: Equatable, Hashable, Sendable {
     }
 }
 
+public enum PrismetCasinoStudyLabAuditSeedUsage: Equatable, Hashable, Sendable {
+    case newSeed
+    case reusedOriginalDealSeed
+
+    public var displayText: String {
+        switch self {
+        case .newSeed:
+            return "A new seed is drawn."
+        case .reusedOriginalDealSeed:
+            return "The original deal seed is reused; no new seed is drawn."
+        }
+    }
+}
+
 public struct PrismetCasinoStudyLabAuditSeed: Equatable, Hashable, Sendable {
     public let sequence: Int
     public let action: String
     public let seed: UInt64
+    public let seedUsage: PrismetCasinoStudyLabAuditSeedUsage
 
-    public init(sequence: Int, action: String, seed: UInt64) {
+    public init(sequence: Int, action: String, seed: UInt64, seedUsage: PrismetCasinoStudyLabAuditSeedUsage = .newSeed) {
         self.sequence = sequence
         self.action = action
         self.seed = seed
+        self.seedUsage = seedUsage
     }
 }
 
@@ -361,7 +419,7 @@ public struct PrismetCasinoStudyLabAdapter: Equatable, Sendable {
             status = "Ready to \(openingActionTitle(for: gameID))"
             summaryRows = [.init(label: "Stage", value: "Ready")]
         case .threeCard(let s):
-            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal"))
+            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal", seedUsage: .newSeed))
             group("Learner", s.learnerCards.map { .standard($0) })
             group("Reference", s.referenceCards.map { $0.card.map(PrismetCasinoStudyLabCard.standard) ?? .hidden })
             comparison = s.comparison.map(presentationLabel)
@@ -373,18 +431,18 @@ public struct PrismetCasinoStudyLabAdapter: Equatable, Sendable {
             status = s.phase == .dealt ? "Three-card hands dealt; reveal the reference hand" : "Comparison resolved: \(comparison ?? "tie")"
             summaryRows = [.init(label: "Stage", value: s.phase == .dealt ? "Hands dealt" : "Comparison resolved"), .init(label: "Learner category", value: category ?? "Pending"), .init(label: "Reference category", value: referenceCategory ?? "Hidden")]
         case .holdem(let s):
-            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal"))
+            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal", seedUsage: .newSeed))
             group("Hole cards", s.holeCards.map { .standard($0) }); group("Community", s.communityCards.map { .standard($0) }); category = s.bestCategory.map(presentationLabel); result = category
             let stage = holdemStage(s.phase)
             status = "Hold'em \(stage.lowercased())"
             summaryRows = [.init(label: "Stage", value: stage), .init(label: "Community cards", value: "\(s.communityCards.count)"), .init(label: "Best category", value: category ?? "Pending")]
         case .caribbean(let s):
-            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal"))
+            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal", seedUsage: .newSeed))
             group("Learner", s.learnerCards.map { .standard($0) }); group("Reference", s.referenceCards.map { $0.card.map(PrismetCasinoStudyLabCard.standard) ?? .hidden }); comparison = s.comparison.map(presentationLabel); category = s.referenceQualification.map(presentationLabel)
             status = s.phase == .dealt ? "Learner hand dealt; reveal the reference hand" : "Qualification resolved: \(category ?? "unavailable")"
             summaryRows = [.init(label: "Stage", value: s.phase == .dealt ? "Reference hidden" : "Qualification resolved"), .init(label: "Reference qualification", value: category ?? "Pending"), .init(label: "Comparison", value: comparison ?? "Pending")]
         case .paiGow(let s, let draft):
-            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal")); selectedPaiGowCardIndices = draft.map { $0 + 1 }
+            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal", seedUsage: .newSeed)); selectedPaiGowCardIndices = draft.map { $0 + 1 }
             group("Seven-card deal", s.cards.map { card in
                 switch card { case .joker: return .joker; case .standard(let value): return .standard(value) }
             })
@@ -395,17 +453,17 @@ public struct PrismetCasinoStudyLabAdapter: Equatable, Sendable {
             let analysisSummary = analysisIsCurrent ? category ?? "Unavailable" : s.phase == .dealt ? "Pending" : "Pending reanalysis"
             summaryRows = [.init(label: "Stage", value: stage), .init(label: "Selected positions", value: selectedPaiGowCardIndices.map(String.init).joined(separator: ", ").isEmpty ? "None" : selectedPaiGowCardIndices.map(String.init).joined(separator: ", ")), .init(label: "Analysis", value: analysisSummary)]
         case .omaha(let s):
-            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal")); group("Hole cards", s.holeCards.map { .standard($0) }); group("Board", s.visibleBoard.map { .standard($0) }); category = s.classification.map { presentationLabel($0.category) }
+            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal", seedUsage: .newSeed)); group("Hole cards", s.holeCards.map { .standard($0) }); group("Board", s.visibleBoard.map { .standard($0) }); category = s.classification.map { presentationLabel($0.category) }
             let stage = omahaStage(s.phase)
             status = "Omaha \(stage.lowercased())"
             summaryRows = [.init(label: "Stage", value: stage), .init(label: "Board cards", value: "\(s.visibleBoard.count)"), .init(label: "Best category", value: category ?? "Pending")]
         case .baccarat(let s):
-            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal")); group("Player", s.playerCards.map { .standard($0.card) }); group("Banker", s.bankerCards.map { .standard($0.card) }); result = s.outcome.map(presentationLabel)
+            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal", seedUsage: .newSeed)); group("Player", s.playerCards.map { .standard($0.card) }); group("Banker", s.bankerCards.map { .standard($0.card) }); result = s.outcome.map(presentationLabel)
             let stage = baccaratStage(s.phase)
             status = s.phase == .complete ? "Resolved: \(result ?? "pending") — Player \(s.playerTotal), Banker \(s.bankerTotal)" : "\(stage): Player \(s.playerTotal), Banker \(s.bankerTotal)"
             summaryRows = [.init(label: "Stage", value: s.phase == .complete ? "Resolved" : stage), .init(label: "Player total", value: "\(s.playerTotal)"), .init(label: "Banker total", value: "\(s.bankerTotal)")] + (result.map { [.init(label: "Outcome", value: $0)] } ?? [])
         case .casinoWar(let s):
-            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: s.auditHistory.enumerated().map { .init(sequence: $0.offset + 1, action: $0.element.action == .dealt ? "Deal" : "Reveal war", seed: $0.element.seed) })
+            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: s.auditHistory.enumerated().map { .init(sequence: $0.offset + 1, action: $0.element.action == .dealt ? "Deal" : "Reveal war", seed: $0.element.seed, seedUsage: $0.element.action == .dealt ? .newSeed : .reusedOriginalDealSeed) })
             group("Learner", [.standard(s.learnerCard)])
             group("Reference", [.standard(s.referenceCard)])
             if s.phase == .warReady || (s.phase == .complete && s.auditHistory.count > 1) {
@@ -417,15 +475,15 @@ public struct PrismetCasinoStudyLabAdapter: Equatable, Sendable {
             status = s.phase == .warReady ? "Tie dealt; reveal the war cards" : isTiePath ? "War resolved: \(result ?? "pending")" : "Comparison resolved: \(result ?? "pending")"
             summaryRows = [.init(label: "Stage", value: s.phase == .warReady ? "War ready" : isTiePath ? "War resolved" : "Comparison resolved"), .init(label: "Outcome", value: result ?? (isTiePath ? "Tie; reveal required" : "Pending"))]
         case .craps(let s):
-            audit = .init(seed: s.history.last?.seed, rulesVersion: s.audit.rulesVersion, randomizerVersion: s.audit.randomizerVersion, seeds: s.history.enumerated().map { .init(sequence: $0.offset + 1, action: "Roll", seed: $0.element.seed) }); if let last = s.history.last { dice = .init(values: [last.dice.first, last.dice.second], total: last.total, pattern: s.observation) }; result = s.resolution.map(presentationLabel)
+            audit = .init(seed: s.history.last?.seed, rulesVersion: s.audit.rulesVersion, randomizerVersion: s.audit.randomizerVersion, seeds: s.history.enumerated().map { .init(sequence: $0.offset + 1, action: "Roll", seed: $0.element.seed, seedUsage: .newSeed) }); if let last = s.history.last { dice = .init(values: [last.dice.first, last.dice.second], total: last.total, pattern: s.observation) }; result = s.resolution.map(presentationLabel)
             status = crapsStatus(s)
             summaryRows = [.init(label: "Stage", value: s.phase == .point ? "Point \(s.point ?? 0)" : s.phase == .complete ? "Resolved" : "Come-out"), .init(label: "Rolls", value: "\(s.history.count)"), .init(label: "Observation", value: result ?? "Awaiting roll")]
         case .sicBo(let s):
-            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: s.history.enumerated().map { .init(sequence: $0.offset + 1, action: "Roll", seed: $0.element.seed) }); if let total = s.total { dice = .init(values: s.dice, total: total, pattern: s.pattern.map(presentationLabel))}; result = s.pattern.map(presentationLabel)
+            audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: s.history.enumerated().map { .init(sequence: $0.offset + 1, action: "Roll", seed: $0.element.seed, seedUsage: .newSeed) }); if let total = s.total { dice = .init(values: s.dice, total: total, pattern: s.pattern.map(presentationLabel))}; result = s.pattern.map(presentationLabel)
             status = "Sic Bo resolved: total \(s.total ?? 0), \(result ?? "pattern pending")"
             summaryRows = [.init(label: "Stage", value: "Resolved"), .init(label: "Total", value: s.total.map(String.init) ?? "Pending"), .init(label: "Pattern", value: result ?? "Pending")]
         case .roulette(let s):
-            audit = .init(seed: s.phase == .spun ? s.seed : nil, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Spin")); if let pocket = s.pocket, let color = s.color { wheel = .init(pocket: pocket, color: color.rawValue); result = "Pocket \(pocket)" }
+            audit = .init(seed: s.phase == .spun ? s.seed : nil, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Spin", seedUsage: .newSeed)); if let pocket = s.pocket, let color = s.color { wheel = .init(pocket: pocket, color: color.rawValue); result = "Pocket \(pocket)" }
             status = "Roulette resolved: \(result ?? "pocket pending")"
             summaryRows = [.init(label: "Stage", value: "Resolved"), .init(label: "Pocket", value: wheel.map { "\($0.pocket)" } ?? "Pending"), .init(label: "Color", value: wheel?.color ?? "Pending")]
         }
@@ -433,8 +491,8 @@ public struct PrismetCasinoStudyLabAdapter: Equatable, Sendable {
         return .init(phase: phase, title: descriptor.title, status: status, primaryAction: primary, primaryControlTitle: primary?.title ?? "", primaryControlEnabled: primary?.enabled ?? false, primaryControlRequiresSeed: primary?.requiresSeed ?? false, secondaryNewRoundTitle: phase == .unstarted ? nil : "New Round", cards: cards, dice: dice, wheel: wheel, ledger: ledger(for: gameID), summaryRows: summaryRows, audit: audit, result: result, comparison: comparison, category: category, referenceCategory: referenceCategory, selectedPaiGowCardIndices: selectedPaiGowCardIndices)
     }
 
-    private func auditSeeds(seed: UInt64?, action: String) -> [PrismetCasinoStudyLabAuditSeed] {
-        seed.map { [.init(sequence: 1, action: action, seed: $0)] } ?? []
+    private func auditSeeds(seed: UInt64?, action: String, seedUsage: PrismetCasinoStudyLabAuditSeedUsage = .newSeed) -> [PrismetCasinoStudyLabAuditSeed] {
+        seed.map { [.init(sequence: 1, action: action, seed: $0, seedUsage: seedUsage)] } ?? []
     }
 
     private func openingActionTitle(for gameID: PrismetPracticeCasinoGameID) -> String {
@@ -510,19 +568,25 @@ public struct PrismetCasinoStudyLabAdapter: Equatable, Sendable {
     private func ledger(for id: PrismetPracticeCasinoGameID) -> [PrismetCasinoStudyLabLedgerRow] {
         switch id {
         case .threeCardPokerLab:
-            return PrismetThreeCardPokerCategory.allCases.map { .init(label: presentationLabel($0), numerator: PrismetThreeCardPokerLab.exactCategoryCounts[$0], denominator: PrismetThreeCardPokerLab.exactTotalSingleHandCount) }
+            return PrismetThreeCardPokerCategory.allCases.compactMap { category in
+                guard let count = PrismetThreeCardPokerLab.exactCategoryCounts[category] else { return nil }
+                return .init(label: presentationLabel(category), value: .probability(numerator: count, denominator: PrismetThreeCardPokerLab.exactTotalSingleHandCount))
+            }
         case .texasHoldemLab:
-            return PrismetHoldemHandLabEngine.exactCategoryCounts.map { .init(label: presentationLabel($0.category), numerator: $0.count, denominator: PrismetHoldemHandLabEngine.exactTotalHandCount) }
-        case .caribbeanStudQualificationLab: return [.init(label: "Labeled five-card deals", numerator: PrismetCaribbeanStudLab.exactLabeledDealCount, denominator: PrismetCaribbeanStudLab.exactLabeledDealCount)]
-        case .paiGowSplitLab: return [.init(label: "Seven-card deals", exactText: "C(53, 7) = \(PrismetPaiGowSplitLab.totalUnorderedDealCount); C(7, 2) = \(PrismetPaiGowSplitLab.possibleLowAllocationCount)")]
-        case .omahaHandLab: return [.init(label: "Legal Omaha candidates", numerator: PrismetOmahaHandLab.legalCandidateCount, denominator: PrismetOmahaHandLab.legalCandidateCount, exactText: "C(4, 2) × C(5, 3) = \(PrismetOmahaHandLab.legalCandidateCount)")]
-        case .miniBaccaratPractice: return PrismetMiniBaccaratLabEngine.exactOutcomeCounts.map { .init(label: presentationLabel($0.outcome), numerator: $0.count, denominator: PrismetMiniBaccaratLabEngine.exactOutcomeDenominator) }
-        case .casinoWarPractice: return [.init(label: "Learner higher", numerator: 10_376, denominator: PrismetCasinoWarLab.exactOutcomeSampleCount), .init(label: "Reference higher", numerator: 10_376, denominator: PrismetCasinoWarLab.exactOutcomeSampleCount), .init(label: "Tie", numerator: 73, denominator: PrismetCasinoWarLab.exactOutcomeSampleCount)]
+            return PrismetHoldemHandLabEngine.exactCategoryCounts.map { .init(label: presentationLabel($0.category), value: .probability(numerator: $0.count, denominator: PrismetHoldemHandLabEngine.exactTotalHandCount)) }
+        case .caribbeanStudQualificationLab: return [.init(label: "Labeled five-card deals", value: .count(PrismetCaribbeanStudLab.exactLabeledDealCount))]
+        case .paiGowSplitLab: return [.init(label: "Seven-card deals", value: .formula("C(53, 7) = \(PrismetPaiGowSplitLab.totalUnorderedDealCount); C(7, 2) = \(PrismetPaiGowSplitLab.possibleLowAllocationCount)"))]
+        case .omahaHandLab: return [.init(label: "Legal Omaha candidates", value: .formula("C(4, 2) × C(5, 3) = \(PrismetOmahaHandLab.legalCandidateCount)"))]
+        case .miniBaccaratPractice: return PrismetMiniBaccaratLabEngine.exactOutcomeCounts.map { .init(label: presentationLabel($0.outcome), value: .probability(numerator: $0.count, denominator: PrismetMiniBaccaratLabEngine.exactOutcomeDenominator)) }
+        case .casinoWarPractice: return [.init(label: "Learner higher", value: .probability(numerator: 10_376, denominator: PrismetCasinoWarLab.exactOutcomeSampleCount)), .init(label: "Reference higher", value: .probability(numerator: 10_376, denominator: PrismetCasinoWarLab.exactOutcomeSampleCount)), .init(label: "Tie", value: .probability(numerator: 73, denominator: PrismetCasinoWarLab.exactOutcomeSampleCount))]
         case .crapsPointLab:
-            return PrismetCrapsPointLabEngine.comeOutDisclosures.map { .init(label: $0.observation, numerator: $0.favorableCount, denominator: $0.totalCount) } + PrismetCrapsPointLabEngine.pointResolutionDisclosures.map { .init(label: "Point \($0.point) before seven", numerator: $0.pointCount, denominator: $0.pointCount + $0.sevenCount) }
+            return PrismetCrapsPointLabEngine.comeOutDisclosures.map { .init(label: $0.observation, value: .probability(numerator: $0.favorableCount, denominator: $0.totalCount)) } + PrismetCrapsPointLabEngine.pointResolutionDisclosures.map { .init(label: "Point \($0.point) before seven", value: .probability(numerator: $0.pointCount, denominator: $0.pointCount + $0.sevenCount)) }
         case .sicBoOutcomeLab:
-            return PrismetSicBoOutcomeLab.exactTotalCounts.enumerated().map { .init(label: "Total \($0.offset + 3)", numerator: $0.element, denominator: 216) } + PrismetSicBoPattern.allCases.map { .init(label: presentationLabel($0), numerator: PrismetSicBoOutcomeLab.exactPatternCounts[$0], denominator: 216) }
-        case .europeanRouletteLab: return [.init(label: "Red", numerator: 18, denominator: 37), .init(label: "Black", numerator: 18, denominator: 37), .init(label: "Zero", numerator: 1, denominator: 37)]
+            return PrismetSicBoOutcomeLab.exactTotalCounts.enumerated().map { .init(label: "Total \($0.offset + 3)", value: .probability(numerator: $0.element, denominator: 216)) } + PrismetSicBoPattern.allCases.compactMap { pattern in
+                guard let count = PrismetSicBoOutcomeLab.exactPatternCounts[pattern] else { return nil }
+                return .init(label: presentationLabel(pattern), value: .probability(numerator: count, denominator: 216))
+            }
+        case .europeanRouletteLab: return [.init(label: "Red", value: .probability(numerator: 18, denominator: 37)), .init(label: "Black", value: .probability(numerator: 18, denominator: 37)), .init(label: "Zero", value: .probability(numerator: 1, denominator: 37))]
         default: return []
         }
     }

@@ -350,6 +350,38 @@ final class PrismetCasinoStudyLabAdapterTests: XCTestCase {
 
     // MARK: - Presentation contract
 
+    func testEveryStudyLabLedgerUsesAnExplicitTypedValueAndSharedDisplayText() throws {
+        let probabilities: Set<PrismetPracticeCasinoGameID> = [
+            .threeCardPokerLab, .texasHoldemLab, .miniBaccaratPractice,
+            .casinoWarPractice, .crapsPointLab, .sicBoOutcomeLab,
+            .europeanRouletteLab,
+        ]
+
+        for gameID in PrismetCasinoStudyLabAdapter.supportedGameIDs {
+            let ledger = try PrismetCasinoStudyLabAdapter(gameID: gameID).snapshot.ledger
+            XCTAssertFalse(ledger.isEmpty, "\(gameID) must explicitly provide a ledger")
+            if probabilities.contains(gameID) {
+                XCTAssertTrue(ledger.allSatisfy { if case .probability = $0.value { return true }; return false }, "\(gameID) must use probability values")
+            }
+        }
+
+        let caribbean = try PrismetCasinoStudyLabAdapter(gameID: .caribbeanStudQualificationLab).snapshot.ledger
+        XCTAssertEqual(caribbean.map(\.value), [.count(PrismetCaribbeanStudLab.exactLabeledDealCount)])
+        XCTAssertEqual(caribbean.first?.displayText, "\(PrismetCaribbeanStudLab.exactLabeledDealCount)")
+        XCTAssertFalse(caribbean.first?.displayText.contains("/") ?? true)
+
+        let paiGow = try PrismetCasinoStudyLabAdapter(gameID: .paiGowSplitLab).snapshot.ledger
+        XCTAssertTrue(paiGow.allSatisfy { if case .formula = $0.value { return true }; return false })
+
+        let omaha = try PrismetCasinoStudyLabAdapter(gameID: .omahaHandLab).snapshot.ledger
+        XCTAssertEqual(omaha.map(\.value), [.formula("C(4, 2) × C(5, 3) = \(PrismetOmahaHandLab.legalCandidateCount)")])
+        XCTAssertEqual(omaha.first?.displayText, "C(4, 2) × C(5, 3) = \(PrismetOmahaHandLab.legalCandidateCount)")
+        XCTAssertFalse(omaha.first?.displayText.contains("/") ?? true)
+
+        let threeCard = try PrismetCasinoStudyLabAdapter(gameID: .threeCardPokerLab).snapshot.ledger
+        XCTAssertEqual(threeCard.first?.displayText, "16440/22100")
+    }
+
     func testPresentationLedgerContractsAreExactAndStable() throws {
         let three = try PrismetCasinoStudyLabAdapter(gameID: .threeCardPokerLab).snapshot.ledger
         XCTAssertEqual(three.map(\.label), ["High card", "One pair", "Flush", "Straight", "Three of a kind", "Straight flush"])
@@ -362,7 +394,7 @@ final class PrismetCasinoStudyLabAdapterTests: XCTestCase {
         XCTAssertTrue(holdem.allSatisfy { $0.denominator == 133_784_560 })
 
         let caribbean = try PrismetCasinoStudyLabAdapter(gameID: .caribbeanStudQualificationLab).snapshot.ledger
-        XCTAssertEqual(caribbean, [.init(label: "Labeled five-card deals", numerator: 3_986_646_103_440, denominator: 3_986_646_103_440)])
+        XCTAssertEqual(caribbean, [.init(label: "Labeled five-card deals", value: .count(3_986_646_103_440))])
 
         let war = try PrismetCasinoStudyLabAdapter(gameID: .casinoWarPractice).snapshot.ledger
         XCTAssertEqual(war, [
@@ -448,6 +480,18 @@ final class PrismetCasinoStudyLabAdapterTests: XCTestCase {
         XCTAssertEqual(adapter.phase, .complete)
         XCTAssertEqual(adapter.snapshot.cards.flatMap(\.cards).filter { $0 == .hidden }.count, 6)
         XCTAssertEqual(adapter.snapshot.cards.flatMap(\.accessibilityLabels).filter { $0 == "Face-down card" }.count, 6)
+    }
+
+    func testCasinoWarTieAuditReusesTheOriginalDealSeedWithoutDrawingANewSeed() throws {
+        var adapter = try PrismetCasinoStudyLabAdapter(gameID: .casinoWarPractice)
+        try adapter.perform(.deal, seed: try firstWarTieSeed())
+        try adapter.perform(.reveal)
+
+        let auditSeeds = adapter.snapshot.audit.seeds
+        XCTAssertEqual(auditSeeds.map(\.seedUsage), [.newSeed, .reusedOriginalDealSeed])
+        XCTAssertEqual(auditSeeds.map(\.seed), [auditSeeds[0].seed, auditSeeds[0].seed])
+        XCTAssertEqual(PrismetCasinoStudyLabAuditSeedUsage.newSeed.displayText, "A new seed is drawn.")
+        XCTAssertEqual(PrismetCasinoStudyLabAuditSeedUsage.reusedOriginalDealSeed.displayText, "The original deal seed is reused; no new seed is drawn.")
     }
 
     func testPaiGowJokerFixtureSurfacesAnAccessibleJokerCard() throws {
