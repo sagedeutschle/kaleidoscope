@@ -2282,3 +2282,13 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
 - **Excludes:** Catan, Home/catalog, `RootView`, `ShotHarness`, `ContentView`, `FacetRegistry`, cabinet/sidebar shell, shared design tokens, both main `project.yml` files, generated main projects, and App Store/release files
 - **Rules:** one deck; independent hands; player Hit/Stand; dealer stands on hard and soft 17; a natural beats non-natural 21; equal final values tie; no split, double, insurance, surrender, money, chips, balances, wagers, stakes, payouts, rewards, streaks, urgency, automatic next hand, or outcome tuning
 - **Launch gate:** every completed slice must build and launch on iPhone 17 Pro, iPad Pro 13-inch, and macOS before release
+
+### PRISM — Practice Casino Blackjack release — 2026-07-15T04:19:30Z
+
+- **Branch/worktree:** `codex/prismet-shared-parity-foundation` / `/Users/gtrktscrb/Desktop/Kaleidoscope/.worktrees/codex-prismet-shared-parity`
+- **Status:** RELEASED TO ISOLATED THREE-PLATFORM PREVIEW; main-shell routing intentionally deferred while the active Home/root-navigation and App Store claims remain in force
+- **Delivered:** auditable one-deck Practice Blackjack shared engine; unbiased deterministic shuffle; Hit/Stand/End Hand/New Hand; dealer stands on every 17; automatic dealer completion at player 21; terminal replay/fairness disclosure; visible-information bust odds; exact future-deck restore; corrupt-save preservation; adaptive iPhone/iPad and native macOS views; accessibility and keyboard support; explicit no-money safety copy; inert Five-Card Poker coming-next card
+- **Commits:** `25391bd`, `ea14bc4`, `1ddb01c`, `32fad6d`, `a20bd80`, `e786a09` (plus prerequisite Fair Play contract commits already on this branch)
+- **Verification:** SwiftPM `103/103`; focused iOS `21/21`; focused macOS `20/20`; final no-sign preview builds succeeded for iPhone 17 Pro, iPad Pro 13-inch, and macOS; visual screenshots inspected for all three form factors
+- **Launch evidence:** simulator processes `16350` (iPhone) and `16373` (iPad); installed macOS preview `/Users/gtrktscrb/Applications/Prismet Practice Casino.app` process `16433`; freshest main `/Users/gtrktscrb/Applications/Prismet.app` also open as process `99221`
+- **Next safe integration:** selectively merge this branch after current shell/release owners release Home/root-navigation files, then add the real Casino tab route without crossing their active edits
