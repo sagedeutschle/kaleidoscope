@@ -142,6 +142,56 @@ final class PrismetCasinoStudyLabAdapterTests: XCTestCase {
         XCTAssertEqual(adapter.phase, .unstarted)
     }
 
+    func testPaiGowChangedLegalDraftPublishesPendingReanalysisInsteadOfStaleAnalysis() throws {
+        var adapter = try PrismetCasinoStudyLabAdapter(gameID: .paiGowSplitLab)
+        try adapter.perform(.deal, seed: 83)
+        let committed = try firstAnalyzableDraft(for: adapter)
+        try adapter.perform(.changePaiGowSplit(indices: committed))
+        try adapter.perform(.analyzeSplit)
+        let analyzedCategory = try XCTUnwrap(adapter.snapshot.category)
+
+        let replacement = try firstChangedAnalyzableDraft(for: adapter, excluding: committed)
+        for index in committed where !replacement.contains(index) {
+            try adapter.perform(.togglePaiGowCard(index: index))
+        }
+        for index in replacement where !committed.contains(index) {
+            try adapter.perform(.togglePaiGowCard(index: index))
+        }
+
+        let snapshot = adapter.snapshot
+        XCTAssertEqual(snapshot.selectedPaiGowCardIndices, replacement.map { $0 + 1 })
+        XCTAssertEqual(snapshot.status, "Split changed; selected positions \(replacement.map { String($0 + 1) }.joined(separator: ", ")) are ready to reanalyze")
+        XCTAssertNil(snapshot.category)
+        XCTAssertNotEqual(snapshot.category, analyzedCategory)
+        XCTAssertEqual(snapshot.summaryRows.first(where: { $0.label == "Stage" })?.value, "Reanalysis pending")
+        XCTAssertEqual(snapshot.summaryRows.first(where: { $0.label == "Analysis" })?.value, "Pending reanalysis")
+        assertPrimary(adapter, .changePaiGowSplit(indices: replacement), "Update Split", requiresSeed: false)
+    }
+
+    func testPaiGowReselectingCommittedDraftRestoresCurrentAnalysis() throws {
+        var adapter = try PrismetCasinoStudyLabAdapter(gameID: .paiGowSplitLab)
+        try adapter.perform(.deal, seed: 83)
+        let committed = try firstAnalyzableDraft(for: adapter)
+        try adapter.perform(.changePaiGowSplit(indices: committed))
+        try adapter.perform(.analyzeSplit)
+        let analyzedSnapshot = adapter.snapshot
+        let removedIndex = try XCTUnwrap(committed.first)
+
+        try adapter.perform(.togglePaiGowCard(index: removedIndex))
+        XCTAssertNil(adapter.snapshot.category)
+        XCTAssertEqual(adapter.snapshot.status, "Split changed; select two low-hand cards to reanalyze")
+        XCTAssertEqual(adapter.snapshot.summaryRows.first(where: { $0.label == "Analysis" })?.value, "Pending reanalysis")
+
+        try adapter.perform(.togglePaiGowCard(index: removedIndex))
+        let restoredSnapshot = adapter.snapshot
+        XCTAssertEqual(restoredSnapshot.selectedPaiGowCardIndices, committed.map { $0 + 1 })
+        XCTAssertEqual(restoredSnapshot.category, analyzedSnapshot.category)
+        XCTAssertEqual(restoredSnapshot.status, analyzedSnapshot.status)
+        XCTAssertEqual(restoredSnapshot.summaryRows.first(where: { $0.label == "Stage" })?.value, "Split analyzed")
+        XCTAssertEqual(restoredSnapshot.summaryRows.first(where: { $0.label == "Analysis" })?.value, analyzedSnapshot.category)
+        XCTAssertEqual(restoredSnapshot.primaryAction?.enabled, false)
+    }
+
     private func assertPrimary(
         _ adapter: PrismetCasinoStudyLabAdapter,
         _ action: PrismetCasinoStudyLabAdapter.Action,

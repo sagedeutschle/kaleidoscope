@@ -387,9 +387,13 @@ public struct PrismetCasinoStudyLabAdapter: Equatable, Sendable {
             audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal")); selectedPaiGowCardIndices = draft.map { $0 + 1 }
             group("Seven-card deal", s.cards.map { card in
                 switch card { case .joker: return .joker; case .standard(let value): return .standard(value) }
-            }); category = s.analysis.map { "Low \(presentationLabel($0.lowHand.category)), high \(presentationLabel($0.highHand.category))" }
+            })
+            let analysisIsCurrent = paiGowAnalysisIsCurrent(state: s, draft: draft)
+            category = analysisIsCurrent ? s.analysis.map { "Low \(presentationLabel($0.lowHand.category)), high \(presentationLabel($0.highHand.category))" } : nil
             status = paiGowStatus(state: s, draft: draft)
-            summaryRows = [.init(label: "Stage", value: s.phase == .dealt ? "Select low hand" : "Split analyzed"), .init(label: "Selected positions", value: selectedPaiGowCardIndices.map(String.init).joined(separator: ", ").isEmpty ? "None" : selectedPaiGowCardIndices.map(String.init).joined(separator: ", ")), .init(label: "Analysis", value: category ?? "Pending")]
+            let stage = analysisIsCurrent ? "Split analyzed" : s.phase == .dealt ? "Select low hand" : "Reanalysis pending"
+            let analysisSummary = analysisIsCurrent ? category ?? "Unavailable" : s.phase == .dealt ? "Pending" : "Pending reanalysis"
+            summaryRows = [.init(label: "Stage", value: stage), .init(label: "Selected positions", value: selectedPaiGowCardIndices.map(String.init).joined(separator: ", ").isEmpty ? "None" : selectedPaiGowCardIndices.map(String.init).joined(separator: ", ")), .init(label: "Analysis", value: analysisSummary)]
         case .omaha(let s):
             audit = .init(seed: s.seed, rulesVersion: s.rulesVersion, randomizerVersion: s.randomizerVersion, seeds: auditSeeds(seed: s.seed, action: "Deal")); group("Hole cards", s.holeCards.map { .standard($0) }); group("Board", s.visibleBoard.map { .standard($0) }); category = s.classification.map { presentationLabel($0.category) }
             let stage = omahaStage(s.phase)
@@ -472,8 +476,19 @@ public struct PrismetCasinoStudyLabAdapter: Equatable, Sendable {
         }
     }
 
+    private func paiGowAnalysisIsCurrent(state: PrismetPaiGowSplitLabState, draft: [Int]) -> Bool {
+        state.phase == .splitSelected && state.lowCardIndices == draft
+    }
+
     private func paiGowStatus(state: PrismetPaiGowSplitLabState, draft: [Int]) -> String {
-        guard state.phase == .dealt else { return "Split analyzed: \(state.analysis.map { "Low \(presentationLabel($0.lowHand.category)), high \(presentationLabel($0.highHand.category))" } ?? "unavailable")" }
+        if paiGowAnalysisIsCurrent(state: state, draft: draft) {
+            return "Split analyzed: \(state.analysis.map { "Low \(presentationLabel($0.lowHand.category)), high \(presentationLabel($0.highHand.category))" } ?? "unavailable")"
+        }
+        if state.phase == .splitSelected {
+            guard draft.count == 2 else { return "Split changed; select two low-hand cards to reanalyze" }
+            guard isLegalPaiGowDraft(draft, in: state) else { return "Split changed; selected pair fouls the split; choose another pair before reanalyzing" }
+            return "Split changed; selected positions \(draft.map { String($0 + 1) }.joined(separator: ", ")) are ready to reanalyze"
+        }
         guard draft.count == 2 else { return "Select two low-hand cards" }
         guard isLegalPaiGowDraft(draft, in: state) else { return "Selected pair fouls the split; choose another pair" }
         return "Selected positions \(draft.map { String($0 + 1) }.joined(separator: ", ")) are ready to analyze"
