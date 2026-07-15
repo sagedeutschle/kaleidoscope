@@ -1,59 +1,93 @@
 import XCTest
 
 final class CasinoSafetyContractTests: XCTestCase {
-    private let disclosure = "Practice only. No money, purchases, wagering, prizes, or rewards."
+    private let disclosure = "Practice only. No money, purchases, wagering, prizes, rewards, or transferable value."
 
-    func testExactNoMoneyDisclosureAndAllTablesArePresent() {
-        XCTAssertTrue(casinoSource.contains(disclosure))
-        for id in [
-            "blackjack", "five-card-draw", "red-black", "higher-lower", "high-card",
-            "coin-call", "dice-duel", "over-under-seven", "odd-even", "fair-wheel", "number-draw",
-        ] {
-            XCTAssertTrue(casinoSource.contains(id), "Casino source must route shared ID: \(id)")
-        }
+    func testPermanentNoMoneyDisclosureIsExactAtTheEntryGateAndStudyLab() {
+        XCTAssertTrue(gateSource.contains(disclosure))
+        XCTAssertTrue(studyLabSource.contains(disclosure))
     }
 
-    func testCasinoSourceContainsNoEconomyOrPressureSystem() {
-        let normalized = casinoSource
+    func testCasinoDoesNotContainEconomicOrRetentionMechanics() {
+        let normalized = casinoSources.values.joined(separator: "\n")
             .replacingOccurrences(of: disclosure, with: "")
+            .replacingOccurrences(of: "Practice only. No money, purchases, wagering, prizes, or rewards.", with: "")
             .lowercased()
         let prohibited = [
-            "balance", "bankroll", "chip", "stake", "payout", "jackpot",
-            "daily reward", "streak", "countdown", "near miss", "loss recovery", "auto-round",
-            "win chance", "auto-next", "automatic next", "buy-in", "cash value",
+            "balance", "bankroll", "chip", "stake", "payout", "jackpot", "buy-in", "cash out",
+            "timer", "countdown", "autoplay", "auto-play", "auto round", "auto-round", "auto-next",
+            "streak", "near miss", "near-miss", "economy", "reward", "advertisement", "bannerad",
+            "account", "leaderboard", "persistent aggregate", "aggregate stats",
         ]
 
         for term in prohibited {
-            XCTAssertFalse(normalized.contains(term), "Casino source contains prohibited term: \(term)")
+            XCTAssertFalse(normalized.contains(term), "Casino safety surface contains prohibited mechanic: \(term)")
         }
     }
 
-    func testCasinoDoesNotUseAccountsLeaderboardsPurchasesOrAds() {
-        for term in ["accountID", "Leaderboard", "GameCenter", "StoreKit", "BannerAd", "RemoveAds"] {
-            XCTAssertFalse(casinoSource.contains(term), "Casino source must remain isolated from \(term)")
+    func testCasinoDoesNotReferenceSocialOrMonetizationFrameworkIdentifiers() {
+        let normalized = casinoSources.values.joined(separator: "\n").lowercased()
+
+        for identifier in ["gamecenter", "storekit", "removeads"] {
+            XCTAssertFalse(normalized.contains(identifier), "Casino safety surface contains prohibited identifier: \(identifier)")
         }
     }
 
-    func testNoCodePathAutomaticallyStartsAnotherRound() {
-        XCTAssertFalse(casinoSource.contains("onChange(of: session.table.phase"))
-        XCTAssertFalse(casinoSource.contains("onReceive"))
-        XCTAssertTrue(casinoSource.contains("Reset Session"))
-        XCTAssertTrue(casinoSource.contains("Leave Game"))
-        XCTAssertTrue(casinoSource.contains("newRound()"))
+    func testStudyLabIsExplicitActionOnlyAndHasNoAutomaticRoundTrigger() {
+        XCTAssertTrue(sessionSource.contains("func newRound()"))
+        XCTAssertTrue(studyLabSource.contains("snapshot.secondaryNewRoundTitle"))
+        XCTAssertFalse(studyLabSource.contains("Timer."))
+        XCTAssertFalse(studyLabSource.contains("onReceive"))
+        XCTAssertFalse(studyLabSource.contains("onChange(of: snapshot"))
+        XCTAssertFalse(sessionSource.contains("Timer."))
+        XCTAssertFalse(sessionSource.contains("onReceive"))
     }
 
-    func testFairPlayCopyNamesRulesDealerPolicyAndOddsAssumption() {
-        XCTAssertTrue(casinoSource.contains("Rules & Fairness"))
-        XCTAssertTrue(casinoSource.contains("Reset Session"))
-        XCTAssertTrue(casinoSource.contains("Leave Game"))
+    func testStudyLabOwnsOneDisclosureAndOrderedAuditWhileHubOwnsRulesFairness() {
+        XCTAssertTrue(studyLabSource.contains(disclosure))
+        XCTAssertEqual(studyLabSource.components(separatedBy: disclosure).count - 1, 1)
+        XCTAssertTrue(studyLabSource.contains("Text(\"Ordered audit\")"))
+        XCTAssertFalse(studyLabSource.contains("session.descriptor.rules"))
+        XCTAssertFalse(studyLabSource.contains("session.descriptor.fairness"))
+        XCTAssertTrue(casinoSources["CasinoHubView.swift", default: ""].contains("casinoSession.descriptor.rules"))
+        XCTAssertTrue(casinoSources["CasinoHubView.swift", default: ""].contains("casinoSession.descriptor.fairness"))
     }
 
-    func testResetDisclosureIsSpecificToInMemoryCompactAndPokerVisitResults() {
-        XCTAssertTrue(casinoSource.contains("Clear compact and Five-Card Draw results from this visit?"))
-        XCTAssertTrue(casinoSource.contains("does not clear the existing Blackjack audit save"))
+    func testStudyLabAuditAccessibilityAndControlHintAgreeAboutReusedOriginalDealSeeds() {
+        XCTAssertTrue(studyLabSource.contains("seed.seedUsage"))
+        XCTAssertTrue(studyLabSource.contains("seed.seedUsage.displayText"))
+        XCTAssertFalse(studyLabSource.contains("auditSeedUsageText("))
+        XCTAssertFalse(studyLabSource.contains("auditSeedUsageAccessibilityText("))
     }
 
-    private var casinoSource: String {
+    func testPracticeCasinoPreviewSeedIsStatefulAndProductionStillUsesSecureRandomness() {
+        XCTAssertTrue(sessionSource.contains("convenience init(previewSeed: UInt64?)"))
+        XCTAssertFalse(sessionSource.contains("convenience init(previewSeed: UInt64? = nil)"))
+        XCTAssertTrue(sessionSource.contains("var nextPreviewSeed = previewSeed"))
+        XCTAssertTrue(sessionSource.contains("defer { nextPreviewSeed &+= 1 }"))
+        XCTAssertTrue(sessionSource.contains("UInt64.random(in: .min ... .max)"))
+    }
+
+    func testSafetyScanEnumeratesEveryCasinoSwiftSourceIncludingEachTableFamily() throws {
+        let expectedFiles: Set<String> = [
+            "CasinoEntryGateView.swift", "CasinoFairPlayView.swift", "CasinoHubView.swift",
+            "CasinoPlayingCardView.swift", "CasinoTheme.swift", "PracticeBlackjackSession.swift",
+            "PracticeBlackjackStore.swift", "PracticeBlackjackView.swift", "PracticeCasinoSession.swift",
+            "PracticeChanceGameView.swift", "PracticePokerView.swift", "PracticeStudyLabView.swift",
+        ]
+
+        XCTAssertEqual(Set(casinoSources.keys), expectedFiles)
+        XCTAssertFalse(try XCTUnwrap(casinoSources["PracticeBlackjackView.swift"]).isEmpty)
+        XCTAssertFalse(try XCTUnwrap(casinoSources["PracticeChanceGameView.swift"]).isEmpty)
+        XCTAssertFalse(try XCTUnwrap(casinoSources["PracticePokerView.swift"]).isEmpty)
+    }
+
+    private var gateSource: String { casinoSources["CasinoEntryGateView.swift", default: ""] }
+    private var hubSource: String { casinoSources["CasinoHubView.swift", default: ""] }
+    private var sessionSource: String { casinoSources["PracticeCasinoSession.swift", default: ""] }
+    private var studyLabSource: String { casinoSources["PracticeStudyLabView.swift", default: ""] }
+
+    private var casinoSources: [String: String] {
         let root = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
@@ -62,10 +96,8 @@ final class CasinoSafetyContractTests: XCTestCase {
             at: root,
             includingPropertiesForKeys: nil
         )) ?? []
-        return files
+        return Dictionary(uniqueKeysWithValues: files
             .filter { $0.pathExtension == "swift" }
-            .sorted { $0.lastPathComponent < $1.lastPathComponent }
-            .compactMap { try? String(contentsOf: $0) }
-            .joined(separator: "\n")
+            .map { ($0.lastPathComponent, (try? String(contentsOf: $0)) ?? "") })
     }
 }
