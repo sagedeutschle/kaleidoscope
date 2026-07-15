@@ -287,7 +287,6 @@ struct PracticeBlackjackView: View {
             .buttonStyle(.borderedProminent)
             .tint(CasinoTheme.brass)
             .foregroundStyle(CasinoTheme.ink)
-            .keyboardShortcut("n", modifiers: .command)
             .disabled(!availability.newHand)
             .focused($focusedControl, equals: .newHand)
             .casinoFocusRing(focusedControl == .newHand)

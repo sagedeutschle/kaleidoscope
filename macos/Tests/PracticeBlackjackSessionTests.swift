@@ -4,16 +4,30 @@ import PrismetShared
 
 @MainActor
 final class PracticeBlackjackSessionTests: XCTestCase {
+    private enum InjectedFileFailure: Error {
+        case read
+        case preserve
+    }
+
     func testHitDelegatesToSharedEngineAndPublishesItsObservation() async throws {
         let seed = try activeSeed(requiring: .hit)
         let session = makeSession(seed: seed)
         await session.restoreOrDeal()
         let initialCount = session.table.playerCards.count
+        let expected = try PrismetBlackjackAuditedSession.start(seed: seed)
+            .applying(.hit)
 
         session.hit()
 
         XCTAssertEqual(session.table.playerCards.count, initialCount + 1)
-        XCTAssertEqual(session.table, session.auditedSession.observation)
+        XCTAssertEqual(session.table, expected.observation)
+    }
+
+    func testConcealedAuditedStateHasNoModuleInternalGetter() throws {
+        let source = try String(contentsOf: casinoSourceURL("PracticeBlackjackSession.swift"))
+
+        XCTAssertTrue(source.contains("private var auditedSession:"))
+        XCTAssertFalse(source.contains("private(set) var auditedSession:"))
     }
 
     func testNewHandDoesNothingWhileCurrentHandIsActive() async throws {
@@ -97,6 +111,30 @@ final class PracticeBlackjackSessionTests: XCTestCase {
         XCTAssertEqual(restored.table, original.table)
     }
 
+    func testScheduledActionSavesRemainOrderedAfterSessionDeallocation() async throws {
+        let seed = try activeSeed(requiring: [.hit, .hit])
+        let store = temporaryStore()
+        var expected = try PrismetBlackjackAuditedSession.start(seed: seed)
+        var session: PracticeBlackjackSession? = PracticeBlackjackSession(
+            previewSeed: seed,
+            store: store
+        )
+        await session?.restoreOrDeal()
+
+        session?.hit()
+        expected = try expected.applying(.hit)
+        session?.hit()
+        expected = try expected.applying(.hit)
+        XCTAssertEqual(session?.table, expected.observation)
+
+        weak var releasedSession = session
+        session = nil
+
+        XCTAssertNil(releasedSession)
+        releasedSession = nil
+        try await waitForStoredObservation(expected.observation, in: store)
+    }
+
     func testProductionNewHandRequestsANewSystemSeed() async throws {
         let firstSeed = try activeSeed(requiring: .stand)
         let secondSeed = firstSeed &+ 91
@@ -166,14 +204,73 @@ final class PracticeBlackjackSessionTests: XCTestCase {
         )
     }
 
+    func testReadFailureQuarantinesOriginalBeforeStartFreshReplacement() async throws {
+        let fileURL = temporaryFileURL()
+        let original = Data("unreadable practice hand".utf8)
+        try original.write(to: fileURL, options: .atomic)
+        let store = PracticeBlackjackStore(
+            fileURL: fileURL,
+            readData: { _ in throw InjectedFileFailure.read }
+        )
+        let session = PracticeBlackjackSession(previewSeed: 23, store: store)
+
+        await session.restoreOrDeal()
+
+        XCTAssertEqual(session.loadState, .recoveryRequired(.corrupt))
+        XCTAssertEqual(try Data(contentsOf: fileURL), original)
+
+        await session.startFresh()
+
+        XCTAssertEqual(session.loadState, .ready)
+        XCTAssertNotEqual(try Data(contentsOf: fileURL), original)
+        let diagnosticURL = try XCTUnwrap(
+            diagnosticFiles(beside: fileURL).first
+        )
+        XCTAssertEqual(try Data(contentsOf: diagnosticURL), original)
+        XCTAssertNoThrow(try storedObservation(at: fileURL))
+    }
+
+    func testStartFreshRefusesOverwriteWhenQuarantineFails() async throws {
+        let fileURL = temporaryFileURL()
+        let original = Data("damaged practice hand".utf8)
+        try original.write(to: fileURL, options: .atomic)
+        let store = PracticeBlackjackStore(
+            fileURL: fileURL,
+            preserveFile: { _, _ in throw InjectedFileFailure.preserve }
+        )
+        let session = PracticeBlackjackSession(previewSeed: 29, store: store)
+        await session.restoreOrDeal()
+
+        await session.startFresh()
+
+        XCTAssertEqual(session.loadState, .recoveryRequired(.corrupt))
+        XCTAssertEqual(try Data(contentsOf: fileURL), original)
+        XCTAssertTrue(diagnosticFiles(beside: fileURL).isEmpty)
+        XCTAssertNotNil(session.errorMessage)
+    }
+
     private func activeSeed(requiring command: PrismetBlackjackCommand) throws -> UInt64 {
+        try activeSeed(requiring: [command])
+    }
+
+    private func activeSeed(
+        requiring commands: [PrismetBlackjackCommand]
+    ) throws -> UInt64 {
         for seed in UInt64(1)...UInt64(2_000) {
-            let session = try PrismetBlackjackAuditedSession.start(seed: seed)
-            if session.observation.legalCommands.contains(command) {
+            var session = try PrismetBlackjackAuditedSession.start(seed: seed)
+            var supportsSequence = true
+            for command in commands {
+                guard session.observation.legalCommands.contains(command) else {
+                    supportsSequence = false
+                    break
+                }
+                session = try session.applying(command)
+            }
+            if supportsSequence {
                 return seed
             }
         }
-        throw XCTSkip("No deterministic active-hand seed was found in the fixture range.")
+        throw XCTSkip("No deterministic seed supports the requested command sequence.")
     }
 
     private func makeSession(seed: UInt64) -> PracticeBlackjackSession {
@@ -181,8 +278,66 @@ final class PracticeBlackjackSessionTests: XCTestCase {
     }
 
     private func temporaryStore() -> PracticeBlackjackStore {
+        PracticeBlackjackStore(fileURL: temporaryFileURL())
+    }
+
+    private func temporaryFileURL() -> URL {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("prismet-blackjack-mac-tests-\(UUID().uuidString)", isDirectory: true)
-        return PracticeBlackjackStore(fileURL: directory.appendingPathComponent("hand.json"))
+        try? FileManager.default.createDirectory(
+            at: directory,
+            withIntermediateDirectories: true
+        )
+        return directory.appendingPathComponent("hand.json")
+    }
+
+    private func casinoSourceURL(_ file: String) -> URL {
+        URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Sources/Casino", isDirectory: true)
+            .appendingPathComponent(file)
+    }
+
+    private func waitForStoredObservation(
+        _ expected: PrismetBlackjackObservation,
+        in store: PracticeBlackjackStore
+    ) async throws {
+        for _ in 0..<100 {
+            if let observation = try? storedObservation(at: store.fileURL),
+               observation == expected {
+                return
+            }
+            try await Task.sleep(nanoseconds: 10_000_000)
+        }
+        XCTFail("The final queued observation was not persisted before timeout.")
+    }
+
+    private func storedObservation(at fileURL: URL) throws -> PrismetBlackjackObservation {
+        let data = try Data(contentsOf: fileURL)
+        let state = try PrismetVersionedGameStateCodec.decodeSupported(
+            data,
+            support: PrismetVersionSupport(
+                versions: [
+                    PrismetSupportedGameVersion(
+                        gameID: PrismetBlackjackRulesV1.canonicalGameID,
+                        rulesVersion: PrismetBlackjackRulesV1.rulesVersion,
+                        payloadVersion: PrismetBlackjackRulesV1.payloadVersion,
+                        randomizerVersion: PrismetDeterministicRandom.algorithmVersion,
+                        hashAlgorithm: .fnv1a64V1
+                    )
+                ]
+            )
+        )
+        return try PrismetBlackjackAuditedSession.restore(from: state).observation
+    }
+
+    private func diagnosticFiles(beside fileURL: URL) -> [URL] {
+        (try? FileManager.default.contentsOfDirectory(
+            at: fileURL.deletingLastPathComponent(),
+            includingPropertiesForKeys: nil
+        ))?.filter {
+            $0.lastPathComponent.hasPrefix("practice-blackjack-diagnostic-")
+        } ?? []
     }
 }

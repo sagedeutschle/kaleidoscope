@@ -3,9 +3,19 @@ import PrismetShared
 
 actor PracticeBlackjackStore {
     nonisolated let fileURL: URL
+    private let readData: @Sendable (URL) throws -> Data
+    private let preserveFile: @Sendable (URL, URL) throws -> Void
 
-    init(fileURL: URL = PracticeBlackjackStore.defaultFileURL()) {
+    init(
+        fileURL: URL = PracticeBlackjackStore.defaultFileURL(),
+        readData: @escaping @Sendable (URL) throws -> Data = { try Data(contentsOf: $0) },
+        preserveFile: @escaping @Sendable (URL, URL) throws -> Void = { source, destination in
+            try FileManager.default.copyItem(at: source, to: destination)
+        }
+    ) {
         self.fileURL = fileURL
+        self.readData = readData
+        self.preserveFile = preserveFile
         try? FileManager.default.createDirectory(
             at: fileURL.deletingLastPathComponent(),
             withIntermediateDirectories: true
@@ -16,7 +26,7 @@ actor PracticeBlackjackStore {
         guard FileManager.default.fileExists(atPath: fileURL.path) else {
             return nil
         }
-        return try Data(contentsOf: fileURL)
+        return try readData(fileURL)
     }
 
     func save(_ state: PrismetVersionedGameState) throws {
@@ -25,13 +35,15 @@ actor PracticeBlackjackStore {
         try encoded.write(to: fileURL, options: [.atomic])
     }
 
-    @discardableResult
-    func preserveDiagnosticCopy(_ data: Data) throws -> URL {
+    func preserveExistingFile() throws -> URL? {
+        guard FileManager.default.fileExists(atPath: fileURL.path) else {
+            return nil
+        }
         try ensureDirectory()
         let destination = fileURL.deletingLastPathComponent().appendingPathComponent(
             "practice-blackjack-diagnostic-\(UUID().uuidString.lowercased()).json"
         )
-        try data.write(to: destination, options: [.atomic])
+        try preserveFile(fileURL, destination)
         return destination
     }
 

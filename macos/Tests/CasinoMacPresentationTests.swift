@@ -67,4 +67,21 @@ final class CasinoMacPresentationTests: XCTestCase {
         XCTAssertEqual(CasinoMacKeyboardHints.replay, "Command-R")
         XCTAssertEqual(CasinoMacKeyboardHints.leave, "Escape")
     }
+
+    func testPreviewHarnessOwnsCommandNInASingleWindowScene() throws {
+        let source = try String(contentsOf: previewHarnessURL)
+
+        XCTAssertTrue(source.contains("Window(\"Prismet Practice Casino\", id:"))
+        XCTAssertFalse(source.contains("WindowGroup"))
+        XCTAssertTrue(source.contains("CommandGroup(replacing: .newItem)"))
+        XCTAssertTrue(source.contains(".disabled(!session.canStartNewHand)"))
+    }
+
+    private var previewHarnessURL: URL {
+        URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("tools/PracticeCasinoHarness/Sources/macOS/PracticeCasinoMacApp.swift")
+    }
 }

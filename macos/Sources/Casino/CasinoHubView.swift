@@ -16,6 +16,14 @@ struct CasinoHubView: View {
         suppliedLeaveAction = onLeave
     }
 
+    init(
+        session: PracticeBlackjackSession,
+        onLeave: (() -> Void)? = nil
+    ) {
+        _session = StateObject(wrappedValue: session)
+        suppliedLeaveAction = onLeave
+    }
+
     var body: some View {
         GeometryReader { proxy in
             switch CasinoMacLayoutPolicy.presentation(for: proxy.size.width) {

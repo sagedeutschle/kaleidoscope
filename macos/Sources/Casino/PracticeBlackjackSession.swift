@@ -27,11 +27,10 @@ final class PracticeBlackjackSession: ObservableObject {
     @Published private(set) var errorMessage: String?
     @Published var presentedSheet: Sheet?
 
-    private(set) var auditedSession: PrismetBlackjackAuditedSession
+    private var auditedSession: PrismetBlackjackAuditedSession
 
     private let store: PracticeBlackjackStore
     private let seedSource: () -> UInt64
-    private var recoveryData: Data?
     private var nextPreviewSeed: UInt64?
     private var pendingPersistence: Task<Void, Never>?
 
@@ -47,10 +46,6 @@ final class PracticeBlackjackSession: ObservableObject {
         self.auditedSession = initialSession
         self.table = initialSession.observation
         self.nextPreviewSeed = previewSeed.map { $0 &+ 0x9e3779b97f4a7c15 }
-    }
-
-    deinit {
-        pendingPersistence?.cancel()
     }
 
     var canHit: Bool {
@@ -119,19 +114,14 @@ final class PracticeBlackjackSession: ObservableObject {
                 auditedSession = restored
                 table = restored.observation
                 loadState = .ready
-                recoveryData = nil
                 errorMessage = nil
             } catch let error as PrismetVersionedGameStateError {
-                enterRecovery(
-                    data: data,
-                    reason: Self.recoveryReason(for: error)
-                )
+                enterRecovery(reason: Self.recoveryReason(for: error))
             } catch {
-                enterRecovery(data: data, reason: .corrupt)
+                enterRecovery(reason: .corrupt)
             }
         } catch {
-            loadState = .recoveryRequired(.corrupt)
-            errorMessage = "The saved hand could not be read. Start Fresh keeps a diagnostic copy first."
+            enterRecovery(reason: .corrupt)
         }
     }
 
@@ -172,8 +162,8 @@ final class PracticeBlackjackSession: ObservableObject {
         guard loadState == .ready else { return }
         do {
             let state = try auditedSession.versionedState(modifiedAt: Date())
-            try await store.save(state)
-            errorMessage = nil
+            let task = enqueuePersistence(state)
+            await task.value
         } catch {
             errorMessage = "This hand is still playable, but it could not be saved."
         }
@@ -183,15 +173,12 @@ final class PracticeBlackjackSession: ObservableObject {
         guard case .recoveryRequired = loadState else { return }
 
         do {
-            if let recoveryData {
-                try await store.preserveDiagnosticCopy(recoveryData)
-            }
+            _ = try await store.preserveExistingFile()
             let fresh = Self.startSession(seed: takeNextSeed())
             let state = try fresh.versionedState(modifiedAt: Date())
             try await store.save(state)
             auditedSession = fresh
             table = fresh.observation
-            self.recoveryData = nil
             loadState = .ready
             errorMessage = nil
         } catch {
@@ -216,15 +203,34 @@ final class PracticeBlackjackSession: ObservableObject {
     }
 
     private func schedulePersistence() {
-        pendingPersistence?.cancel()
-        pendingPersistence = Task { [weak self] in
-            guard !Task.isCancelled else { return }
-            await self?.persist()
+        do {
+            let state = try auditedSession.versionedState(modifiedAt: Date())
+            enqueuePersistence(state)
+        } catch {
+            errorMessage = "This hand is still playable, but it could not be saved."
         }
     }
 
-    private func enterRecovery(data: Data, reason: RecoveryReason) {
-        recoveryData = data
+    @discardableResult
+    private func enqueuePersistence(
+        _ state: PrismetVersionedGameState
+    ) -> Task<Void, Never> {
+        let predecessor = pendingPersistence
+        let store = self.store
+        let task = Task { @MainActor [weak self] in
+            await predecessor?.value
+            do {
+                try await store.save(state)
+                self?.errorMessage = nil
+            } catch {
+                self?.errorMessage = "This hand is still playable, but it could not be saved."
+            }
+        }
+        pendingPersistence = task
+        return task
+    }
+
+    private func enterRecovery(reason: RecoveryReason) {
         loadState = .recoveryRequired(reason)
         switch reason {
         case .corrupt:

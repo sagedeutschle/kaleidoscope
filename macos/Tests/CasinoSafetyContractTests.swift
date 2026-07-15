@@ -61,7 +61,6 @@ final class CasinoSafetyContractTests: XCTestCase {
         XCTAssertTrue(source.contains("accessibilityDifferentiateWithoutColor"))
         XCTAssertTrue(source.contains(".keyboardShortcut(\"h\""))
         XCTAssertTrue(source.contains(".keyboardShortcut(\"s\""))
-        XCTAssertTrue(source.contains(".keyboardShortcut(\"n\""))
         XCTAssertTrue(source.contains(".keyboardShortcut(\"r\""))
         XCTAssertTrue(source.contains(".onKeyPress(.return"))
         XCTAssertTrue(source.contains(".onExitCommand"))
