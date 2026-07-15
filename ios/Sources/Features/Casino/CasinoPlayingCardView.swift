@@ -3,15 +3,17 @@ import SwiftUI
 
 struct CasinoPlayingCardView: View {
     let displayedCard: PrismetBlackjackDisplayedCard
+    var maximumWidth: CGFloat = 88
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .fill(CasinoTheme.cardFace)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .strokeBorder(Color.black.opacity(0.16), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(Color.black.opacity(0.16), lineWidth: 1)
                 )
+                .shadow(color: CasinoTheme.feltEdge.opacity(0.24), radius: 4, y: 2)
 
             if let card {
                 VStack(spacing: 4) {
@@ -35,7 +37,7 @@ struct CasinoPlayingCardView: View {
             }
         }
         .aspectRatio(0.68, contentMode: .fit)
-        .frame(maxWidth: 88)
+        .frame(maxWidth: maximumWidth)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityLabel)
     }

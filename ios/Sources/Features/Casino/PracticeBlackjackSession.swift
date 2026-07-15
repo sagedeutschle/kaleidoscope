@@ -24,9 +24,9 @@ final class PracticeBlackjackSession: ObservableObject {
     @Published private(set) var loadState: LoadState = .idle
     @Published var presentedSheet: Sheet?
 
-    var canHit: Bool { table.legalCommands.contains(.hit) }
-    var canStand: Bool { table.legalCommands.contains(.stand) }
-    var canStartNewHand: Bool { table.phase == .completed || table.phase == .abandoned }
+    var canHit: Bool { loadState == .ready && table.legalCommands.contains(.hit) }
+    var canStand: Bool { loadState == .ready && table.legalCommands.contains(.stand) }
+    var canStartNewHand: Bool { loadState == .ready && (table.phase == .completed || table.phase == .abandoned) }
 
     var auditSummary: PracticeBlackjackAuditSummary? {
         guard canStartNewHand,
@@ -61,6 +61,9 @@ final class PracticeBlackjackSession: ObservableObject {
         let initial = Self.startSession(seed: initialSeed)
         self.auditedSession = initial
         self.table = initial.observation
+        if previewSeed != nil {
+            self.loadState = .ready
+        }
     }
 
     func restoreOrDeal() async {
@@ -103,7 +106,7 @@ final class PracticeBlackjackSession: ObservableObject {
     }
 
     func endHand() {
-        guard table.canEndHand else { return }
+        guard loadState == .ready, table.canEndHand else { return }
         do {
             replaceSession(try auditedSession.endingHand())
             persistAfterAction()
@@ -149,7 +152,7 @@ final class PracticeBlackjackSession: ObservableObject {
     }
 
     private func apply(_ command: PrismetBlackjackCommand) {
-        guard table.legalCommands.contains(command) else { return }
+        guard loadState == .ready, table.legalCommands.contains(command) else { return }
         do {
             replaceSession(try auditedSession.applying(command))
             persistAfterAction()

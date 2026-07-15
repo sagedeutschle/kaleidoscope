@@ -3,10 +3,14 @@ import XCTest
 final class CasinoSafetyContractTests: XCTestCase {
     private let disclosure = "Practice only. No money, purchases, wagering, prizes, or rewards."
 
-    func testExactNoMoneyDisclosureAndComingNextCopyArePresent() {
+    func testExactNoMoneyDisclosureAndAllTablesArePresent() {
         XCTAssertTrue(casinoSource.contains(disclosure))
-        XCTAssertTrue(casinoSource.contains("Five-Card Poker — Coming next"))
-        XCTAssertFalse(casinoSource.contains("NavigationLink"), "Coming-next Poker must not expose a fake route")
+        for id in [
+            "blackjack", "five-card-draw", "red-black", "higher-lower", "high-card",
+            "coin-call", "dice-duel", "over-under-seven", "odd-even", "fair-wheel", "number-draw",
+        ] {
+            XCTAssertTrue(casinoSource.contains(id), "Casino source must route shared ID: \(id)")
+        }
     }
 
     func testCasinoSourceContainsNoEconomyOrPressureSystem() {
@@ -14,8 +18,8 @@ final class CasinoSafetyContractTests: XCTestCase {
             .replacingOccurrences(of: disclosure, with: "")
             .lowercased()
         let prohibited = [
-            "balance", "bankroll", "chip", "token", "stake", "payout", "jackpot",
-            "daily reward", "streak", "countdown", "near miss", "loss recovery",
+            "balance", "bankroll", "chip", "stake", "payout", "jackpot",
+            "daily reward", "streak", "countdown", "near miss", "loss recovery", "auto-round",
             "win chance", "auto-next", "automatic next", "buy-in", "cash value",
         ]
 
@@ -30,18 +34,23 @@ final class CasinoSafetyContractTests: XCTestCase {
         }
     }
 
-    func testNoCodePathAutomaticallyStartsAnotherHand() {
+    func testNoCodePathAutomaticallyStartsAnotherRound() {
         XCTAssertFalse(casinoSource.contains("onChange(of: session.table.phase"))
         XCTAssertFalse(casinoSource.contains("onReceive"))
-        XCTAssertTrue(casinoSource.contains("Button(\"New Hand\")"))
-        XCTAssertTrue(casinoSource.contains("session.newHand()"))
+        XCTAssertTrue(casinoSource.contains("Reset Session"))
+        XCTAssertTrue(casinoSource.contains("Leave Game"))
+        XCTAssertTrue(casinoSource.contains("newRound()"))
     }
 
     func testFairPlayCopyNamesRulesDealerPolicyAndOddsAssumption() {
-        XCTAssertTrue(casinoSource.contains("Practice Blackjack rules v1"))
-        XCTAssertTrue(casinoSource.contains("Dealer stands on every 17, including soft 17."))
-        XCTAssertTrue(casinoSource.contains("Uses only your cards and the dealer’s face-up card; the hole card and draw pile are treated as unseen."))
-        XCTAssertTrue(casinoSource.contains("Replay & Fairness becomes available after this hand ends."))
+        XCTAssertTrue(casinoSource.contains("Rules & Fairness"))
+        XCTAssertTrue(casinoSource.contains("Reset Session"))
+        XCTAssertTrue(casinoSource.contains("Leave Game"))
+    }
+
+    func testResetDisclosureIsSpecificToInMemoryCompactAndPokerVisitResults() {
+        XCTAssertTrue(casinoSource.contains("Clear compact and Five-Card Draw results from this visit?"))
+        XCTAssertTrue(casinoSource.contains("does not clear the existing Blackjack audit save"))
     }
 
     private var casinoSource: String {

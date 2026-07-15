@@ -73,10 +73,15 @@ final class PracticeBlackjackSessionTests: XCTestCase {
         let store = makeStore()
         let corruptData = Data("not a blackjack save".utf8)
         try await store.save(corruptData)
-        let session = PracticeBlackjackSession(previewSeed: 41, store: store)
+        let session = PracticeBlackjackSession(previewSeed: try activeSeed(), store: store)
 
         await session.restoreOrDeal()
 
+        XCTAssertEqual(session.loadState, .corruptSave)
+        session.endHand()
+        session.hit()
+        session.stand()
+        session.newHand()
         XCTAssertEqual(session.loadState, .corruptSave)
         let stillSavedData = try await store.load()
         XCTAssertEqual(stillSavedData, corruptData)

@@ -1,3 +1,4 @@
+import PrismetShared
 import SwiftUI
 
 struct PracticeBlackjackAuditSummary: Equatable {
@@ -30,7 +31,7 @@ struct CasinoFairPlayView: View {
                     )
                     fairPlaySection(
                         title: "Hit bust probability",
-                        body: CasinoFairPlayCopy.hitOddsAssumption
+                        body: PrismetPracticeCasinoCatalog[.blackjack].fairness
                     )
                     fairPlaySection(
                         title: "Shuffle",

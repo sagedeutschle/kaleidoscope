@@ -66,6 +66,7 @@ struct HomeView: View {
     @State private var showRemoveAds = false
     @State private var showGameCenterHint = false
     @State private var showSettings = false
+    @State private var navigationPath = NavigationPath()
     // Default mirrors PrismetDesign.paper's fallback (dark) so the Reading picker reflects
     // the true paper before a choice is ever stored.
     @AppStorage("kaleido.paper") private var paperRaw = PrismetPaper.dark.rawValue
@@ -73,7 +74,7 @@ struct HomeView: View {
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 16)]
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     brandStrip
@@ -174,7 +175,7 @@ struct HomeView: View {
                 Text("Open Settings ▸ Game Center to sign in, then you can add friends and compare scores.")
             }
             .safeAreaInset(edge: .bottom) {
-                if AdConfig.shouldDisplayBanner(adsRemoved: adEntitlement.adsRemoved, liveReadiness: AdConfig.currentLiveReadiness) {
+                if navigationPath.isEmpty && AdConfig.shouldDisplayBanner(adsRemoved: adEntitlement.adsRemoved, liveReadiness: AdConfig.currentLiveReadiness) {
                     BannerAdBar(entitlement: adEntitlement)
                         .padding(.top, 4)
                 }
