@@ -11,9 +11,9 @@
 ## Global Constraints
 
 - Exactly 11 catalog entries: `blackjack`, `five-card-draw`, `red-black`, `higher-lower`, `high-card`, `coin-call`, `dice-duel`, `over-under-seven`, `odd-even`, `fair-wheel`, and `number-draw`.
-- No money, purchase, wallet, cash-out, transferable or purchasable value, prize, reward, persistent result, account, cloud, Game Center, leaderboard, ad dependency, timer, automatic next round, outcome tuning, or pressure language in Casino production code.
+- No money, purchase, wallet, cash-out, transferable or purchasable value, prize, reward, persistent balance or aggregate result history, account, cloud, Game Center, leaderboard, ad dependency, timer, automatic next round, outcome tuning, or pressure language in Casino production code.
 - Blackjack stays on its existing shared engine and is never described as 50/50.
-- Compact games and Poker are session-only. A result appears only after an explicit player action; New Round clears the result and waits.
+- Compact games and Poker are session-only. Existing Blackjack may retain only its isolated local auditable active-hand state, never a balance or aggregate statistics. A result appears only after an explicit player action; New Round clears the result and waits.
 - Random outcomes use `PrismetDeterministicRandom`; exact probabilities use integer numerator/denominator values.
 - Every iOS/iPad action target is at least 44 points. macOS supports focus rings, pointer hover, and Escape to leave.
 - All new cross-platform model behavior is test-first: verify the intended red failure before production edits.
@@ -230,6 +230,13 @@ public struct PrismetPracticeRoundRequest: Codable, Hashable, Sendable {
     public let choiceIDs: [String]
 }
 
+public struct PrismetHigherLowerPreview: Codable, Hashable, Sendable {
+    public let seed: UInt64
+    public let randomizerVersion: Int
+    public let shownCard: PrismetPracticeRevealToken
+    public let probabilities: [PrismetPracticeProbabilityLine]
+}
+
 public struct PrismetPracticeRevealToken: Identifiable, Codable, Hashable, Sendable {
     public let id: String
     public let primary: String
@@ -254,6 +261,10 @@ public struct PrismetPracticeRoundResult: Codable, Hashable, Sendable {
 }
 
 public enum PrismetFairChanceEngine {
+    public static func previewHigherLower(
+        seed: UInt64
+    ) throws -> PrismetHigherLowerPreview
+
     public static func play(
         _ request: PrismetPracticeRoundRequest,
         seed: UInt64
@@ -261,7 +272,7 @@ public enum PrismetFairChanceEngine {
 }
 ```
 
-Use rejection-sampled bounded draws for coin/dice/wheel; Fisher-Yates for card and number draws. Validate choices before creating the RNG. Use one private function per game so each function has one outcome space and one exact-fraction table.
+Use rejection-sampled bounded draws for coin/dice/wheel; Fisher-Yates for card and number draws. Validate choices before creating the RNG. Higher or Lower preview and terminal play must reuse the same seed so the first card is stable and the second is drawn without replacement. Use one private function per game so each function has one outcome space and one exact-fraction table.
 
 - [ ] **Step 4: Run focused and full shared suites**
 
@@ -342,6 +353,8 @@ public enum PrismetFiveCardPokerEngine {
 
 Keep the shuffled deck and draw cursor as private codable state so Draw uses the exact unused cards. Evaluate straights with unique ranks and the ace-low set `[2, 3, 4, 5, 14]`. Do not add an opponent, score, payout table, or persistent statistics.
 
+Publish the standard straight-flush family total as 40 while exposing mutually exclusive display counts of 36 non-royal straight flushes and 4 royal-flush subtypes. Their sum must remain 40; never publish 40 plus 4.
+
 - [ ] **Step 4: Run focused and full package tests**
 
 Expected: every category fixture, hold transition, invalid action, deterministic deal, and full package test passes.
@@ -354,6 +367,8 @@ git commit -m "feat: add five card draw practice engine"
 ```
 
 ### Task 4: iPhone and iPad Casino Library
+
+The mobile hub must begin behind a session-only `CasinoEntryGateView` that visually separates Casino from the main catalog, states the 18+ destination and permanent no-money terms, and exposes a replaceable future verified-age access seam without persisting or collecting age data in this pass.
 
 **Files:**
 - Create: `ios/Tests/PracticeCasinoSessionTests.swift`
@@ -471,6 +486,8 @@ git commit -m "feat: add fair play casino library on iPhone and iPad"
 ```
 
 ### Task 5: macOS Casino Library
+
+The macOS hub mirrors the session-only `CasinoEntryGateView`, exact access copy, and replaceable future verified-age seam. Return/Escape work as Enter/Not Now, and no durable acceptance or identity data is stored.
 
 **Files:**
 - Create: `macos/Tests/PracticeCasinoSessionTests.swift`

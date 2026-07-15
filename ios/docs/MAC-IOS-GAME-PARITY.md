@@ -84,6 +84,16 @@ one canonical feature identity to the current iOS/macOS legacy IDs.
 
 ## Parity Log
 
+- `PRISM: Codex/Legion, 2026-07-15 (Fair Play Casino 11-table expansion)` —
+  **MIRRORED in the same pass:** iPhone, iPad, and macOS now share one typed
+  11-table catalog and deterministic fairness engines, with native session,
+  chance-game, Five-Card Draw, rules, reset, accessibility, and adaptive-layout
+  surfaces on each platform. The iOS presentation, safety, and session tests are
+  matched by `macos/Tests/CasinoMacPresentationTests.swift`,
+  `CasinoSafetyContractTests.swift`, and `PracticeCasinoSessionTests.swift`.
+  Owner: Codex/Legion. Blocker: none. Next action: keep new Casino tables shared
+  first and require simultaneous native presentation/tests before deploy.
+
 - `PRISM: Agent-Ads/Codex, 2026-07-02` — Added mandatory iOS->macOS parity gate,
   deploy-script enforcement, and path mapping. This is a process change only; no
   gameplay source changed. macOS counterpart docs updated so both agent lanes see

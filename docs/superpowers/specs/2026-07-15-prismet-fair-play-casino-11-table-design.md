@@ -18,14 +18,15 @@ These are technical requirements, not optional copy:
 
 1. No real money, purchases, wallet, cash-out, external account, transferable value, purchasable value, prize, reward, or redemption path exists in Casino code.
 2. No Casino table imports or calls ads, StoreKit, Game Center, leaderboards, cloud sync, social pressure, or account state.
-3. Results and completed-round counts live only in memory for the current Casino visit. Reset Session clears them. Leaving the Casino releases them.
-4. A new round begins only after the player chooses New Round, Deal Hand, Roll Dice, Draw Numbers, or Reveal Result. No timer, lifecycle event, result observer, or animation starts another round.
+3. Compact-game and Five-Card Draw results and completed-round counts live only in memory for the current Casino visit. Reset Session clears that visit state. Existing Blackjack may retain only its local auditable active-hand state; it never stores balances, rewards, or aggregate result statistics and continues to use its existing New Hand and recovery controls.
+4. A new compact-game or Poker round begins only after the player chooses New Round, Deal Hand, Roll Dice, Draw Numbers, or Reveal Result. Higher or Lower's first-card preview is also an explicit action. No timer, lifecycle event, result observer, or animation starts another round.
 5. Random outcomes use `PrismetDeterministicRandom` with rejection sampling or Fisher-Yates shuffle. The player can see the completed round's seed and randomizer version and reproduce it.
 6. Balanced games expose exact rational probabilities. Games with ties expose the tie separately. Blackjack explicitly states that it is not a 50/50 game.
 7. Animations never fake a near miss, change a selected outcome, delay a result for pressure, flash repeatedly, pulse indefinitely, or trigger confetti.
 8. Leave Game is always visible. Reset Session states exactly what it clears. Neither action uses shame, urgency, or loss-recovery language.
 9. The Casino surface must not display the app's global advertisement banner while a table is open.
 10. All 11 catalog entries must route on iPhone, iPad, and macOS before the pass is called complete.
+11. Entering Casino crosses a distinct, full-surface threshold before any table is shown. The threshold is session-only, states that Casino is an 18+ practice destination, and says honestly that verified-age access is planned before public release; it must never imply that verification has already occurred.
 
 ## Approaches Considered
 
@@ -59,7 +60,7 @@ This is fastest, but the games would not have distinct decisions, state, or rule
 | 10 | Fair Wheel | Choose ivory or emerald, reveal one of 12 equal segments | Six segments per color, so 6/12; each numbered segment is 1/12; there is no zero segment |
 | 11 | Number Draw | Choose exactly three values from 1 through 12, draw three without replacement | Match distribution is hypergeometric: 84/220 for zero, 108/220 for one, 27/220 for two, and 1/220 for three |
 
-Five-Card Draw uses the standard mutually exclusive five-card category counts: straight flush 40, four of a kind 624, full house 3,744, flush 5,108, straight 10,200, three of a kind 54,912, two pair 123,552, one pair 1,098,240, and high card 1,302,540. A royal flush is presented as a named straight-flush subtype rather than double-counted.
+Five-Card Draw uses the standard mutually exclusive five-card category counts: straight flush family 40, four of a kind 624, full house 3,744, flush 5,108, straight 10,200, three of a kind 54,912, two pair 123,552, one pair 1,098,240, and high card 1,302,540. The UI splits the 40-card straight-flush family into two mutually exclusive labels—36 non-royal straight flushes and 4 royal-flush subtypes—so the two labels still total 40 and are never double-counted.
 
 ## Shared Architecture
 
@@ -85,10 +86,12 @@ Public concepts:
 
 - `PrismetProbabilityFraction`, reduced by greatest common divisor while preserving numerator and denominator.
 - `PrismetPracticeRoundRequest`, containing one game ID and selected choice IDs.
+- `PrismetHigherLowerPreview`, containing the seed, first revealed card, and rank-conditional exact probability lines before a choice is made.
 - `PrismetPracticeRoundResult`, containing the game ID, seed, randomizer version, reveal tokens, neutral result title/body, and probability lines.
+- `PrismetFairChanceEngine.previewHigherLower(seed:)`.
 - `PrismetFairChanceEngine.play(_:seed:)`.
 
-The engine is a pure function. Calling it twice with the same request and seed returns the same result. Invalid choice counts, duplicate number choices, out-of-range choices, unsupported game IDs, and attempts to route Blackjack or Poker through the compact engine return typed errors without a partial result.
+The engine is a pure function. Calling it twice with the same request and seed returns the same result. Higher or Lower preview and terminal play use the same seed: terminal play preserves the preview card and reveals the next card from the same shuffled deck without replacement. Invalid choice counts, duplicate number choices, out-of-range choices, unsupported game IDs, and attempts to route Blackjack or Poker through the compact engine return typed errors without a partial result.
 
 ### `PrismetFiveCardPoker.swift`
 
@@ -107,6 +110,12 @@ The opening hand is dealt from a Fisher-Yates shuffled deck. The player may togg
 
 ## Platform Presentation
 
+### Segment threshold and future age verification
+
+Casino opens behind a dedicated emerald, ivory, and brass entry portal on every platform so it reads as a separate probability-practice segment rather than another tile detail. The native 12-part probability rosette is the threshold signature. The portal repeats the permanent no-money disclosure, identifies the destination as 18+, and offers only two calm actions: Enter Practice Casino for this visit or Not Now/Leave.
+
+The current pass does not collect a birth date, identity document, account data, or a durable consent flag. Entry is an in-memory access decision for the current view lifetime. Platform hubs isolate that decision behind a small access-policy/status seam so a real region-aware verified-age provider can replace the temporary session decision before public release without touching game engines or table state. Until that provider exists, copy must say verification is planned and must not call the temporary entry action verified access.
+
 ### Shared interaction shell
 
 Each platform controller stores:
@@ -117,7 +126,7 @@ Each platform controller stores:
 - in-memory completed-round count;
 - an injectable seed source for tests and `SystemRandomNumberGenerator` for live explicit rounds.
 
-Changing tables clears the previous table's transient result. Reset Session clears all Casino session state and returns to a pre-round screen; it does not automatically deal. Leaving releases the controller with the view hierarchy.
+Changing tables clears the previous compact/Poker table's transient result. Reset Session clears compact/Poker visit state and returns to a pre-round screen; it does not automatically deal or claim to erase the existing Blackjack audit save. Leaving releases the controller with the view hierarchy.
 
 ### iPhone
 
@@ -151,21 +160,21 @@ Every selected card, choice, or number uses a brass outline plus a checkmark or 
 
 1. The player selects a table from the shared catalog.
 2. The platform controller creates an empty table-specific request or poker state; no outcome exists yet.
-3. The player makes the required choice or hold selection.
-4. An explicit action asks the controller for a fresh seed and calls the appropriate shared engine.
+3. The player makes the required choice or hold selection. Higher or Lower instead begins with an explicit Show Card action that creates a preview and publishes its conditional odds before the player chooses.
+4. An explicit terminal action asks the controller for a fresh seed and calls the appropriate shared engine. Higher or Lower reuses its preview seed so the shown card cannot be rerolled by choosing.
 5. The shared engine validates the request, consumes deterministic random values, and returns a terminal observation with exact probability disclosure.
 6. The platform view renders only that observation, announces the result, and moves focus to the explicit next action.
-7. New Round clears the terminal observation and waits for input. Reset Session clears all in-memory Casino state. Leave Game dismisses the Casino.
+7. New Round clears the terminal observation and waits for input. Reset Session clears compact/Poker in-memory visit state. Leave Game dismisses the Casino.
 
-No app service, network call, advertisement, purchase state, account, leaderboard, or persistent history participates in this flow.
+No app service, network call, advertisement, purchase state, account, leaderboard, or persistent result history participates in this flow. The existing Blackjack wrapper's local auditable active-hand resume remains an isolated compatibility exception; it contains no balance or aggregate results.
 
 ## Errors and Recovery
 
 - Invalid selections remain on the current pre-round screen with a plain explanation and no RNG consumption.
 - Engine failures preserve the previous visible state and present a retryable error; they never substitute a random outcome.
 - Poker rejects invalid card indices and a second Draw without changing the hand.
-- Random seed creation failure is not expected from `SystemRandomNumberGenerator`; deterministic test seed sources still fail closed when exhausted.
-- Existing Blackjack persistence remains isolated and unchanged in this pass. Reset Session starts a fresh Blackjack session only after explicit confirmation and removes only its local practice save.
+- Random seed creation failure is not expected from `SystemRandomNumberGenerator`. Deterministic test sources are finite fixtures; controllers validate phase and selections before requesting their next seed.
+- Existing Blackjack persistence remains isolated and unchanged in this pass. It may resume one local auditable active hand, but never a balance, reward, or aggregate result history. Compact/Poker Reset Session does not claim to erase that save; Blackjack keeps its existing explicit New Hand and recovery controls.
 - Switching games during an active Blackjack hand uses the existing neutral End Hand path before clearing the view.
 
 ## Accessibility
