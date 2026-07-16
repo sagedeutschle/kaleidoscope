@@ -2255,3 +2255,17 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   changed, so this is not user-visible → macOS parity N/A. NOT built/tested here (no Xcode);
   `SWIFT_VERSION 5.0` confirmed, so the static-let closure registry is fine.
   Branch `claude/prismet-catan-research-l86o6j`.
+
+- `PRISM: CLAIM Codex 2026-07-15 20:02 EDT (Quick Adventurer + rules-neutral Catan counsel)` —
+  Sage approved a market-informed, level-1, 5E-compatible creator integrated into the existing iOS
+  Catan surface. Working in isolated branch `codex/prismet-catan-adventurer`. Claiming new iOS
+  character domain/store/counsel/creator files and focused tests, plus narrow additive edits to
+  `ios/Sources/Core/Games/CatanGame.swift`, `ios/Sources/Core/Games/GameSnapshots.swift`, and
+  `ios/Sources/Features/Games/CatanView.swift`. Existing Catan mechanics remain unchanged: no resource,
+  dice, trade, placement, AI, hidden-information, victory-point, or win-threshold effects. Existing
+  snapshots decode with no character; edits affect future matches only. Also claiming the matching
+  design/plan/legal docs. Explicitly NOT touching Home routing, `project.yml`, macOS, shared package,
+  backend, Casino, ads, App Store metadata, entitlements, or release plumbing. Baseline after copying
+  the existing gitignored local Secrets file and regenerating with XcodeGen: focused
+  `CatanGameTests` passed on iPhone 17 / iOS 26.5 simulator. A small repo-local Legion cohort will use
+  distinct implementation and review portfolios; all production behavior follows test-first cycles.
