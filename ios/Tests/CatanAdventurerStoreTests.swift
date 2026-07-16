@@ -76,6 +76,26 @@ final class CatanAdventurerStoreTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: file), data)
     }
 
+    func testCoordinatorCannotOverwriteFutureSchemaAfterLoad() throws {
+        let root = root()
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let file = root.appendingPathComponent("state.json")
+        let data = Data("{\"schemaVersion\":99,\"active\":null,\"draft\":null}".utf8)
+        try data.write(to: file)
+        let store = CatanAdventurerStore(fileStore: CatanAdventurerFileStore(rootURL: root))
+
+        store.load()
+        store.beginDraft()
+        store.updateDraft { $0.name = "Rowan" }
+
+        XCTAssertThrowsError(try store.completeDraft()) {
+            XCTAssertEqual($0 as? CatanAdventurerStoreError, .unsupportedSchema(99))
+        }
+        XCTAssertEqual(store.draft?.name, "Rowan")
+        XCTAssertNil(store.active)
+        XCTAssertEqual(try Data(contentsOf: file), data)
+    }
+
     func testDeleteTouchesOnlyCharacterState() throws {
         let root = root()
         let sibling = root.deletingLastPathComponent().appendingPathComponent("GameSaves/keep.json")
@@ -166,6 +186,21 @@ final class CatanAdventurerStoreTests: XCTestCase {
 
         XCTAssertEqual(store.draft?.name, "Rowan")
         XCTAssertNotNil(store.message)
+        XCTAssertTrue(store.message?.localizedCaseInsensitiveContains("retry") == true)
+    }
+
+    func testCoordinatorCompletionPreservesDraftWhenWriteFails() throws {
+        let blockedRoot = root()
+        try Data("not a directory".utf8).write(to: blockedRoot)
+        let store = CatanAdventurerStore(fileStore: CatanAdventurerFileStore(rootURL: blockedRoot))
+        store.beginDraft()
+        store.updateDraft { $0.name = "Rowan" }
+
+        XCTAssertThrowsError(try store.completeDraft()) {
+            XCTAssertEqual($0 as? CatanAdventurerStoreError, .persistenceFailed)
+        }
+        XCTAssertEqual(store.draft?.name, "Rowan")
+        XCTAssertNil(store.active)
         XCTAssertTrue(store.message?.localizedCaseInsensitiveContains("retry") == true)
     }
 }

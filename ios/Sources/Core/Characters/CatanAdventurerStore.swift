@@ -43,6 +43,7 @@ struct CatanAdventurerLoadResult: Equatable {
 enum CatanAdventurerStoreError: Error, Equatable {
     case unsupportedSchema(Int)
     case noDraft
+    case persistenceFailed
 }
 
 struct CatanAdventurerFileStore {
@@ -117,6 +118,7 @@ final class CatanAdventurerStore: ObservableObject {
     @Published private(set) var message: String?
 
     private let fileStore: CatanAdventurerFileStore
+    private var blockedSchemaVersion: Int?
 
     init(fileStore: CatanAdventurerFileStore = CatanAdventurerFileStore()) {
         self.fileStore = fileStore
@@ -125,13 +127,15 @@ final class CatanAdventurerStore: ObservableObject {
     func load() {
         do {
             let result = try fileStore.loadRecovering()
+            blockedSchemaVersion = nil
             active = result.state.active
             draft = result.state.draft
             message = result.quarantinedURL == nil
                 ? nil
                 : "Your previous character state was recovered. You can start again safely."
-        } catch CatanAdventurerStoreError.unsupportedSchema {
-            message = "This character was created by a newer version of Prismet. It was left unchanged."
+        } catch CatanAdventurerStoreError.unsupportedSchema(let version) {
+            blockedSchemaVersion = version
+            message = futureSchemaMessage
         } catch {
             message = "Your character could not be loaded. Please try again."
         }
@@ -150,15 +154,29 @@ final class CatanAdventurerStore: ObservableObject {
     }
 
     func completeDraft() throws -> CatanAdventurer {
+        if let blockedSchemaVersion {
+            message = futureSchemaMessage
+            throw CatanAdventurerStoreError.unsupportedSchema(blockedSchemaVersion)
+        }
         guard let draft else { throw CatanAdventurerStoreError.noDraft }
         let character = try CatanAdventurer.make(from: draft)
-        active = character
-        self.draft = nil
-        persistCurrentState()
-        return character
+        do {
+            try fileStore.save(CatanAdventurerState(active: character, draft: nil))
+            active = character
+            self.draft = nil
+            message = nil
+            return character
+        } catch {
+            message = "Your character changes are kept here, but could not be saved. Please retry."
+            throw CatanAdventurerStoreError.persistenceFailed
+        }
     }
 
     func deleteActive() {
+        guard blockedSchemaVersion == nil else {
+            message = futureSchemaMessage
+            return
+        }
         do {
             try fileStore.delete()
             active = nil
@@ -170,11 +188,19 @@ final class CatanAdventurerStore: ObservableObject {
     }
 
     private func persistCurrentState() {
+        guard blockedSchemaVersion == nil else {
+            message = futureSchemaMessage
+            return
+        }
         do {
             try fileStore.save(CatanAdventurerState(active: active, draft: draft))
             message = nil
         } catch {
             message = "Your character changes are kept here, but could not be saved. Please retry."
         }
+    }
+
+    private var futureSchemaMessage: String {
+        "This character was created by a newer version of Prismet. It was left unchanged."
     }
 }
