@@ -75,6 +75,56 @@ final class CatanAdventurerTests: XCTestCase {
         }
     }
 
+    func testNameLimitCountsExtendedGraphemeClusters() throws {
+        var draft = CatanAdventurerDraft.new()
+        draft.name = String(repeating: "👩🏽‍🚀", count: 24)
+        XCTAssertNoThrow(try CatanAdventurer.make(from: draft))
+
+        draft.name.append("👩🏽‍🚀")
+        XCTAssertThrowsError(try CatanAdventurer.make(from: draft)) {
+            XCTAssertEqual($0 as? CatanAdventurerValidationError, .nameTooLong)
+        }
+    }
+
+    func testChoosingClassRefreshesUntouchedRecommendations() {
+        var draft = CatanAdventurerDraft.new()
+        draft.chooseClass(.wizard)
+
+        XCTAssertEqual(draft.classChoice, .wizard)
+        XCTAssertEqual(draft.abilities, .recommended(for: .wizard))
+        XCTAssertFalse(draft.didCustomizeAbilities)
+    }
+
+    func testChoosingClassPreservesCustomizedAbilities() {
+        var draft = CatanAdventurerDraft.new()
+        draft.swapAbilities(.strength, .dexterity)
+        let customized = draft.abilities
+
+        draft.chooseClass(.wizard)
+
+        XCTAssertEqual(draft.classChoice, .wizard)
+        XCTAssertEqual(draft.abilities, customized)
+        XCTAssertTrue(draft.didCustomizeAbilities)
+    }
+
+    func testSwappingAnAbilityWithItselfDoesNotMarkDraftCustomized() {
+        var draft = CatanAdventurerDraft.new()
+        draft.swapAbilities(.strength, .strength)
+
+        XCTAssertFalse(draft.didCustomizeAbilities)
+    }
+
+    func testCharacterDecodingRejectsLevelAboveOne() throws {
+        var draft = CatanAdventurerDraft.new()
+        draft.name = "Rowan"
+        let encoded = try JSONEncoder().encode(CatanAdventurer.make(from: draft))
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        object["level"] = 2
+        let invalid = try JSONSerialization.data(withJSONObject: object)
+
+        XCTAssertThrowsError(try JSONDecoder().decode(CatanAdventurer.self, from: invalid))
+    }
+
     func testCharacterAndDraftRoundTrip() throws {
         var draft = CatanAdventurerDraft.new()
         draft.name = "Rowan"

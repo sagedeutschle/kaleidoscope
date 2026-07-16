@@ -60,7 +60,10 @@ struct CatanAbilityScores: Codable, Equatable, Hashable {
     }
 
     static func recommended(for choice: CatanAdventurerClass) -> Self {
-        assigning(standardArray, in: choice.recommendedAbilityOrder)!
+        guard let scores = assigning(standardArray, in: choice.recommendedAbilityOrder) else {
+            preconditionFailure("Every class recommendation must assign the complete standard array")
+        }
+        return scores
     }
 }
 
@@ -248,6 +251,7 @@ struct CatanAdventurerDraft: Codable, Equatable, Hashable, Identifiable {
     }
 
     mutating func swapAbilities(_ first: CatanAbility, _ second: CatanAbility) {
+        guard first != second else { return }
         let old = abilities[first]
         abilities[first] = abilities[second]
         abilities[second] = old
@@ -266,7 +270,47 @@ struct CatanAdventurer: Codable, Equatable, Hashable, Identifiable {
     var background: CatanAdventurerBackground
     var abilities: CatanAbilityScores
     var crest: CatanAdventurerCrest
-    var level: Int
+    let level: Int
+
+    private enum CodingKeys: String, CodingKey {
+        case id, schemaVersion, name, classChoice, species, background, abilities, crest, level
+    }
+
+    private init(id: UUID, schemaVersion: Int, name: String,
+                 classChoice: CatanAdventurerClass, species: CatanAdventurerSpecies,
+                 background: CatanAdventurerBackground, abilities: CatanAbilityScores,
+                 crest: CatanAdventurerCrest, level: Int) {
+        self.id = id
+        self.schemaVersion = schemaVersion
+        self.name = name
+        self.classChoice = classChoice
+        self.species = species
+        self.background = background
+        self.abilities = abilities
+        self.crest = crest
+        self.level = level
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let decodedLevel = try container.decode(Int.self, forKey: .level)
+        guard decodedLevel == 1 else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .level,
+                in: container,
+                debugDescription: "Quick Adventurer supports level 1 characters only."
+            )
+        }
+        id = try container.decode(UUID.self, forKey: .id)
+        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
+        name = try container.decode(String.self, forKey: .name)
+        classChoice = try container.decode(CatanAdventurerClass.self, forKey: .classChoice)
+        species = try container.decode(CatanAdventurerSpecies.self, forKey: .species)
+        background = try container.decode(CatanAdventurerBackground.self, forKey: .background)
+        abilities = try container.decode(CatanAbilityScores.self, forKey: .abilities)
+        crest = try container.decode(CatanAdventurerCrest.self, forKey: .crest)
+        level = decodedLevel
+    }
 
     static func make(from draft: CatanAdventurerDraft) throws -> Self {
         let name = draft.name.trimmingCharacters(in: .whitespacesAndNewlines)
