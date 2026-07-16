@@ -76,7 +76,7 @@ struct CatanAdventurerCreatorView: View {
 
     private var headingCopy: some View {
         VStack(alignment: .leading, spacing: 3) {
-            Text("Quick Adventurer").font(PrismetDesign.title(28)).foregroundStyle(PrismetDesign.ink)
+            Text("Quick Adventurer").font(.system(.title, design: .serif, weight: .bold)).foregroundStyle(PrismetDesign.ink)
             Text("Level 1 • 5E-compatible")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(PrismetDesign.ink2)
@@ -226,7 +226,7 @@ struct CatanAdventurerCreatorView: View {
                 CatanCrestMedallion(crest: draft.crest, classChoice: draft.classChoice)
                 VStack(alignment: .leading, spacing: 5) {
                     Text(draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Unnamed adventurer" : draft.name)
-                        .font(PrismetDesign.title(23)).foregroundStyle(PrismetDesign.ink)
+                        .font(.system(.title2, design: .serif, weight: .bold)).foregroundStyle(PrismetDesign.ink)
                     Text("Level 1 \(draft.classChoice.displayName)").font(.headline).foregroundStyle(accent)
                     Text("\(draft.species.displayName) • \(draft.background.displayName)").font(.subheadline).foregroundStyle(PrismetDesign.ink2)
                 }
@@ -238,7 +238,7 @@ struct CatanAdventurerCreatorView: View {
                     let score = draft.abilities[ability]
                     VStack(spacing: 2) {
                         Text(ability.displayName).font(.caption.weight(.semibold))
-                        Text("\(score) \(modifierText(score))").font(PrismetDesign.rounded(18))
+                        Text("\(score) \(modifierText(score))").font(.system(.headline, design: .rounded, weight: .bold))
                     }
                     .frame(maxWidth: .infinity).padding(8).background(PrismetDesign.panelHi, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                 }
@@ -294,7 +294,7 @@ struct CatanAdventurerCreatorView: View {
             else if secondSwap == nil { secondSwap = ability }
             else { selectedSwap = ability; secondSwap = nil }
         } label: {
-            HStack { Text(ability.displayName).font(.headline); Spacer(); Text("\(draft.abilities[ability]) \(modifierText(draft.abilities[ability]))").font(PrismetDesign.rounded(19)); if selected { Image(systemName: "checkmark.circle.fill") } }
+            HStack { Text(ability.displayName).font(.headline); Spacer(); Text("\(draft.abilities[ability]) \(modifierText(draft.abilities[ability]))").font(.system(.headline, design: .rounded, weight: .bold)); if selected { Image(systemName: "checkmark.circle.fill") } }
                 .foregroundStyle(selected ? accent : PrismetDesign.ink).padding(12).frame(maxWidth: .infinity, minHeight: 44)
                 .background(PrismetDesign.panelHi, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(selected ? accent : PrismetDesign.outline, lineWidth: selected ? 3 : 1))
@@ -329,7 +329,7 @@ struct CatanAdventurerCreatorView: View {
             .accessibilityLabel("Validation error: \(message)")
     }
     private func validationText(_ error: CatanAdventurerValidationError) -> String { switch error { case .emptyName: return "Add an adventurer name before saving."; case .nameTooLong: return "Names must be 24 characters or fewer."; case .invalidStandardArray: return "Abilities must use the standard array: 15, 14, 13, 12, 10, 8." } }
-    private func stepSection<Content: View>(title: String, detail: String, @ViewBuilder content: () -> Content) -> some View { VStack(alignment: .leading, spacing: 12) { Text(title).font(PrismetDesign.title(25)).foregroundStyle(PrismetDesign.ink); Text(detail).font(.subheadline).foregroundStyle(PrismetDesign.ink2); content() }.prismetCard() }
+    private func stepSection<Content: View>(title: String, detail: String, @ViewBuilder content: () -> Content) -> some View { VStack(alignment: .leading, spacing: 12) { Text(title).font(.system(.title2, design: .serif, weight: .bold)).foregroundStyle(PrismetDesign.ink); Text(detail).font(.subheadline).foregroundStyle(PrismetDesign.ink2); content() }.prismetCard() }
     private func choiceGrid<Item: Identifiable, Content: View>(_ items: [Item], columns: [GridItem], @ViewBuilder content: @escaping (Item) -> Content) -> some View { LazyVGrid(columns: columns, spacing: 10) { ForEach(items) { content($0) } } }
     private func choiceCard(title: String, detail: String, symbol: String, selected: Bool, action: @escaping () -> Void) -> some View { Button(action: action) { VStack(alignment: .leading, spacing: 7) { HStack { Image(systemName: symbol).font(.title3); Spacer(); if selected { Image(systemName: "checkmark.circle.fill") } }; Text(title).font(.headline); Text(detail).font(.caption).foregroundStyle(PrismetDesign.ink2).fixedSize(horizontal: false, vertical: true) }.foregroundStyle(selected ? accent : PrismetDesign.ink).padding(12).frame(maxWidth: .infinity, minHeight: 44, alignment: .topLeading).background(PrismetDesign.panelHi, in: RoundedRectangle(cornerRadius: 13, style: .continuous)).overlay(RoundedRectangle(cornerRadius: 13, style: .continuous).strokeBorder(selected ? accent : PrismetDesign.outline, lineWidth: selected ? 3 : 1)) }.buttonStyle(.plain).accessibilityLabel(title).accessibilityValue(selected ? "Selected. \(detail)" : detail).accessibilityAddTraits(selected ? .isSelected : []) }
 }
@@ -344,5 +344,5 @@ struct CatanCrestMedallion: View {
 
 struct CatanRulesCreditsView: View {
     private let accent = Color(red: 0.80, green: 0.52, blue: 0.24)
-    var body: some View { ScrollView { VStack(alignment: .leading, spacing: 16) { Text("Rules & Credits").font(PrismetDesign.title(28)); Text(CatanRulesAttribution.notice).font(.body); Link("Open SRD 5.2.1", destination: CatanRulesAttribution.sourceURL); Link("Creative Commons BY 4.0", destination: CatanRulesAttribution.licenseURL) }.foregroundStyle(PrismetDesign.ink).padding(20) }.facetBackground(accent, multiHue: true).accessibilityLabel("Rules and Credits") }
+    var body: some View { ScrollView { VStack(alignment: .leading, spacing: 16) { Text("Rules & Credits").font(.system(.title, design: .serif, weight: .bold)); Text(CatanRulesAttribution.notice).font(.body); Link("Open SRD 5.2.1", destination: CatanRulesAttribution.sourceURL); Link("Creative Commons BY 4.0", destination: CatanRulesAttribution.licenseURL) }.foregroundStyle(PrismetDesign.ink).padding(20) }.facetBackground(accent, multiHue: true).accessibilityLabel("Rules and Credits") }
 }
