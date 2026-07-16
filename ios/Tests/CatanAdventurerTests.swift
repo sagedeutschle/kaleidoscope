@@ -136,6 +136,26 @@ final class CatanAdventurerTests: XCTestCase {
         XCTAssertThrowsError(try JSONDecoder().decode(CatanAdventurer.self, from: invalid))
     }
 
+    func testCharacterDecodingRejectsInvalidPersistedNameAndAbilities() throws {
+        var draft = CatanAdventurerDraft.new()
+        draft.name = "Rowan"
+        let encoded = try JSONEncoder().encode(CatanAdventurer.make(from: draft))
+        let validObject = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        var invalidNameObject = validObject
+        invalidNameObject["name"] = "   "
+        let invalidName = try JSONSerialization.data(withJSONObject: invalidNameObject)
+        XCTAssertThrowsError(try JSONDecoder().decode(CatanAdventurer.self, from: invalidName))
+
+        var invalidAbilitiesObject = validObject
+        var abilities = try XCTUnwrap(invalidAbilitiesObject["abilities"] as? [String: Any])
+        abilities["strength"] = 15
+        abilities["dexterity"] = 15
+        invalidAbilitiesObject["abilities"] = abilities
+        let invalidAbilities = try JSONSerialization.data(withJSONObject: invalidAbilitiesObject)
+        XCTAssertThrowsError(try JSONDecoder().decode(CatanAdventurer.self, from: invalidAbilities))
+    }
+
     func testCharacterAndDraftRoundTrip() throws {
         var draft = CatanAdventurerDraft.new()
         draft.name = "Rowan"

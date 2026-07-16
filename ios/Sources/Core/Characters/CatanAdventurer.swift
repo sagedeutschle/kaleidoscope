@@ -309,13 +309,31 @@ struct CatanAdventurer: Codable, Equatable, Hashable, Identifiable {
                 debugDescription: "Quick Adventurer supports level 1 characters only."
             )
         }
+        let decodedName = try container.decode(String.self, forKey: .name)
+        let trimmedName = decodedName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty, trimmedName.count <= 24 else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .name,
+                in: container,
+                debugDescription: "Quick Adventurer names must contain 1 through 24 characters."
+            )
+        }
+        let decodedAbilities = try container.decode(CatanAbilityScores.self, forKey: .abilities)
+        guard decodedAbilities.isStandardArray else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .abilities,
+                in: container,
+                debugDescription: "Quick Adventurer abilities must use the standard array."
+            )
+        }
+
         id = try container.decode(UUID.self, forKey: .id)
         schemaVersion = decodedSchemaVersion
-        name = try container.decode(String.self, forKey: .name)
+        name = trimmedName
         classChoice = try container.decode(CatanAdventurerClass.self, forKey: .classChoice)
         species = try container.decode(CatanAdventurerSpecies.self, forKey: .species)
         background = try container.decode(CatanAdventurerBackground.self, forKey: .background)
-        abilities = try container.decode(CatanAbilityScores.self, forKey: .abilities)
+        abilities = decodedAbilities
         crest = try container.decode(CatanAdventurerCrest.self, forKey: .crest)
         level = decodedLevel
     }

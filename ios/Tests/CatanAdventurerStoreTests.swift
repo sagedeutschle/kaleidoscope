@@ -70,7 +70,11 @@ final class CatanAdventurerStoreTests: XCTestCase {
         let data = Data("{\"schemaVersion\":99,\"active\":null,\"draft\":null}".utf8)
         try data.write(to: file)
 
-        XCTAssertThrowsError(try CatanAdventurerFileStore(rootURL: root).loadRecovering()) {
+        let store = CatanAdventurerFileStore(rootURL: root)
+        XCTAssertThrowsError(try store.loadRecovering()) {
+            XCTAssertEqual($0 as? CatanAdventurerStoreError, .unsupportedSchema(99))
+        }
+        XCTAssertThrowsError(try store.save(.empty)) {
             XCTAssertEqual($0 as? CatanAdventurerStoreError, .unsupportedSchema(99))
         }
         XCTAssertEqual(try Data(contentsOf: file), data)
@@ -124,6 +128,39 @@ final class CatanAdventurerStoreTests: XCTestCase {
 
         XCTAssertEqual(try fileStore.loadRecovering().state.draft?.name, "Rowan")
         XCTAssertEqual(store.draft?.name, "Rowan")
+    }
+
+    func testCoordinatorResumesLoadedNewCharacterDraft() throws {
+        let fileStore = CatanAdventurerFileStore(rootURL: root())
+        var draft = CatanAdventurerDraft.new()
+        draft.name = "Mira"
+        draft.step = .identity
+        try fileStore.save(CatanAdventurerState(draft: draft))
+        let store = CatanAdventurerStore(fileStore: fileStore)
+        store.load()
+
+        store.beginDraft()
+
+        XCTAssertEqual(store.draft, draft)
+        XCTAssertEqual(try fileStore.loadRecovering().state.draft, draft)
+    }
+
+    func testCoordinatorResumesLoadedDraftWhenEditingTheSameActiveCharacter() throws {
+        let fileStore = CatanAdventurerFileStore(rootURL: root())
+        var original = CatanAdventurerDraft.new()
+        original.name = "Rowan"
+        let active = try CatanAdventurer.make(from: original)
+        var edited = active.editableDraft
+        edited.name = "Mira"
+        edited.step = .identity
+        try fileStore.save(CatanAdventurerState(active: active, draft: edited))
+        let store = CatanAdventurerStore(fileStore: fileStore)
+        store.load()
+
+        store.beginDraft(editing: active)
+
+        XCTAssertEqual(store.draft, edited)
+        XCTAssertEqual(try fileStore.loadRecovering().state.draft, edited)
     }
 
     func testCoordinatorCompletesDraftAndClearsPersistedDraft() throws {

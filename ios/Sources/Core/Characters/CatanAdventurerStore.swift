@@ -47,6 +47,10 @@ enum CatanAdventurerStoreError: Error, Equatable {
 }
 
 struct CatanAdventurerFileStore {
+    private struct SchemaEnvelope: Decodable {
+        let schemaVersion: Int
+    }
+
     let rootURL: URL
     var fileManager: FileManager = .default
     var now: () -> Date = Date.init
@@ -90,6 +94,13 @@ struct CatanAdventurerFileStore {
     }
 
     func save(_ state: CatanAdventurerState) throws {
+        if fileManager.fileExists(atPath: stateURL.path),
+           let existingData = try? Data(contentsOf: stateURL),
+           let existingVersion = try? JSONDecoder().decode(SchemaEnvelope.self, from: existingData).schemaVersion,
+           existingVersion != CatanAdventurerState.currentSchemaVersion {
+            throw CatanAdventurerStoreError.unsupportedSchema(existingVersion)
+        }
+
         var normalizedState = state
         normalizedState.schemaVersion = CatanAdventurerState.currentSchemaVersion
 
@@ -142,6 +153,10 @@ final class CatanAdventurerStore: ObservableObject {
     }
 
     func beginDraft(editing character: CatanAdventurer? = nil) {
+        if let draft, character == nil || draft.id == character?.id {
+            persistCurrentState()
+            return
+        }
         draft = (character ?? active)?.editableDraft ?? .new()
         persistCurrentState()
     }
