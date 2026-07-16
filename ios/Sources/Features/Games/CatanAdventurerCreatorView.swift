@@ -22,6 +22,9 @@ struct CatanAdventurerCreatorView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     heading
                     progressRail
+                    if let storeMessage = store.message {
+                        creatorNotice(storeMessage)
+                    }
                     stepBody
                     navigation
                 }
@@ -244,7 +247,6 @@ struct CatanAdventurerCreatorView: View {
                 }
             }
             if let validationMessage { Text(validationMessage).font(.subheadline.weight(.semibold)).foregroundStyle(.red).accessibilityLabel("Validation error: \(validationMessage)") }
-            if let message = store.message { Text(message).font(.caption).foregroundStyle(PrismetDesign.ink2) }
             Button("Save for next match", action: saveDraft)
                 .buttonStyle(AccentButtonStyle(accent: accent)).frame(maxWidth: .infinity, minHeight: 44)
                 .accessibilityLabel("Save adventurer for next Catan match")
@@ -328,6 +330,25 @@ struct CatanAdventurerCreatorView: View {
             .foregroundStyle(.red)
             .accessibilityLabel("Validation error: \(message)")
     }
+    private func creatorNotice(_ message: String) -> some View {
+        HStack(alignment: .top, spacing: 9) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(accent)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 3) {
+                Text("Character notice").font(.subheadline.weight(.semibold))
+                Text(message)
+                    .font(.caption)
+                    .foregroundStyle(PrismetDesign.ink2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(accent.opacity(0.12), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Character notice: \(message)")
+    }
     private func validationText(_ error: CatanAdventurerValidationError) -> String { switch error { case .emptyName: return "Add an adventurer name before saving."; case .nameTooLong: return "Names must be 24 characters or fewer."; case .invalidStandardArray: return "Abilities must use the standard array: 15, 14, 13, 12, 10, 8." } }
     private func stepSection<Content: View>(title: String, detail: String, @ViewBuilder content: () -> Content) -> some View { VStack(alignment: .leading, spacing: 12) { Text(title).font(.system(.title2, design: .serif, weight: .bold)).foregroundStyle(PrismetDesign.ink); Text(detail).font(.subheadline).foregroundStyle(PrismetDesign.ink2); content() }.prismetCard() }
     private func choiceGrid<Item: Identifiable, Content: View>(_ items: [Item], columns: [GridItem], @ViewBuilder content: @escaping (Item) -> Content) -> some View { LazyVGrid(columns: columns, spacing: 10) { ForEach(items) { content($0) } } }
@@ -344,5 +365,22 @@ struct CatanCrestMedallion: View {
 
 struct CatanRulesCreditsView: View {
     private let accent = Color(red: 0.80, green: 0.52, blue: 0.24)
-    var body: some View { ScrollView { VStack(alignment: .leading, spacing: 16) { Text("Rules & Credits").font(.system(.title, design: .serif, weight: .bold)); Text(CatanRulesAttribution.notice).font(.body); Link("Open SRD 5.2.1", destination: CatanRulesAttribution.sourceURL); Link("Creative Commons BY 4.0", destination: CatanRulesAttribution.licenseURL) }.foregroundStyle(PrismetDesign.ink).padding(20) }.facetBackground(accent, multiHue: true).accessibilityLabel("Rules and Credits") }
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Rules & Credits").font(.system(.title, design: .serif, weight: .bold))
+                Text(CatanRulesAttribution.notice).font(.body)
+                Link("Open SRD 5.2.1", destination: CatanRulesAttribution.sourceURL)
+                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                    .contentShape(Rectangle())
+                Link("Creative Commons BY 4.0", destination: CatanRulesAttribution.licenseURL)
+                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .foregroundStyle(PrismetDesign.ink)
+            .padding(20)
+        }
+        .facetBackground(accent, multiHue: true)
+        .accessibilityLabel("Rules and Credits")
+    }
 }

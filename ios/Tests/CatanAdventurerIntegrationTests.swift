@@ -25,6 +25,15 @@ final class CatanAdventurerIntegrationTests: XCTestCase {
         XCTAssertTrue(creator.contains("Reset adventurer"))
         XCTAssertTrue(creator.contains("confirmationDialog"))
         XCTAssertTrue(creator.contains("store.deleteActive()"))
+        XCTAssertTrue(creator.contains("if let storeMessage = store.message"))
+        XCTAssertTrue(creator.contains("creatorNotice(storeMessage)"))
+        let creditsSource = try XCTUnwrap(creator.range(of: "struct CatanRulesCreditsView"))
+        XCTAssertGreaterThanOrEqual(
+            creator[creditsSource.lowerBound...]
+                .components(separatedBy: ".frame(maxWidth: .infinity, minHeight: 44").count - 1,
+            2,
+            "Both Rules and Credits links need full-width 44-point hit targets"
+        )
         XCTAssertTrue(dock.contains("Hero's Counsel"))
         XCTAssertTrue(dock.contains("let storeMessage: String?"))
         XCTAssertTrue(dock.contains("Character notice"))
