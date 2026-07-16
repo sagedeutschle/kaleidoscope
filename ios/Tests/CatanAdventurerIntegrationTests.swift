@@ -13,6 +13,8 @@ final class CatanAdventurerIntegrationTests: XCTestCase {
         XCTAssertTrue(creator.contains("Rules & Credits"))
         XCTAssertTrue(creator.contains("accessibilityAddTraits"))
         XCTAssertTrue(creator.contains("accessibilityReduceMotion"))
+        XCTAssertFalse(creator.contains(".animation(reduceMotion ? .easeInOut"))
+        XCTAssertTrue(creator.contains(".animation(reduceMotion ? nil :"))
         XCTAssertTrue(creator.contains("dynamicTypeSize.isAccessibilitySize"))
         XCTAssertTrue(creator.contains("scrollDismissesKeyboard"))
         XCTAssertTrue(creator.contains("minHeight: 44"))

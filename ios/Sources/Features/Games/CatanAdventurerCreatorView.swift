@@ -62,12 +62,15 @@ struct CatanAdventurerCreatorView: View {
                 headingCopy
             }
         }
-        .animation(reduceMotion ? .easeInOut(duration: 0.18) : .spring(response: 0.38, dampingFraction: 0.75), value: draft.crest)
     }
 
     private var crest: some View {
         CatanCrestMedallion(crest: draft.crest, classChoice: draft.classChoice, size: 58)
-            .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
+            .transition(
+                reduceMotion
+                    ? .opacity.animation(.easeInOut(duration: 0.18))
+                    : .scale.combined(with: .opacity).animation(.spring(response: 0.38, dampingFraction: 0.75))
+            )
             .id("\(draft.crest.rawValue)-\(draft.classChoice.rawValue)")
     }
 
@@ -124,7 +127,7 @@ struct CatanAdventurerCreatorView: View {
                 .accessibilityLabel("Creator progress")
             }
         }
-        .animation(reduceMotion ? .easeInOut(duration: 0.18) : .spring(response: 0.35, dampingFraction: 0.8), value: currentIndex)
+        .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.8), value: currentIndex)
     }
 
     @ViewBuilder private var stepBody: some View {
