@@ -263,7 +263,7 @@ struct CatanAdventurer: Codable, Equatable, Hashable, Identifiable {
     static let currentSchemaVersion = 1
 
     var id: UUID
-    var schemaVersion: Int
+    let schemaVersion: Int
     var name: String
     var classChoice: CatanAdventurerClass
     var species: CatanAdventurerSpecies
@@ -293,6 +293,14 @@ struct CatanAdventurer: Codable, Equatable, Hashable, Identifiable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        let decodedSchemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
+        guard decodedSchemaVersion == Self.currentSchemaVersion else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .schemaVersion,
+                in: container,
+                debugDescription: "Unsupported Quick Adventurer schema version."
+            )
+        }
         let decodedLevel = try container.decode(Int.self, forKey: .level)
         guard decodedLevel == 1 else {
             throw DecodingError.dataCorruptedError(
@@ -302,7 +310,7 @@ struct CatanAdventurer: Codable, Equatable, Hashable, Identifiable {
             )
         }
         id = try container.decode(UUID.self, forKey: .id)
-        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
+        schemaVersion = decodedSchemaVersion
         name = try container.decode(String.self, forKey: .name)
         classChoice = try container.decode(CatanAdventurerClass.self, forKey: .classChoice)
         species = try container.decode(CatanAdventurerSpecies.self, forKey: .species)

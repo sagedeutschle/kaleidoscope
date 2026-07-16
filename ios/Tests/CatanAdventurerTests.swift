@@ -125,6 +125,17 @@ final class CatanAdventurerTests: XCTestCase {
         XCTAssertThrowsError(try JSONDecoder().decode(CatanAdventurer.self, from: invalid))
     }
 
+    func testCharacterDecodingRejectsUnsupportedSchemaVersion() throws {
+        var draft = CatanAdventurerDraft.new()
+        draft.name = "Rowan"
+        let encoded = try JSONEncoder().encode(CatanAdventurer.make(from: draft))
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        object["schemaVersion"] = 2
+        let invalid = try JSONSerialization.data(withJSONObject: object)
+
+        XCTAssertThrowsError(try JSONDecoder().decode(CatanAdventurer.self, from: invalid))
+    }
+
     func testCharacterAndDraftRoundTrip() throws {
         var draft = CatanAdventurerDraft.new()
         draft.name = "Rowan"
