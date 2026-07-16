@@ -292,6 +292,22 @@ struct OracleSnapshot: Codable {
 
 struct CatanSnapshot: Codable, Equatable {
     var game: CatanGame
+    var adventurer: CatanAdventurer?
+
+    init(game: CatanGame, adventurer: CatanAdventurer? = nil) {
+        self.game = game
+        self.adventurer = adventurer
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case game, adventurer
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        game = try container.decode(CatanGame.self, forKey: .game)
+        adventurer = try container.decodeIfPresent(CatanAdventurer.self, forKey: .adventurer)
+    }
 }
 
 struct GameSaveSnapshotSample {

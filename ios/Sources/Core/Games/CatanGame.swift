@@ -105,7 +105,7 @@ struct CatanGame: Codable, Equatable {
 
     // MARK: New game
 
-    static func newGame(playerCount: Int = 3, seed: UInt64) -> CatanGame {
+    static func newGame(playerCount: Int = 3, seed: UInt64, humanName: String = "You") -> CatanGame {
         var rng = SeededGenerator(seed: seed)
 
         var producing: [CatanResource] = []
@@ -135,7 +135,7 @@ struct CatanGame: Codable, Equatable {
         }
 
         let count = max(2, min(4, playerCount))
-        let names = ["You", "Amber", "Jade", "Garnet"]
+        let names = [humanName, "Amber", "Jade", "Garnet"]
         var players: [CatanPlayer] = []
         for i in 0..<count {
             players.append(CatanPlayer(index: i, name: names[i], isBot: i != 0))
