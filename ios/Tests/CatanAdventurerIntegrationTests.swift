@@ -41,8 +41,9 @@ final class CatanAdventurerIntegrationTests: XCTestCase {
         )
         var edited = original.editableDraft
         edited.name = "Mira"
-        _ = try CatanAdventurer.make(from: edited)
+        let editedCharacter = try CatanAdventurer.make(from: edited)
 
+        XCTAssertEqual(editedCharacter.name, "Mira")
         XCTAssertEqual(snapshot.adventurer?.name, "Rowan")
         XCTAssertEqual(snapshot.game.players[0].name, "Rowan")
     }
