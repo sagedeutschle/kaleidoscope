@@ -22,6 +22,8 @@ final class CatanAdventurerIntegrationTests: XCTestCase {
         XCTAssertTrue(creator.contains("confirmationDialog"))
         XCTAssertTrue(creator.contains("store.deleteActive()"))
         XCTAssertTrue(dock.contains("Hero's Counsel"))
+        XCTAssertTrue(dock.contains("let storeMessage: String?"))
+        XCTAssertTrue(dock.contains("Character notice"))
         XCTAssertTrue(dock.contains("Ready for next match"))
         XCTAssertTrue(dock.contains("ViewThatFits"))
         XCTAssertTrue(dock.contains("accessibilityLabel"))
@@ -37,6 +39,7 @@ final class CatanAdventurerIntegrationTests: XCTestCase {
             "Dock identity copy must wrap instead of truncating at accessibility text sizes"
         )
         XCTAssertTrue(catan.contains("matchAdventurer = snap.adventurer"))
+        XCTAssertTrue(catan.contains("storeMessage: adventurerStore.message"))
         XCTAssertTrue(catan.contains("adventurer: matchAdventurer"))
         XCTAssertTrue(catan.contains("humanName: matchAdventurer?.name ?? \"You\""))
     }

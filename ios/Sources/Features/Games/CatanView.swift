@@ -56,6 +56,7 @@ struct CatanView: View {
                     matchAdventurer: matchAdventurer,
                     activeAdventurer: adventurerStore.active,
                     counsel: CatanHeroCounsel.advice(for: matchAdventurer, game: game),
+                    storeMessage: adventurerStore.message,
                     onCreate: { openAdventurerCreator(editing: nil) },
                     onEdit: { openAdventurerCreator(editing: adventurerStore.active) },
                     onBegin: startNewGame

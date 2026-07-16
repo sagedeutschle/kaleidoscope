@@ -4,6 +4,7 @@ struct CatanAdventurerDock: View {
     let matchAdventurer: CatanAdventurer?
     let activeAdventurer: CatanAdventurer?
     let counsel: CatanCounsel?
+    let storeMessage: String?
     var onCreate: () -> Void
     var onEdit: () -> Void
     var onBegin: () -> Void
@@ -11,17 +12,42 @@ struct CatanAdventurerDock: View {
     private let accent = Color(red: 0.80, green: 0.52, blue: 0.24)
 
     var body: some View {
-        Group {
-            if let matchAdventurer {
-                inMatch(matchAdventurer)
-            } else if let activeAdventurer {
-                ready(activeAdventurer)
-            } else {
-                empty
+        VStack(alignment: .leading, spacing: 12) {
+            if let storeMessage {
+                characterNotice(storeMessage)
+            }
+            Group {
+                if let matchAdventurer {
+                    inMatch(matchAdventurer)
+                } else if let activeAdventurer {
+                    ready(activeAdventurer)
+                } else {
+                    empty
+                }
             }
         }
         .foregroundStyle(PrismetDesign.ink)
         .prismetCard()
+    }
+
+    private func characterNotice(_ message: String) -> some View {
+        HStack(alignment: .top, spacing: 9) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(accent)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 3) {
+                Text("Character notice").font(.subheadline.weight(.semibold))
+                Text(message)
+                    .font(.caption)
+                    .foregroundStyle(PrismetDesign.ink2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(accent.opacity(0.12), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Character notice: \(message)")
     }
 
     private var empty: some View {
