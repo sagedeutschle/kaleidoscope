@@ -11,6 +11,7 @@ struct CatanAdventurerCreatorView: View {
     @State private var secondSwap: CatanAbility?
     @State private var validationMessage: String?
     @State private var showCredits = false
+    @State private var showResetConfirmation = false
 
     private let accent = Color(red: 0.80, green: 0.52, blue: 0.24)
     private var draft: CatanAdventurerDraft { store.draft ?? .new() }
@@ -36,6 +37,16 @@ struct CatanAdventurerCreatorView: View {
                 }
             }
             .sheet(isPresented: $showCredits) { CatanRulesCreditsView() }
+            .confirmationDialog(
+                "Reset adventurer?",
+                isPresented: $showResetConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button("Reset adventurer", role: .destructive, action: resetAdventurer)
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This removes your saved adventurer and unfinished draft. Existing Catan matches stay unchanged.")
+            }
         }
     }
 
@@ -171,6 +182,7 @@ struct CatanAdventurerCreatorView: View {
                 Button("Restore smart assignment") {
                     selectedSwap = nil
                     secondSwap = nil
+                    validationMessage = nil
                     store.updateDraft {
                         $0.abilities = .recommended(for: $0.classChoice)
                         $0.didCustomizeAbilities = false
@@ -178,6 +190,9 @@ struct CatanAdventurerCreatorView: View {
                 }
                 .buttonStyle(GlassButtonStyle()).frame(maxWidth: .infinity, minHeight: 44)
                 .accessibilityLabel("Restore smart ability assignment")
+            }
+            if let validationMessage {
+                validationError(validationMessage)
             }
         }
     }
@@ -233,6 +248,13 @@ struct CatanAdventurerCreatorView: View {
             Button("Rules & Credits") { showCredits = true }
                 .buttonStyle(GlassButtonStyle()).frame(maxWidth: .infinity, minHeight: 44)
                 .accessibilityLabel("Open Rules and Credits")
+            if store.active != nil {
+                Button("Reset adventurer", role: .destructive) { showResetConfirmation = true }
+                    .buttonStyle(GlassButtonStyle())
+                    .foregroundStyle(.red)
+                    .frame(maxWidth: .infinity, minHeight: 44)
+                    .accessibilityLabel("Reset saved adventurer")
+            }
         }
     }
 
@@ -250,7 +272,10 @@ struct CatanAdventurerCreatorView: View {
 
     private var currentIndex: Int { CatanCreatorStep.allCases.firstIndex(of: draft.step) ?? 0 }
 
-    private func setStep(_ index: Int) { store.updateDraft { $0.step = CatanCreatorStep.allCases[index] } }
+    private func setStep(_ index: Int) {
+        validationMessage = nil
+        store.updateDraft { $0.step = CatanCreatorStep.allCases[index] }
+    }
     private func swapSelectedAbilities() {
         guard let first = selectedSwap, let second = secondSwap else { return }
         selectedSwap = nil
@@ -274,7 +299,32 @@ struct CatanAdventurerCreatorView: View {
         .buttonStyle(.plain).accessibilityLabel("\(ability.displayName), \(draft.abilities[ability])").accessibilityValue(selected ? "Selected for swap" : "Double tap to select for swap").accessibilityAddTraits(selected ? .isSelected : [])
     }
     private func modifierText(_ score: Int) -> String { let value = CatanAbilityScores.modifier(forScore: score); return value >= 0 ? "+\(value)" : "\(value)" }
-    private func saveDraft() { do { onSaved(try store.completeDraft()) } catch let error as CatanAdventurerValidationError { validationMessage = validationText(error) } catch { validationMessage = "Your adventurer could not be saved. Please try again." } }
+    private func saveDraft() {
+        do {
+            onSaved(try store.completeDraft())
+        } catch let error as CatanAdventurerValidationError {
+            validationMessage = validationText(error)
+            let recoveryStep = Self.recoveryStep(for: error, from: draft.step)
+            if recoveryStep != draft.step {
+                store.updateDraft { $0.step = recoveryStep }
+            }
+        } catch {
+            validationMessage = "Your adventurer could not be saved. Please try again."
+        }
+    }
+    static func recoveryStep(for error: CatanAdventurerValidationError, from currentStep: CatanCreatorStep) -> CatanCreatorStep {
+        error == .invalidStandardArray ? .abilities : currentStep
+    }
+    private func resetAdventurer() {
+        store.deleteActive()
+        if store.active == nil { onCancel() }
+    }
+    private func validationError(_ message: String) -> some View {
+        Text(message)
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(.red)
+            .accessibilityLabel("Validation error: \(message)")
+    }
     private func validationText(_ error: CatanAdventurerValidationError) -> String { switch error { case .emptyName: return "Add an adventurer name before saving."; case .nameTooLong: return "Names must be 24 characters or fewer."; case .invalidStandardArray: return "Abilities must use the standard array: 15, 14, 13, 12, 10, 8." } }
     private func stepSection<Content: View>(title: String, detail: String, @ViewBuilder content: () -> Content) -> some View { VStack(alignment: .leading, spacing: 12) { Text(title).font(PrismetDesign.title(25)).foregroundStyle(PrismetDesign.ink); Text(detail).font(.subheadline).foregroundStyle(PrismetDesign.ink2); content() }.prismetCard() }
     private func choiceGrid<Item: Identifiable, Content: View>(_ items: [Item], columns: [GridItem], @ViewBuilder content: @escaping (Item) -> Content) -> some View { LazyVGrid(columns: columns, spacing: 10) { ForEach(items) { content($0) } } }

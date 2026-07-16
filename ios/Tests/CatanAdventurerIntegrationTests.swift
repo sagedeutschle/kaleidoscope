@@ -16,6 +16,9 @@ final class CatanAdventurerIntegrationTests: XCTestCase {
         XCTAssertTrue(creator.contains("dynamicTypeSize.isAccessibilitySize"))
         XCTAssertTrue(creator.contains("scrollDismissesKeyboard"))
         XCTAssertTrue(creator.contains("minHeight: 44"))
+        XCTAssertTrue(creator.contains("Reset adventurer"))
+        XCTAssertTrue(creator.contains("confirmationDialog"))
+        XCTAssertTrue(creator.contains("store.deleteActive()"))
         XCTAssertTrue(dock.contains("Hero's Counsel"))
         XCTAssertTrue(dock.contains("Ready for next match"))
         XCTAssertTrue(dock.contains("ViewThatFits"))
@@ -34,6 +37,21 @@ final class CatanAdventurerIntegrationTests: XCTestCase {
         XCTAssertTrue(catan.contains("matchAdventurer = snap.adventurer"))
         XCTAssertTrue(catan.contains("adventurer: matchAdventurer"))
         XCTAssertTrue(catan.contains("humanName: matchAdventurer?.name ?? \"You\""))
+    }
+
+    func testValidationRecoveryReturnsInvalidArraysToAbilities() {
+        XCTAssertEqual(
+            CatanAdventurerCreatorView.recoveryStep(for: .invalidStandardArray, from: .review),
+            .abilities
+        )
+        XCTAssertEqual(
+            CatanAdventurerCreatorView.recoveryStep(for: .emptyName, from: .review),
+            .review
+        )
+        XCTAssertEqual(
+            CatanAdventurerCreatorView.recoveryStep(for: .nameTooLong, from: .identity),
+            .identity
+        )
     }
 
     private func character() throws -> CatanAdventurer {
