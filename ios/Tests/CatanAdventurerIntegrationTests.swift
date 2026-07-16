@@ -2,6 +2,40 @@ import XCTest
 @testable import Prismet
 
 final class CatanAdventurerIntegrationTests: XCTestCase {
+    func testCreatorAndDockExposeRequiredAccessibleCopy() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let creator = try String(contentsOf: root.appendingPathComponent("Sources/Features/Games/CatanAdventurerCreatorView.swift"))
+        let dock = try String(contentsOf: root.appendingPathComponent("Sources/Features/Games/CatanAdventurerDock.swift"))
+        let catan = try String(contentsOf: root.appendingPathComponent("Sources/Features/Games/CatanView.swift"))
+
+        XCTAssertTrue(creator.contains("Quick Adventurer"))
+        XCTAssertTrue(creator.contains("Level 1 • 5E-compatible"))
+        XCTAssertTrue(creator.contains("Rules & Credits"))
+        XCTAssertTrue(creator.contains("accessibilityAddTraits"))
+        XCTAssertTrue(creator.contains("accessibilityReduceMotion"))
+        XCTAssertTrue(creator.contains("dynamicTypeSize.isAccessibilitySize"))
+        XCTAssertTrue(creator.contains("scrollDismissesKeyboard"))
+        XCTAssertTrue(creator.contains("minHeight: 44"))
+        XCTAssertTrue(dock.contains("Hero's Counsel"))
+        XCTAssertTrue(dock.contains("Ready for next match"))
+        XCTAssertTrue(dock.contains("ViewThatFits"))
+        XCTAssertTrue(dock.contains("accessibilityLabel"))
+        XCTAssertTrue(
+            dock.contains("Text(\"Hero's Counsel\").font(.headline)\n                        .fixedSize(horizontal: false, vertical: true)"),
+            "Counsel heading must wrap instead of truncating at accessibility text sizes"
+        )
+        let identitySource = try XCTUnwrap(dock.range(of: "private func identity"))
+        let editButtonSource = try XCTUnwrap(dock.range(of: "private func editButton"))
+        XCTAssertTrue(
+            dock[identitySource.lowerBound..<editButtonSource.lowerBound]
+                .contains(".fixedSize(horizontal: false, vertical: true)"),
+            "Dock identity copy must wrap instead of truncating at accessibility text sizes"
+        )
+        XCTAssertTrue(catan.contains("matchAdventurer = snap.adventurer"))
+        XCTAssertTrue(catan.contains("adventurer: matchAdventurer"))
+        XCTAssertTrue(catan.contains("humanName: matchAdventurer?.name ?? \"You\""))
+    }
+
     private func character() throws -> CatanAdventurer {
         var draft = CatanAdventurerDraft.new()
         draft.name = "Rowan"

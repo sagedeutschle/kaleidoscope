@@ -10,8 +10,11 @@ import SwiftUI
 struct CatanView: View {
     private let accountID: UUID?
     @StateObject private var persistence = PersistedGameSession<CatanSnapshot>(gameID: .catan)
+    @StateObject private var adventurerStore = CatanAdventurerStore()
 
     @State private var game = CatanGame.newGame(seed: UInt64.random(in: 1...UInt64.max))
+    @State private var matchAdventurer: CatanAdventurer?
+    @State private var showAdventurerCreator = false
     @State private var buildMode: BuildMode = .none
     @State private var isBotWorking = false
     @State private var moveTick = 0
@@ -49,6 +52,14 @@ struct CatanView: View {
                     diceView
                 }
                 scoreboard
+                CatanAdventurerDock(
+                    matchAdventurer: matchAdventurer,
+                    activeAdventurer: adventurerStore.active,
+                    counsel: CatanHeroCounsel.advice(for: matchAdventurer, game: game),
+                    onCreate: { openAdventurerCreator(editing: nil) },
+                    onEdit: { openAdventurerCreator(editing: adventurerStore.active) },
+                    onBegin: startNewGame
+                )
                 boardModeToggle
                 boardView
                     .rotation3DEffect(.degrees(is3D ? 47 : 0),
@@ -70,10 +81,21 @@ struct CatanView: View {
                 Button { startNewGame() } label: { Image(systemName: "arrow.counterclockwise") }
                     .accessibilityLabel("New game")
             }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { openAdventurerCreator(editing: adventurerStore.active) } label: { Image(systemName: "person.crop.circle") }
+                    .accessibilityLabel("Create or edit adventurer")
+            }
         }
         .sensoryFeedback(.impact(weight: .light), trigger: moveTick)
         .sensoryFeedback(.success, trigger: game.winner)
         .sheet(isPresented: $showTrade) { tradeSheet }
+        .sheet(isPresented: $showAdventurerCreator) {
+            CatanAdventurerCreatorView(store: adventurerStore) { _ in
+                showAdventurerCreator = false
+            } onCancel: {
+                showAdventurerCreator = false
+            }
+        }
         .onAppear { setupOnce() }
         .onChange(of: humanResourceSignature) { old, new in flashResourceChange(old: old, new: new) }
         .onDisappear { save(forceCloud: true) }
@@ -630,8 +652,9 @@ struct CatanView: View {
 
     private func startNewGame() {
         let seed = UInt64.random(in: 1...UInt64.max)
+        matchAdventurer = adventurerStore.active
         withAnimation(.easeInOut(duration: 0.3)) {
-            game = CatanGame.newGame(playerCount: 3, seed: seed)
+            game = CatanGame.newGame(playerCount: 3, seed: seed, humanName: matchAdventurer?.name ?? "You")
             buildMode = .none
         }
         save(forceCloud: true)
@@ -643,6 +666,11 @@ struct CatanView: View {
     private func setupOnce() {
         guard !didSetup else { advanceBotsIfNeeded(); return }
         didSetup = true
+        adventurerStore.load()
+        if let active = adventurerStore.active {
+            matchAdventurer = active
+            game = CatanGame.newGame(seed: UInt64.random(in: 1...UInt64.max), humanName: active.name)
+        }
         // The default `game` is already a fresh random match. `configure` restores a
         // local save synchronously (and a newer cloud save asynchronously) over it if
         // one exists. We deliberately do NOT start + force-save a new game here: on a
@@ -650,12 +678,18 @@ struct CatanView: View {
         // save before the async restore runs.
         persistence.configure(accountID: accountID, cloudStore: .shared) { snap in
             game = snap.game
+            matchAdventurer = snap.adventurer
         }
         advanceBotsIfNeeded()
     }
 
     private func save(forceCloud: Bool = false) {
-        persistence.save(snapshot: CatanSnapshot(game: game), score: game.publicScore(for: 0), forceCloud: forceCloud)
+        persistence.save(snapshot: CatanSnapshot(game: game, adventurer: matchAdventurer), score: game.publicScore(for: 0), forceCloud: forceCloud)
+    }
+
+    private func openAdventurerCreator(editing character: CatanAdventurer?) {
+        adventurerStore.beginDraft(editing: character)
+        showAdventurerCreator = true
     }
 
     // MARK: Geometry
