@@ -2269,3 +2269,22 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   the existing gitignored local Secrets file and regenerating with XcodeGen: focused
   `CatanGameTests` passed on iPhone 17 / iOS 26.5 simulator. A small repo-local Legion cohort will use
   distinct implementation and review portfolios; all production behavior follows test-first cycles.
+
+- `PRISM: RELEASE Codex 2026-07-15/16 (Quick Adventurer + rules-neutral Catan counsel)` —
+  DONE on branch `codex/prismet-catan-adventurer` through code commit `e38d6c8`. Added the optional,
+  offline, resumable level-1 `Quick Adventurer` creator (`Level 1 • 5E-compatible`) with 12 SRD classes,
+  nine species, four backgrounds, the standard array, original SF Symbol crests, edit/reset, atomic local
+  persistence, corrupt-state quarantine, future-schema protection, native Dynamic Type, Reduce Motion,
+  immediate recovery/retry notices, and exact offline SRD 5.2.1 / CC BY 4.0 attribution. New Catan matches
+  snapshot the active name/crest/class identity; restored and legacy snapshots remain compatible, and edits
+  or reset affect future matches only. Deterministic Hero's Counsel reads only the human seat's visible game
+  state. Catan mechanics are explicitly unchanged: no resource, dice, trade, cost, placement, AI,
+  hidden-information, scoring, victory-point, or win-threshold changes. Market research informed only broad
+  interaction patterns; all code, copy, layout, symbols, and presentation are original Prismet work.
+  Verification at `e38d6c8`: focused six-suite gate 58 passed / 0 failed / 0 skipped; full iOS
+  `PrismetTests` 356 / 0 / 0; unsigned generic iOS device build GREEN; `git diff --check` clean; normal and
+  Accessibility XXXL simulator QA under `/tmp/prismet-catan-adventurer-qa/`, including native semantic
+  typography capture `06-review-native-dynamic-type-axxxl.png`. Final repo-local Legion Terra and Luna
+  acceptance portfolios both returned Spec Approved, Quality Approved, Blockers None. iOS-only parity
+  decision is intentional for this slice; macOS/shared/backend remain untouched. CLAIM RELEASED. This
+  release publishes the Git branch only and does not upload or submit an App Store build.
