@@ -2192,3 +2192,37 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   subtitle, promotional text, keywords, and What's New copy so the metadata no longer contradicts the
   description. Retired the old build-11 paste block to avoid two competing descriptions in the listing kit.
   Verification: App Store character-limit check GREEN; `git diff --check` clean.
+
+- `PRISM: CLAIM Claude 2026-07-21 (cicero — new iPhone "vibe coding" app)` —
+  Sage asked to beef out a **Cicero** app for iPhone: a mobile AI coding environment (do the
+  vibe coding he does on his MacBook in VS Code) that also has mini-games. Cicero does NOT exist
+  yet in the repo. Lane: **new top-level `cicero/` iOS app** (own project.yml, bundle
+  `com.gtrktscrb.cicero`, team YJR3ABV3H4 — Sage's own team, deliberately separate from the
+  shipping SpocksClub Prismet app so this experiment never touches the App Store review lane).
+  Files I will create (all NEW, zero collision with Prismet/macOS/oracle): `cicero/**` only.
+  I am NOT touching `ios/`, `macos/`, `oracle/`, `shared/`, Prismet's `project.yml`, or `HomeView`.
+  Will add one repo-map row to `AGENTS.md` and log a RELEASE entry when the first slice is pushed.
+  Built on branch `claude/cicero-iphone-expansion-ms5eoy`. NOTE: developed in a Linux CI container
+  with no Xcode — code is written to conventions but UNVERIFIED (not compiled); Sage builds on Mac.
+
+- `PRISM: RELEASE Claude 2026-07-21 (cicero v0.1 — first slice)` —
+  DONE: created the new `cicero/` iPhone/iPad app (SwiftUI, iOS 17, XcodeGen; own bundle
+  `com.gtrktscrb.cicero`, team YJR3ABV3H4). First slice = four tabs: **Code** (sandboxed
+  on-device project + syntax-highlighted UITextView editor + file CRUD), **Agent** (Claude
+  Messages API over URLSession, default `claude-opus-4-8`, real tool loop where the model
+  reads/writes/deletes the same project files — capped at 8 tool steps), **Arcade**
+  (Tic-Tac-Toe w/ minimax + Lights Out), **Settings** (API key → Keychain, model/effort
+  pickers, remote-host list). API key lives in the Keychain (no committed secret, no
+  Secrets.swift to create). Remote execution to Sage's dev boxes is scaffolded behind a
+  `RemoteSession` protocol + documented (SSH/relay over the Tailnet is phase 2). Added
+  `cicero/README.md` (architecture + build steps + roadmap), a repo-map row in `AGENTS.md`,
+  and `cicero/Tests/CiceroTests.swift` (highlighter, JSON wire-format round-trips, request
+  encoding, project path-safety, TicTacToe minimax, Lights Out involution).
+  Files touched: `cicero/**` (all new) + one row in `AGENTS.md` + this ledger. Did NOT touch
+  `ios/`, `macos/`, `oracle/`, `shared/`, Prismet's `project.yml`, or `HomeView`.
+  Parity gate: **not applicable** — Cicero is a brand-new standalone app, not a Prismet
+  feature, so the iOS↔macOS parity gate does not apply.
+  Verification: **UNVERIFIED / not compiled** — built in a headless Linux CI container with no
+  Xcode. Written to conventions and reviewed by inspection; imports checked; test invariants
+  encode the key logic. Sage must run `cd cicero && xcodegen generate` and build on a Mac; treat
+  the first compile as a shakedown and expect minor fixups.

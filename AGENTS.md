@@ -21,6 +21,7 @@ backend. One monorepo, three parts:
 | `macos/`  | The **desktop app** (was "chess-hotswap"). SwiftUI, XcodeGen. Design + game **parity with iOS is a release gate**. | `com.gtrktscrb.kaleidoscope` · team `YJR3ABV3H4` |
 | `shared/PrismetShared/` | A **local Swift package both apps depend on** (`.library` "PrismetShared"). Both `project.yml`s reference it by the relative path `../shared/PrismetShared`. Put genuinely cross-platform model/logic here. | — |
 | `oracle/` | **Wizard King's Decree** backend (Python pkg `wkd`). A daily job forges/grades "decrees" and publishes `decrees.json` to a public GitHub gist that **both apps' Oracle feature reads**. | — |
+| `cicero/` | **Cicero** — experimental iPhone/iPad "vibe coding" app (SwiftUI, iOS 17, XcodeGen). On-device code editor + a Claude agent that edits project files + mini-games; a thin-client path to Sage's dev boxes is planned. **Its own app, NOT the App Store lane** — kept separate so it never touches Prismet's review. See `cicero/README.md`. | `com.gtrktscrb.cicero` · team `YJR3ABV3H4` |
 | `docs/`   | Cross-cutting docs: coordination ledger, handoff, release gates. | — |
 
 Each app also has its own `docs/` with deeper, app-specific notes.
