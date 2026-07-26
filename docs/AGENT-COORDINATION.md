@@ -2192,3 +2192,20 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   subtitle, promotional text, keywords, and What's New copy so the metadata no longer contradicts the
   description. Retired the old build-11 paste block to avoid two competing descriptions in the listing kit.
   Verification: App Store character-limit check GREEN; `git diff --check` clean.
+
+- `PRISM: CLAIM+RELEASE Agent-Design/Fable (Sage, prismet org) 2026-07-26 (Command Helm paper — phosphor console theme, iOS + macOS)` —
+  Sage, driving from his phone, asked for a command-console visual overhaul of the app (short of jailbreaking
+  the phone itself). Added a fourth reading paper `Command Helm` behind the existing paper contract, appended
+  after Dark (raw values are persistence contracts). Both `PrismetDesign.swift` files: green-black phosphor
+  palette; `gold` accent and the iris `wheel` are now paper-computed (gilt/jewels byte-identical on the three
+  scroll papers, phosphor sweep at the Helm); `title()`/`rounded()` render monospaced at the Helm; `prismetCard`
+  default corner radius is paper-aware (16 → 5); `FacetBackdrop` gains a `HelmScanlines` CRT layer (Helm only).
+  iOS `SettingsView` paper row auto-flips `AppFont` to Monospaced when Helm is picked (the font picker still
+  overrides; N/A on macOS — no font setting exists there). In-world fixed surfaces pinned to the gilt literal
+  so they never re-tint: iOS `OracleView.gilt` + `SpiderView.goldLine`, macOS `SolitaireView.stitch` +
+  `SpiderView.goldLine`. macOS `ContentView` Reading picker help text now names all four papers. Tests:
+  `SettingsViewTests` + `PrismetSettingsPaneTests` extended to pin registry order/raw value, helm palette
+  dark + distinct, accent retint, and unknown-raw-value fallback to Dark.
+  ⚠ UNVERIFIED — authored on branch `claude/mobile-settings-interface-edit-4utuvj` in a cloud session with no
+  Swift toolchain. Before any deploy, on a Mac: `xcodegen generate` in `ios/` + `macos/`, iOS sim build +
+  focused `SettingsViewTests`, macOS build + focused `PrismetSettingsPaneTests`. Parity: mirrored same-turn.
