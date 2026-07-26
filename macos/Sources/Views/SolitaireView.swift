@@ -15,7 +15,8 @@ private struct SolitaireTheme {
     static let feltDeep = Color(red: 0.075, green: 0.255, blue: 0.157)
     static let well = Color(red: 0.088, green: 0.290, blue: 0.180)
     static let cardBackField = Color(red: 0.078, green: 0.224, blue: 0.161)
-    static let stitch = PrismetDesign.gold.opacity(0.55)
+    // Fixed gilt literal — the felt table never follows the app paper.
+    static let stitch = Color(red: 0.72, green: 0.54, blue: 0.20).opacity(0.55)
 
     // Card stock.
     static let ivory = Color(red: 0.976, green: 0.957, blue: 0.906)

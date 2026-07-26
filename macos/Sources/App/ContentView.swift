@@ -373,7 +373,7 @@ struct ContentView: View {
             } label: {
                 Label("Reading", systemImage: "circle.lefthalf.filled")
             }
-            .help("Reading contrast — High Contrast, Parchment, or Dark")
+            .help("Reading contrast — High Contrast, Parchment, Dark, or Command Helm")
         }
 
         ToolbarItem(placement: .automatic) {
