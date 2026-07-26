@@ -1,0 +1,8 @@
+{
+  "canvas": { "master": 1024, "scales": { "1x": 512, "2x": 1024 } },
+  "characters": {
+    "mookie":  { "poses": ["idle","wave","happy","thinking","sad","sleeping","pointing","playing"] },
+    "reynard": { "poses": ["idle","wave","happy","thinking","sad","sleeping","pointing","playing","dealing","sly-wink"] }
+  },
+  "icon": { "file": "icon/AppIcon-mookie-1024.png", "w": 1024, "h": 1024, "alpha": false }
+}

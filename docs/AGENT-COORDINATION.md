@@ -2192,3 +2192,13 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   subtitle, promotional text, keywords, and What's New copy so the metadata no longer contradicts the
   description. Retired the old build-11 paste block to avoid two competing descriptions in the listing kit.
   Verification: App Store character-limit check GREEN; `git diff --check` clean.
+
+- `PRISM: CLAIM Fable/Claude 2026-07-26 (Mookie's Arcade Phase 1 — RECONSTRUCTION, NEW FILES ONLY)` —
+  Re-materializing the 2026-07-21 Phase-1 delivery (brand docs + mascot asset pipeline) into a fresh
+  clone at ~/Developer/kaleidoscope-mookies, branch claude/mookies-arcade-brand-identity-20260720 from
+  origin/main. Reason: the canonical ~/Desktop/Kaleidoscope working copy is iCloud-evicted (23,660
+  dataless files, FileProvider wedged) and the original Phase-1 commits were never pushed. Content
+  recovered verbatim from the executing session transcript; master art regenerated from the recorded
+  pollinations seeds. Owns ONLY docs/brand/mookies-arcade/** and shared/MascotAssets/**. Sage approved
+  the rebrand push 2026-07-26 ("we are going to push... mookies arcade... reynard at the casino").
+  Legion (Codex) formation executes the remaining lanes under Fable command.
