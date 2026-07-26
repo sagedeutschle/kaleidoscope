@@ -754,8 +754,9 @@ private enum OracleTheme {
     static let ink2 = Color(red: 0.16, green: 0.11, blue: 0.05).opacity(0.78)
     static let ink3 = Color(red: 0.16, green: 0.11, blue: 0.05).opacity(0.55)
 
-    // Gilt flourishes.
-    static let gilt = PrismetDesign.gold
+    // Gilt flourishes — fixed literal: the decree scroll keeps its own parchment
+    // palette and never follows the app paper.
+    static let gilt = Color(red: 0.72, green: 0.54, blue: 0.20)
 
     // Wax seal.
     static let sealCrimson = Color(red: 0.55, green: 0.11, blue: 0.13)

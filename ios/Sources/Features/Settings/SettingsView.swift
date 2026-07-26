@@ -138,6 +138,9 @@ struct SettingsView: View {
         let swatch = PrismetDesign.palette(for: paper)
         return Button {
             paperRaw = paper.rawValue
+            // The Helm reads in mono — flip the app type with it. The font picker
+            // below still overrides, so the choice stays the user's.
+            if paper == .helm { fontRaw = AppFont.monospaced.rawValue }
         } label: {
             HStack(spacing: 12) {
                 ZStack {
@@ -147,9 +150,16 @@ struct SettingsView: View {
                 }
                 .frame(width: 24, height: 24)
 
-                Text(paper.rawValue)
-                    .font(PrismetDesign.title(17))
-                    .foregroundStyle(PrismetDesign.ink)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(paper.rawValue)
+                        .font(PrismetDesign.title(17))
+                        .foregroundStyle(PrismetDesign.ink)
+                    if paper == .helm {
+                        Text("Phosphor console — sets type to Monospaced.")
+                            .font(.caption)
+                            .foregroundStyle(PrismetDesign.ink3)
+                    }
+                }
 
                 Spacer(minLength: 8)
 

@@ -18,7 +18,8 @@ private enum SpiderTheme {
     static let felt     = Color(red: 0.098, green: 0.325, blue: 0.208)
     static let feltLo   = Color(red: 0.047, green: 0.216, blue: 0.129)
     static let feltRail = Color(red: 0.075, green: 0.267, blue: 0.169)
-    static let goldLine = PrismetDesign.gold.opacity(0.55)
+    // Fixed gilt literal — the felt table never follows the app paper.
+    static let goldLine = Color(red: 0.72, green: 0.54, blue: 0.20).opacity(0.55)
     // Card stock
     static let ivory    = Color(red: 0.978, green: 0.966, blue: 0.925)
     static let ivoryLo  = Color(red: 0.936, green: 0.915, blue: 0.856)

@@ -8,6 +8,8 @@ enum PrismetPaper: String, CaseIterable, Identifiable {
     case contrast = "High Contrast"
     case parchment = "Parchment"
     case dark = "Dark"
+    // Appended v15 — raw values persist in UserDefaults; never reorder or rename.
+    case helm = "Command Helm"
     var id: String { rawValue }
 }
 
@@ -51,6 +53,15 @@ enum PrismetDesign {
                            panelHi: Color(red: 0.157, green: 0.169, blue: 0.235),
                            hairline: Color.white.opacity(0.10), outline: Color.white.opacity(0.18),
                            ink: ink, ink2: ink.opacity(0.66), ink3: ink.opacity(0.42), isDark: true)
+        case .helm:
+            // Phosphor console: green-black glass, panels lit like CRT bezels.
+            let ink = Color(red: 0.63, green: 0.98, blue: 0.70)
+            let phosphor = Color(red: 0.30, green: 0.95, blue: 0.45)
+            return Palette(ground: Color(red: 0.016, green: 0.045, blue: 0.026),
+                           panel: Color(red: 0.043, green: 0.094, blue: 0.058),
+                           panelHi: Color(red: 0.078, green: 0.153, blue: 0.096),
+                           hairline: phosphor.opacity(0.16), outline: phosphor.opacity(0.34),
+                           ink: ink, ink2: ink.opacity(0.74), ink3: ink.opacity(0.50), isDark: true)
         }
     }
 
@@ -64,18 +75,39 @@ enum PrismetDesign {
     static var ink3: Color { palette.ink3 }
     static var isDark: Bool { palette.isDark }
 
-    static let gold = Color(red: 0.72, green: 0.54, blue: 0.20)
+    /// Accent: gilt on the scroll papers, phosphor green at the Command Helm.
+    /// Game-local fixed surfaces (Oracle scroll, card felts) pin the gilt literal instead.
+    static var gold: Color {
+        paper == .helm ? Color(red: 0.24, green: 0.94, blue: 0.44)
+                       : Color(red: 0.72, green: 0.54, blue: 0.20)
+    }
 
-    static let wheel: [Color] = [
-        Color(red: 0.86, green: 0.28, blue: 0.34), Color(red: 0.90, green: 0.55, blue: 0.20),
-        Color(red: 0.80, green: 0.66, blue: 0.22), Color(red: 0.30, green: 0.55, blue: 0.42),
-        Color(red: 0.24, green: 0.46, blue: 0.66), Color(red: 0.46, green: 0.34, blue: 0.62),
-        Color(red: 0.86, green: 0.28, blue: 0.34)
-    ]
+    static var wheel: [Color] {
+        if paper == .helm {
+            // The iris refracted through a green CRT — a mono-phosphor sweep.
+            return [
+                Color(red: 0.13, green: 0.52, blue: 0.28), Color(red: 0.24, green: 0.94, blue: 0.44),
+                Color(red: 0.62, green: 1.00, blue: 0.70), Color(red: 0.16, green: 0.80, blue: 0.56),
+                Color(red: 0.10, green: 0.60, blue: 0.46), Color(red: 0.18, green: 0.72, blue: 0.34),
+                Color(red: 0.13, green: 0.52, blue: 0.28)
+            ]
+        }
+        return [
+            Color(red: 0.86, green: 0.28, blue: 0.34), Color(red: 0.90, green: 0.55, blue: 0.20),
+            Color(red: 0.80, green: 0.66, blue: 0.22), Color(red: 0.30, green: 0.55, blue: 0.42),
+            Color(red: 0.24, green: 0.46, blue: 0.66), Color(red: 0.46, green: 0.34, blue: 0.62),
+            Color(red: 0.86, green: 0.28, blue: 0.34)
+        ]
+    }
 
-    static func title(_ size: CGFloat) -> Font { .system(size: size, weight: .bold, design: .serif) }
+    /// Card silhouette follows the paper: soft scroll corners, machined console edges.
+    static var cardCornerRadius: CGFloat { paper == .helm ? 5 : 16 }
+
+    static func title(_ size: CGFloat) -> Font {
+        .system(size: size, weight: .bold, design: paper == .helm ? .monospaced : .serif)
+    }
     static func rounded(_ size: CGFloat, _ weight: Font.Weight = .bold) -> Font {
-        .system(size: size, weight: weight, design: .rounded)
+        .system(size: size, weight: weight, design: paper == .helm ? .monospaced : .rounded)
     }
 }
 
@@ -97,8 +129,27 @@ struct FacetBackdrop: View {
                     .frame(width: 520, height: 520).blur(radius: 150).opacity(0.16)
                     .offset(x: 120, y: -200)
             }
+            if PrismetDesign.paper == .helm {
+                HelmScanlines()
+            }
         }
         .ignoresSafeArea()
+    }
+}
+
+/// CRT scanlines for the Command Helm paper. Background layer only — cards sit
+/// above it, so text never fights the rules.
+struct HelmScanlines: View {
+    var body: some View {
+        Canvas { context, size in
+            var y: CGFloat = 0
+            while y < size.height {
+                context.fill(Path(CGRect(x: 0, y: y, width: size.width, height: 1)),
+                             with: .color(.black.opacity(0.20)))
+                y += 3
+            }
+        }
+        .allowsHitTesting(false)
     }
 }
 
@@ -106,7 +157,7 @@ extension View {
     func facetBackground(_ accent: Color, multiHue: Bool = false) -> some View {
         background(FacetBackdrop(accent: accent, multiHue: multiHue))
     }
-    func prismetCard(cornerRadius: CGFloat = 16) -> some View {
+    func prismetCard(cornerRadius: CGFloat = PrismetDesign.cardCornerRadius) -> some View {
         padding(12)
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous).fill(PrismetDesign.panel)
