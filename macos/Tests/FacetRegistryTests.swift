@@ -11,6 +11,7 @@ final class FacetRegistryTests: XCTestCase {
         XCTAssertEqual(FacetRegistry.ready.map(\.id),
                        ["chess", "brick-bench", "wordle", "oracle", "debt-clock", "steam-rewind", "rubiks-cube", "2048", "lights-out", "minesweeper", "snake", "sudoku", "sliding-15", "nonogram", "reversi", "connect-four", "checkers", "solitaire", "gomoku", "sea-battle", "crazy-8", "spider", "casino"])
         XCTAssertEqual(FacetRegistry.descriptor(for: "wordle")?.title, "Wordgame")
+        XCTAssertEqual(FacetRegistry.descriptor(for: "casino")?.title, "Reynard's Casino")
     }
 
     func testReadyFacetsUseRequestedLaunchCategories() {

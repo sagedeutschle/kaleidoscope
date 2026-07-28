@@ -25,6 +25,7 @@ final class DeploymentScriptTests: XCTestCase {
         XCTAssertTrue(script.contains("xcodebuild"))
         XCTAssertTrue(script.contains("Prismet.app"))
         XCTAssertTrue(script.contains("open -a"))
+        XCTAssertTrue(script.contains(#"BUNDLE_ID="com.spocksclub.kaleidoscope""#))
     }
 
     func testVersionSyncScriptUpdatesBothProjects() throws {

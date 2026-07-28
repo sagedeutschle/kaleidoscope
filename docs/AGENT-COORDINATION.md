@@ -2332,3 +2332,13 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
 - **Permanent safety laws:** no money, purchases, wallet, cash-out, transferable or purchasable value, prizes, rewards, ads during play, pressure language, automatic next rounds, misleading near-miss choreography, or outcome tuning. Blackjack is never described as 50/50. New rounds are session-only and begin only after an explicit action.
 - **Legion:** read-only design cohort `20260715-120411-aquila-legion` maps shared engines/probability math and challenges safety, adaptive UI, accessibility, and visual direction before build cohorts receive isolated file portfolios.
 - **Release note:** this pass builds and launches locally on all three form factors. It does not upload or submit a replacement build; the next submission must update App Store age-rating answers honestly for frequent simulated-gambling content.
+
+### MOOKIE'S ARCADE — Premium Reynard Casino parity — 2026-07-28T13:59:12Z
+
+- **Branch/worktree:** `claude/mookies-arcade-brand-identity-20260720` / `/Users/gtrktscrb/Developer/kaleidoscope-mookies`
+- **Status:** RELEASED TO LOCAL THREE-PLATFORM TESTING
+- **Coordination:** Legion Century run `20260728-133208-8a2cdd67` was stopped without source loss after its first write receipt rejected generated ignored project files. The same exact iPhone, iPad, and macOS lanes were then completed by three disjoint platform Centuries, with commander-only edits to the live Casino and shell seams.
+- **Delivered:** Mookie's Arcade product-facing identity; Reynard's Casino naming; validated Mookie and Reynard character assets on all three platforms; a compact iPhone felt-and-marquee stage with both characters; an adaptive iPad casino theatre with dismissible host rail; a native Mac casino theatre with both mascots, cards, chips, brass trim, and responsive layouts; Reduce Motion and accessibility contracts; exact odds moved behind an optional disclosure so play remains the visual focus.
+- **Safety boundary:** all characters and premium effects are presentation-only. The existing 18+ visit threshold, deterministic practice engines, no-money disclosures, fairness rules, explicit actions, and visit-scoped state remain intact.
+- **Verification:** mascot manifest passed; shared package `257/257`; focused iOS `20/20`; focused macOS `13/13`; full no-sign iOS and macOS application builds passed; live iPhone 17 Pro, iPad Air 13-inch, and installed Mac casino screens were opened and visually inspected after contrast corrections.
+- **Live local targets:** iPhone simulator `D5FC8E9E-143A-4AAD-964E-C0A24650020B`; iPad simulator `332FB853-D87A-406D-B0ED-9ABE62C4F4E8`; `/Users/gtrktscrb/Applications/Prismet.app`.

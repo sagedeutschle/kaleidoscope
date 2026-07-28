@@ -41,7 +41,7 @@ struct GameCard: Identifiable {
             .init(id: "solitaire", title: "Solitaire", icon: "suit.spade.fill", accent: Color(red: 0.20, green: 0.45, blue: 0.30), ready: true, category: "Cards"),
             .init(id: "spider", title: "Spider", icon: "suit.spade.fill", accent: Color(red: 0.42, green: 0.24, blue: 0.18), ready: true, category: "Cards"),
             .init(id: "crazyeight", title: "Crazy 8", icon: "8.circle.fill", accent: Color(red: 0.60, green: 0.28, blue: 0.42), ready: true, category: "Cards"),
-            .init(id: casinoID, title: "Casino", icon: "suit.spade.fill", accent: Color(red: 0.18, green: 0.46, blue: 0.36), ready: true, category: "Casino"),
+            .init(id: casinoID, title: "Reynard's Casino", icon: "suit.spade.fill", accent: Color(red: 0.18, green: 0.46, blue: 0.36), ready: true, category: "Casino"),
             .init(id: "brickbench", title: "Brick Bench", icon: "square.stack.3d.up.fill", accent: Color(red: 0.80, green: 0.20, blue: 0.20), ready: true, category: "Workshop"),
             .init(id: "oracle", title: "Oracle", icon: "sparkles", accent: Color(red: 0.72, green: 0.54, blue: 0.20), ready: true, category: "Lenses"),
             .init(id: debtClockID, title: "Debt Clock", icon: "chart.line.uptrend.xyaxis", accent: Color(red: 0.20, green: 0.62, blue: 0.42), ready: true, category: "Lenses"),
@@ -86,7 +86,7 @@ struct HomeView: View {
             }
             .id(paperRaw)
             .background(FacetBackdrop(accent: PrismetDesign.gold, multiHue: true))
-            .navigationTitle("Prismet")
+            .navigationTitle("Mookie's Arcade")
             // Own the bar: an opaque ground-colored background keyed to the paper, so
             // the collapsed bar never shows stock translucent material (or floating
             // pills) over scrolled content.
@@ -271,24 +271,12 @@ struct HomeView: View {
         }
     }
 
-    // The gilt brand lockup at the top of the scroll — kaleidoscope iris, tagline,
-    // and the one-sentence thesis that tells a first-time visitor what the box holds.
+    // App-facing identity lives here while Prismet remains the internal studio and
+    // compatibility name used by targets, routes, storage, and services.
     private var brandStrip: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 12) {
-                ZStack {
-                    Circle().fill(AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center))
-                        .frame(width: 42, height: 42)
-                    Circle().strokeBorder(PrismetDesign.gold, lineWidth: 2).frame(width: 42, height: 42)
-                    Circle().fill(PrismetDesign.ground).frame(width: 13, height: 13)
-                }
-                .shadow(color: Color.black.opacity(0.16), radius: 5, y: 2)
-                Text("Turn the lens.")
-                    .font(.system(size: 17, weight: .regular, design: .serif)).italic()
-                    .foregroundStyle(PrismetDesign.ink2)
-                Spacer()
-            }
-            Text("Classic games, daily puzzles, and live data lenses — one beautiful box.")
+        VStack(alignment: .leading, spacing: 8) {
+            MookiesPhoneBrandHeader()
+            Text("Games, puzzles, and Reynard's Casino — with Mookie cheering from the sidelines.")
                 .font(.footnote)
                 .foregroundStyle(PrismetDesign.ink2)
                 .fixedSize(horizontal: false, vertical: true)

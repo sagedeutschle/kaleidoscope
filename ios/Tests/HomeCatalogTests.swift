@@ -19,6 +19,7 @@ final class HomeCatalogTests: XCTestCase {
         XCTAssertEqual(cardsByID["spider"]?.category, "Cards")
         XCTAssertEqual(cardsByID["crazyeight"]?.category, "Cards")
         XCTAssertEqual(cardsByID[GameCard.casinoID]?.category, "Casino")
+        XCTAssertEqual(cardsByID[GameCard.casinoID]?.title, "Reynard's Casino")
         XCTAssertEqual(cardsByID["brickbench"]?.category, "Workshop")
         XCTAssertEqual(cardsByID["oracle"]?.category, "Lenses")
         XCTAssertEqual(cardsByID[GameCard.debtClockID]?.category, "Lenses")

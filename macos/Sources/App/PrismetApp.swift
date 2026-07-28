@@ -4,7 +4,7 @@ import SwiftUI
 @main
 struct PrismetApp: App {
     var body: some Scene {
-        WindowGroup("Prismet") {
+        WindowGroup("Mookie's Arcade") {
             ContentView()
         }
         .windowResizability(.contentMinSize)
@@ -23,7 +23,7 @@ struct PrismetSettingsPane: View {
 
     var body: some View {
         Form {
-            Section("Prismet") {
+            Section("Mookie's Arcade") {
                 Link("prismet.xyz — Steam Rewind & Debt Clock",
                      destination: URL(string: "https://prismet.xyz")!)
                 Text("The web home for the Prismet tools.")
@@ -33,7 +33,7 @@ struct PrismetSettingsPane: View {
                 ShareLink(item: Self.appStoreURL) {
                     Label("Share App Store link", systemImage: "square.and.arrow.up")
                 }
-                Text("Send Prismet to friends and family.")
+                Text("Send Mookie's Arcade to friends and family.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

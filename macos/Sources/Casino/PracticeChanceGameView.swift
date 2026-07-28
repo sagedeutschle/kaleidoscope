@@ -9,6 +9,7 @@ struct PracticeChanceGameView: View {
     @FocusState private var actionFocused: Bool
     @AccessibilityFocusState private var accessibilityFocusState: Bool
     @State private var showingResetConfirmation = false
+    @State private var showingExactOdds = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
 
@@ -124,11 +125,7 @@ struct PracticeChanceGameView: View {
             if let preview = session.higherLowerPreview {
                 Label("Shown card: \(preview.shownCard.primary)", systemImage: preview.shownCard.symbol)
                     .font(.title3.bold())
-                Text("Conditional odds from this card")
-                    .font(.headline)
-                ForEach(preview.probabilities, id: \.label) { line in
-                    probabilityLine(line)
-                }
+                exactOddsDisclosure(preview.probabilities)
                 choicePanel
             } else {
                 Text("Show one card first. Its rank sets the conditional odds.")
@@ -234,21 +231,29 @@ struct PracticeChanceGameView: View {
                 .foregroundStyle(token.isSelected ? CasinoTheme.brassSoft : .white)
                 .accessibilityElement(children: .combine)
             }
-            Divider()
-            ForEach(result.probabilities, id: \.label) { line in
-                HStack {
-                    Text(line.label)
-                    Spacer()
-                    Text("\(line.fraction.numerator)/\(line.fraction.denominator) · \(line.fraction.percentText)")
-                        .font(.system(.callout, design: .monospaced).weight(.semibold))
-                }
-            }
+            exactOddsDisclosure(result.probabilities)
             Text("Seed \(result.seed) · randomizer v\(result.randomizerVersion)")
                 .font(.system(.caption, design: .monospaced))
                 .foregroundStyle(.white.opacity(0.7))
         }
         .casinoPanel()
         .accessibilityElement(children: .combine)
+    }
+
+    private func exactOddsDisclosure(_ lines: [PrismetPracticeProbabilityLine]) -> some View {
+        DisclosureGroup(isExpanded: $showingExactOdds) {
+            VStack(spacing: 8) {
+                ForEach(lines, id: \.label) { line in
+                    probabilityLine(line)
+                }
+            }
+            .padding(.top, 8)
+        } label: {
+            Label("Exact odds & audit", systemImage: "checkmark.shield")
+                .font(.callout.weight(.semibold))
+                .foregroundStyle(CasinoTheme.brassSoft)
+        }
+        .accessibilityHint("Shows the exact fractions and percentages behind this practice round.")
     }
 
     @ViewBuilder private var choiceSummary: some View {

@@ -61,6 +61,7 @@ struct ShotHarness: View {
                 Text("no bundled moguls")
             }
         case "settings":           SettingsView()
+        case "casino":             CasinoHubView(previewSeed: 20260728)
         case "glyphs":             AllGlyphsGrid()
         default:                   ChessView(accountID: nil, playMode: .soloBot)
         }

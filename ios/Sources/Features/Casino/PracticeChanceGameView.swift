@@ -4,6 +4,7 @@ import SwiftUI
 struct PracticeChanceGameView: View {
     @ObservedObject var session: PracticeCasinoSession
     @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
+    @State private var showingExactOdds = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -67,7 +68,7 @@ struct PracticeChanceGameView: View {
             Label("Shown card: \(preview.shownCard.primary)", systemImage: preview.shownCard.symbol)
                 .font(.title3.bold())
             Text("Choose a relation, then reveal the next card. The conditional odds use the 51 unseen cards.")
-            probabilityLines(preview.probabilities)
+            exactOddsDisclosure(preview.probabilities)
         }
     }
 
@@ -87,7 +88,7 @@ struct PracticeChanceGameView: View {
                 .foregroundStyle(.primary)
                 .accessibilityElement(children: .combine)
             }
-            probabilityLines(result.probabilities)
+            exactOddsDisclosure(result.probabilities)
             Text("Seed \(result.seed) · randomizer v\(result.randomizerVersion)").font(.footnote.monospacedDigit())
         }
     }
@@ -123,6 +124,17 @@ struct PracticeChanceGameView: View {
         }
         .background(CasinoTheme.mutedIvory.opacity(0.72), in: RoundedRectangle(cornerRadius: 12))
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    private func exactOddsDisclosure(_ lines: [PrismetPracticeProbabilityLine]) -> some View {
+        DisclosureGroup(isExpanded: $showingExactOdds) {
+            probabilityLines(lines)
+                .padding(.top, 8)
+        } label: {
+            Label("Exact odds & audit", systemImage: "checkmark.shield")
+                .font(.footnote.weight(.semibold))
+        }
+        .accessibilityHint("Shows the exact fractions and percentages behind this practice round.")
     }
 
     @ViewBuilder private var actionRow: some View {

@@ -35,6 +35,7 @@ public struct CasinoHubView: View {
 private struct CasinoExperienceHost: View {
     @StateObject private var session: PracticeBlackjackSession
     @StateObject private var casinoSession: PracticeCasinoSession
+    @StateObject private var mookieCompanion: MookiesPhoneCompanionModel
     @State private var showingResetConfirmation = false
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -43,6 +44,7 @@ private struct CasinoExperienceHost: View {
     init(previewSeed: UInt64?, leaveCasino: @escaping () -> Void) {
         _session = StateObject(wrappedValue: PracticeBlackjackSession(previewSeed: previewSeed))
         _casinoSession = StateObject(wrappedValue: PracticeCasinoSession(previewSeed: previewSeed))
+        _mookieCompanion = StateObject(wrappedValue: MookiesPhoneCompanionModel())
         self.leaveCasino = leaveCasino
     }
 
@@ -54,7 +56,15 @@ private struct CasinoExperienceHost: View {
                 let layout = CasinoMobileLayoutPolicy.layout(isCompactWidth: horizontalSizeClass == .compact, usableWidth: proxy.size.width)
                 switch layout {
                 case .compact:
-                    VStack(spacing: 12) { compactGamePicker; compactTableRegion }.padding(.horizontal, 12).padding(.top, 12)
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            compactGamePicker
+                            compactTableRegion
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.top, 12)
+                        .padding(.bottom, 24)
+                    }
                 case .regular(let sidebarWidth): regularHubLayout(sidebarWidth: sidebarWidth)
                 }
             }
@@ -79,13 +89,25 @@ private struct CasinoExperienceHost: View {
     private var hubHeader: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .center) {
-                Text("Casino").font(.system(.largeTitle, design: .serif, weight: .bold)).foregroundStyle(CasinoTheme.headerPrimary)
+                Image("ReynardCasinoHost")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 72, height: 72)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Reynard's Casino")
+                        .font(.system(.largeTitle, design: .serif, weight: .bold))
+                        .foregroundStyle(CasinoTheme.headerPrimary)
+                    Text("Your fox host is ready to deal.")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(CasinoTheme.headerSecondary)
+                }
                 Spacer(minLength: 12)
                 Button(action: leaveCasino) { Label("Leave Game", systemImage: "door.left.hand.open").frame(minHeight: CasinoTheme.minimumTarget) }
                     .buttonStyle(.bordered).tint(CasinoTheme.headerPrimary)
             }
             Text("18+ practice only · no money or transferable value.").font(.subheadline.weight(.semibold)).foregroundStyle(CasinoTheme.headerPrimary)
-            Text("Calm practice tables with open rules").font(.subheadline).foregroundStyle(CasinoTheme.headerSecondary)
+            Text("Playful practice tables with open rules").font(.subheadline).foregroundStyle(CasinoTheme.headerSecondary)
             Text(CasinoFairPlayCopy.disclosure).font(.footnote.weight(.semibold)).foregroundStyle(CasinoTheme.headerPrimary)
         }
         .padding(.horizontal, 16).padding(.vertical, 10)
@@ -121,17 +143,28 @@ private struct CasinoExperienceHost: View {
             .frame(maxWidth: .infinity, alignment: .leading).casinoPanel()
     }
 
-    @ViewBuilder private var compactTableRegion: some View {
-        if casinoSession.descriptor.kind == .blackjack { tableSurface }
-        else { ScrollView { VStack(spacing: 12) { tableSurface; rulesInspector }.padding(.bottom, 24) } }
+    private var compactTableRegion: some View {
+        VStack(spacing: 14) {
+            MookiesPhoneCompanion(model: mookieCompanion)
+            MookiesPhoneCasinoHostCard(mood: .tableReady)
+            MookiesPhoneCasinoTableStage {
+                tableSurface
+            }
+            .frame(minHeight: casinoSession.descriptor.kind == .blackjack ? 660 : 540)
+
+            if casinoSession.descriptor.kind != .blackjack {
+                rulesInspector
+            }
+        }
     }
 
     private func regularHubLayout(sidebarWidth: CGFloat) -> some View {
-        HStack(alignment: .top, spacing: CasinoMobileLayoutPolicy.hubSpacing) {
-            ScrollView { casinoLibrary }.frame(width: CasinoMobileLayoutPolicy.libraryWidth)
-            regularTableRegion.frame(maxWidth: .infinity, maxHeight: .infinity)
-            ScrollView { rulesInspector }.frame(width: sidebarWidth)
-        }.padding(CasinoMobileLayoutPolicy.hubPadding)
+        _ = sidebarWidth
+        return MookiesIPadCasinoTheatre(
+            library: { casinoLibrary },
+            table: { regularTableRegion },
+            inspector: { rulesInspector }
+        )
     }
 
     @ViewBuilder private var regularTableRegion: some View {

@@ -46,7 +46,7 @@ targets:
     info:
       path: Info.plist
       properties:
-        CFBundleDisplayName: Prismet
+        CFBundleDisplayName: "Mookie's Arcade"
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}

@@ -27,7 +27,7 @@ struct ContentView: View {
     @StateObject private var auth = AuthManager()
     @StateObject private var profiles = ProfileStore()
     @Environment(\.scenePhase) private var scenePhase
-    @State private var selection: String? = "chess"
+    @State private var selection: String? = Self.initialSelection
     @State private var showAccount = false
     @AppStorage("kaleido.paper") private var paperRaw = PrismetPaper.contrast.rawValue
     @State private var style: BoardStyle = .iso
@@ -40,6 +40,12 @@ struct ContentView: View {
     @State private var isChessExporting = false
     @State private var isChessImporting = false
     @State private var chessExportDocument = ChessGameFileDocument(snapshot: .placeholder)
+
+    private static var initialSelection: String? {
+        let environment = ProcessInfo.processInfo.environment
+        let shot = environment["PRISMET_SHOT"] ?? environment["KALEIDO_SHOT"]
+        return shot == "casino" ? "casino" : "chess"
+    }
 
     var body: some View {
         NavigationSplitView {
@@ -142,20 +148,16 @@ struct ContentView: View {
 
     private var sidebarBrand: some View {
         HStack(spacing: 11) {
-            ZStack {
-                Circle().strokeBorder(
-                    AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center),
-                    lineWidth: 3)
-                Image(systemName: "circle.hexagongrid.fill")
-                    .font(.system(size: 15))
-                    .foregroundStyle(AngularGradient(gradient: Gradient(colors: PrismetDesign.wheel), center: .center))
-            }
-            .frame(width: 34, height: 34)
+            Image("MookieHost")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 46, height: 46)
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 0) {
-                Text("Prismet")
+                Text("Mookie's Arcade")
                     .font(PrismetDesign.title(20))
                     .foregroundStyle(PrismetDesign.ink)
-                Text("turn the lens.")
+                Text("from Prismet")
                     .font(.caption.italic())
                     .foregroundStyle(PrismetDesign.ink2)
             }
@@ -240,10 +242,10 @@ struct ContentView: View {
             .frame(width: 86, height: 86)
             .shadow(color: PrismetDesign.gold.opacity(0.4), radius: 12)
 
-            Text("Prismet")
+            Text("Mookie's Arcade")
                 .font(PrismetDesign.title(34))
                 .foregroundStyle(PrismetDesign.ink)
-            Text("Turn the lens — choose a facet from the scroll.")
+            Text("Pick a game — Mookie will keep you company.")
                 .font(.system(.subheadline, design: .serif).italic())
                 .foregroundStyle(PrismetDesign.ink2)
         }
@@ -347,7 +349,7 @@ struct ContentView: View {
                     .font(.system(.headline, design: .serif))
                     .foregroundStyle(PrismetDesign.ink)
             } else {
-                Text("Prismet")
+                Text("Mookie's Arcade")
                     .font(.system(.headline, design: .serif))
                     .foregroundStyle(PrismetDesign.ink)
             }

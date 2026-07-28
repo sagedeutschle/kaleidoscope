@@ -82,9 +82,12 @@ private struct CasinoExperienceHost: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            hubHeader
-            Divider()
+        let descriptor = PrismetPracticeCasinoCatalog[session.selectedGameID]
+        MookiesCasinoTheatreView(
+            tableTitle: descriptor.title,
+            tableSubtitle: descriptor.subtitle,
+            onLeave: onLeave
+        ) {
             GeometryReader { proxy in
                 switch CasinoMacLayoutPolicy.presentation(for: proxy.size.width) {
                 case .split:
@@ -102,15 +105,6 @@ private struct CasinoExperienceHost: View {
                 }
             }
         }
-        .background {
-            ZStack(alignment: .trailing) {
-                CasinoTheme.feltBackground
-                CasinoProbabilityRosette(style: .watermark, diameter: 440)
-                    .offset(x: 110)
-                    .opacity(0.78)
-                    .accessibilityHidden(true)
-            }
-        }
         .task {
             await blackjackSession.restoreOrDeal()
             if session.selectedGameID != .blackjack, blackjackSession.loadState == .ready {
@@ -118,26 +112,6 @@ private struct CasinoExperienceHost: View {
             }
         }
         .onExitCommand(perform: onLeave)
-    }
-
-    private var hubHeader: some View {
-        HStack(spacing: 14) {
-            Label("Fair Play Casino", systemImage: "checkmark.shield")
-                .font(.headline)
-            Text("Adults 18+ only · no money, purchases, wagering, prizes, rewards, or transferable value")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Text("Chance, Poker, and Study Lab state is visit-only")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-            Spacer(minLength: 12)
-            Button("Leave Game", systemImage: "door.left.hand.open", action: onLeave)
-                .buttonStyle(.bordered)
-                .frame(minHeight: CasinoTheme.minimumTarget)
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
-        .background(.regularMaterial)
     }
 
     @ViewBuilder
@@ -161,9 +135,9 @@ private struct CasinoExperienceHost: View {
 
     private var gameSidebar: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Label("Casino", systemImage: "suit.spade.fill")
+            Label("Reynard's Casino", systemImage: "suit.spade.fill")
                 .font(.system(size: 25, weight: .bold, design: .rounded))
-            Text("Probability practice room")
+            Text("Choose a table and play")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 

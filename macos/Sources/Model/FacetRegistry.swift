@@ -167,7 +167,7 @@ enum FacetRegistry {
                         category: .cards,
                         status: .ready),
         FacetDescriptor(id: "casino",
-                        title: "Casino",
+                        title: "Reynard's Casino",
                         systemImage: "suit.spade.fill",
                         accent: Color(red: 0.18, green: 0.46, blue: 0.36),
                         category: .casino,
