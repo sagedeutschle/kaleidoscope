@@ -2202,3 +2202,14 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   pollinations seeds. Owns ONLY docs/brand/mookies-arcade/** and shared/MascotAssets/**. Sage approved
   the rebrand push 2026-07-26 ("we are going to push... mookies arcade... reynard at the casino").
   Legion (Codex) formation executes the remaining lanes under Fable command.
+
+- `PRISM: CLAIM Codex/Legion 2026-07-28 (Mookie's Arcade tri-platform congruence — three Centuries)` —
+  RECOVERY: Century runs `20260728-130344-854eba56`, `20260728-130945-3d4be1c0`, and
+  `20260728-131148-4762d9a2` all failed closed during deputy planning/scope validation; none wrote
+  platform source. Commander is integrating the committed three-platform Casino release baseline
+  before relaunching one disjoint Century each for iPhone, iPadOS, and macOS from mascot checkpoint
+  `177bc3b`. Commander alone owns integration hotspots. No Century may edit identifiers,
+  `shared/MascotAssets/**`, commit, or push. Final gate: matching canonical names, visible Mookie and
+  Reynard roles/state vocabulary, premium game-like Casino presentation, dismissibility,
+  accessibility, Reduce-Motion behavior, casino fairness rules, focused tests, platform builds, and
+  live visual proof on all three versions.
