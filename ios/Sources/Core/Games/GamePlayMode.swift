@@ -103,7 +103,7 @@ enum GameModeCatalog {
         case .seaBattle:
             return botAndOnlineOptions
         case .game2048, .snake, .minesweeper, .sudoku, .rubiks, .lightsOut,
-             .slidingPuzzle, .nonogram, .wordle, .solitaire, .spider, .brickBench, .oracle:
+             .slidingPuzzle, .nonogram, .wordle, .solitaire, .spider, .brickBench, .oracle, .catan:
             return [.playable(.soloBot)]
         }
     }

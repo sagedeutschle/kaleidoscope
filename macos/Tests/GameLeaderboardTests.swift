@@ -3,6 +3,32 @@ import XCTest
 
 final class GameLeaderboardTests: XCTestCase {
 
+    func testLocalLeaderboardPresentationUsesDescriptiveStateCopy() {
+        XCTAssertEqual(LocalLeaderboardPresentation.loadingMessage, "Loading local scores…")
+        XCTAssertEqual(LocalLeaderboardPresentation.failureMessage, "Scores could not be loaded.")
+        XCTAssertEqual(LocalLeaderboardPresentation.retryTitle, "Retry")
+        XCTAssertEqual(LocalLeaderboardPresentation.emptyTitle, "No scores yet")
+        XCTAssertEqual(
+            LocalLeaderboardPresentation.emptyGuidance,
+            "Finish a ranked game to create your first local score."
+        )
+    }
+
+    func testLocalLeaderboardPresentationDefinesAccessibleRecoveryLabels() {
+        XCTAssertEqual(LocalLeaderboardPresentation.loadingAccessibilityLabel, "Loading local scores")
+        XCTAssertEqual(LocalLeaderboardPresentation.retryAccessibilityLabel, "Retry loading local scores")
+    }
+
+    func testRefreshControlOnlyAppearsWhenLeaderboardIsIdle() throws {
+        let sourceURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Sources/Views/LeaderboardViews.swift")
+        let source = try String(contentsOf: sourceURL)
+
+        XCTAssertTrue(source.contains("if !isLoading, errorText == nil"))
+    }
+
     func testLocalLeaderboardKeepsBestHighScorePerFacetAndMode() async throws {
         let service = LocalLeaderboardService(fileURL: tempFileURL())
         let first = result(facetID: "2048", score: 512, secondsOffset: 1)

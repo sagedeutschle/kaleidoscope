@@ -186,6 +186,53 @@ final class WordleSessionTests: XCTestCase {
         XCTAssertFalse(source.contains(".overlay(alignment: .bottom)"))
     }
 
+    func testWordleTilesExposeRowColumnLetterAndSemanticState() throws {
+        let testURL = URL(fileURLWithPath: #filePath)
+        let sourceURL = testURL
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Sources/Features/Games/WordleView.swift")
+        let source = try String(contentsOf: sourceURL)
+
+        XCTAssertTrue(source.contains(#"accessibilityLabel("Row \(row + 1), column \(col + 1)")"#))
+        XCTAssertTrue(source.contains("accessibilityValue(info.accessibilityValue)"))
+        for value in [
+            #""Empty""#,
+            #""\(letter), not submitted""#,
+            #""\(letter), correct position""#,
+            #""\(letter), in the word, wrong position""#,
+            #""\(letter), not in the word""#,
+        ] {
+            XCTAssertTrue(source.contains(value), "Missing semantic tile value: \(value)")
+        }
+    }
+
+    func testWordleErrorsUseSupportedAnnouncements() throws {
+        let testURL = URL(fileURLWithPath: #filePath)
+        let sourceURL = testURL
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Sources/Features/Games/WordleView.swift")
+        let source = try String(contentsOf: sourceURL)
+
+        XCTAssertFalse(source.contains("accessibilityLiveRegion"))
+        XCTAssertTrue(source.contains("UIAccessibility.post(notification: .announcement"))
+        XCTAssertTrue(source.contains(#"announceError("Enter all \(wordLength) letters before submitting.")"#))
+    }
+
+    func testWordleReduceMotionSkipsShakeAnimation() throws {
+        let testURL = URL(fileURLWithPath: #filePath)
+        let sourceURL = testURL
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Sources/Features/Games/WordleView.swift")
+        let source = try String(contentsOf: sourceURL)
+
+        XCTAssertTrue(source.contains("@Environment(\\.accessibilityReduceMotion)"))
+        XCTAssertTrue(source.contains("guard !accessibilityReduceMotion else"))
+        XCTAssertTrue(source.contains("shakeOffset = 0"))
+    }
+
     @MainActor
     func testDisplayDateLabelFormatsBrokerDateForPlayers() {
         XCTAssertEqual(WordleSession.displayDateLabel("2026-07-01"), "Jul 1, 2026")

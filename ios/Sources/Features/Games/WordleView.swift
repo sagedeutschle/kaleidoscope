@@ -36,6 +36,7 @@ struct WordleView: View {
     @State private var shakeRow: Int = 0
     @State private var showScores = false
     @State private var isNativeKeyboardFocused = false
+    @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
 
     init(accountID: UUID? = nil) {
         self.accountID = accountID
@@ -226,6 +227,9 @@ struct WordleView: View {
                     .minimumScaleFactor(0.5)
             )
             .frame(width: size, height: size)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Row \(row + 1), column \(col + 1)")
+            .accessibilityValue(info.accessibilityValue)
     }
 
     private struct TileInfo {
@@ -233,6 +237,7 @@ struct WordleView: View {
         var fill: Color
         var border: Color
         var textColor: Color
+        var accessibilityValue: String
     }
 
     private func tileInfo(row: Int, col: Int) -> TileInfo {
@@ -241,12 +246,14 @@ struct WordleView: View {
             let result = session.game.rows[row]
             if col < result.count {
                 let cell = result[col]
+                let letter = String(cell.letter).uppercased()
                 let color = scoreColor(cell.score)
                 return TileInfo(
-                    letter: String(cell.letter).uppercased(),
+                    letter: letter,
                     fill: color,
                     border: color,
-                    textColor: .white
+                    textColor: .white,
+                    accessibilityValue: submittedTileAccessibilityValue(for: cell.score, letter: letter)
                 )
             }
             return emptyTile()
@@ -257,11 +264,13 @@ struct WordleView: View {
         if row == inProgressRow {
             let letters = Array(session.currentGuess.uppercased())
             if col < letters.count {
+                let letter = String(letters[col])
                 return TileInfo(
-                    letter: String(letters[col]),
+                    letter: letter,
                     fill: tileBlank,
                     border: WordleTheme.accent.opacity(0.55),
-                    textColor: PrismetDesign.ink
+                    textColor: PrismetDesign.ink,
+                    accessibilityValue: "\(letter), not submitted"
                 )
             }
             return emptyTile()
@@ -301,8 +310,20 @@ struct WordleView: View {
             letter: "",
             fill: tileBlank.opacity(PrismetDesign.isDark ? 0.35 : 0.85),
             border: PrismetDesign.hairline,
-            textColor: PrismetDesign.ink
+            textColor: PrismetDesign.ink,
+            accessibilityValue: "Empty"
         )
+    }
+
+    private func submittedTileAccessibilityValue(
+        for score: WordPuzzleLetterScore,
+        letter: String
+    ) -> String {
+        switch score {
+        case .correct: return "\(letter), correct position"
+        case .present: return "\(letter), in the word, wrong position"
+        case .absent: return "\(letter), not in the word"
+        }
     }
 
     private func scoreColor(_ score: WordPuzzleLetterScore) -> Color {
@@ -343,17 +364,28 @@ struct WordleView: View {
         guard !session.game.isComplete else { return }
         guard session.currentGuess.count == wordLength else {
             triggerShake()
+            announceError("Enter all \(wordLength) letters before submitting.")
             return
         }
         if !session.submitGuess() {
             triggerShake()
+            announceError(session.message.isEmpty ? "Invalid guess" : session.message)
         }
     }
 
     private func triggerShake() {
         shakeRow = session.game.rows.count
+        guard !accessibilityReduceMotion else {
+            shakeRow = 0
+            shakeOffset = 0
+            return
+        }
         withAnimation(.default) { shakeOffset = -8 }
         withAnimation(.spring(response: 0.2, dampingFraction: 0.25)) { shakeOffset = 0 }
+    }
+
+    private func announceError(_ message: String) {
+        UIAccessibility.post(notification: .announcement, argument: message)
     }
 
     private func newPractice() {

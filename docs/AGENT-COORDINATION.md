@@ -2213,3 +2213,122 @@ The dark **shell** (Home iris + header/footer chrome) unifies everything. Two ki
   Reynard roles/state vocabulary, premium game-like Casino presentation, dismissibility,
   accessibility, Reduce-Motion behavior, casino fairness rules, focused tests, platform builds, and
   live visual proof on all three versions.
+- `PRISM: CLAIM+RELEASE Agent-Design/Claude 2026-07-12 (Catan / Settlers — new iOS Board game)` —
+  Sage asked to "put Settlers of Catan in the app." Added a full, playable Catan to the iOS app
+  in the **Board** category (game-registry lane only). NEW FILES:
+  `ios/Sources/Core/Games/CatanBoard.swift` (radius-2 hex topology → 19 hexes / 54 vertices /
+  72 edges, derived by de-duplicating shared corners), `CatanGame.swift` (deterministic rules
+  engine on the repo's `SeededGenerator`: snake-draft setup, dice production, robber on 7 +
+  automatic over-7 discards + steal, roads/settlements/cities, dev cards Knight + Victory Point,
+  Longest Road +2, Largest Army +2, win at 10 VP, bank 4:1 trades), `CatanAI.swift` (heuristic
+  bot), `ios/Sources/Features/Games/CatanView.swift` (Canvas-drawn hex board + tap overlay in
+  the FacetBackdrop/prismetCard/GameHeader house style), and `ios/Tests/CatanGameTests.swift`.
+  EDITS: `.catan` added to `CanonicalGameID` (GameSync.swift), to the solo-only group in
+  `GameModeCatalog` (GamePlayMode.swift), `CatanSnapshot` + registry sample in
+  GameSnapshots.swift, and HomeView's `GameCard.all` (Board) + `soloOrLocalDestination` route.
+  Did NOT touch the ad banner, leaderboard catalog (Catan is intentionally unranked — metric
+  returns nil via the existing `default`), online lobby (both switches have `default`), or
+  `project.yml` (new .swift auto-include under `sources:`).
+  DOCUMENTED SIMPLIFICATIONS (all winnable): dev deck = Knight + Victory Point only; trading =
+  bank 4:1 (no ports / player-to-player trades); discard-on-7 and robber-steal are automatic
+  (largest stacks / richest adjacent opponent).
+  BUILD/TEST STATUS — **NOT built or tested here.** Authored in a headless Linux cloud session
+  with no Xcode/xcodegen, so I could not compile or run anything. Needs a Mac to `xcodegen
+  generate` (no project.yml change required) + build + run `CatanBoardTests`/`CatanGameTests`
+  (incl. `testHeadlessGameReachesALegitimateWinner`, which drives a full 3-AI game to a legit
+  winner) and the full `PrismetTests` suite (`AllGamePersistenceTests` now covers `.catan`;
+  `GamePlayModeTests`/`HomeCatalogTests` still hold). Code was written to match existing
+  patterns (Reversi as the template, `SeededGenerator`/`nextInt` for randomness, exhaustive
+  switches updated) to minimize the chance of a red build, but a Mac build is the real gate.
+  macOS parity: tracked debt logged in `ios/docs/MAC-IOS-GAME-PARITY.md` (owner me; blocker =
+  no Mac in this session; next = mirror model + view into `macos/` after iOS goes green).
+  Branch `claude/prismet-catan-research-l86o6j`.
+
+- `PRISM: RELEASE Agent-Design/Claude 2026-07-12 (Catan UI polish — colonist.io feel)` —
+  Follow-up on the Catan view ONLY (`ios/Sources/Features/Games/CatanView.swift`, no model/registry
+  changes). Added: (1) a **2D/3D board toggle** (`@AppStorage("catan.is3D")` + segmented Picker,
+  mirroring Chess's `chess.is3D`); 3D is a colonist.io-style **tilted-perspective** board via
+  `rotation3DEffect` (not SceneKit — deliberately, to stay low-risk while unverified). (2) A
+  card-style **resource hand** replacing the old chip row — chunky colored cards with icon + count.
+  (3) **Gain/loss animations** on every resource change (production, trade, steal, spend): each
+  card pops and shows a +N / −N badge for ~1.3s, driven by an `onChange` diff of the human's
+  holdings. (4) Probability **pips** under the number tokens. Still NOT built/tested here (no Xcode);
+  same Mac build gate applies. macOS parity: unchanged tracked debt. Note: "trading animation" here
+  is gain/loss card feedback, not cross-table card-fly choreography, and 3D is a perspective tilt,
+  not a rotatable SceneKit scene — both can be upgraded on request.
+
+- `PRISM: RELEASE Agent-Design/Claude 2026-07-12 (reusable online-game registry)` —
+  Collapsed the five hardcoded `CanonicalGameID` switches that gated online play into one
+  descriptor list, so the next agent turns a game online with a SINGLE entry. NEW:
+  `ios/Sources/Features/Games/OnlineGameCatalog.swift` (`OnlineGameDescriptor` + `OnlineGameCatalog`:
+  per-game seat range, `isAvailable`, initial-snapshot builder, and view builder; includes an
+  inline "how to add a game" guide) and `ios/Tests/OnlineGameCatalogTests.swift`. REFACTOR:
+  `OnlineLobbyView.swift`'s `supportedGames`, `initialStateJSON(for:)`, and `gameContainer` now
+  all delegate to the catalog — behavior is IDENTICAL for the 7 existing online games
+  (chess/checkers/connectFour/reversi/gomoku/crazyEight/seaBattle), and `OnlineGameLobbyView`'s
+  `.supportedGames`/`.supports(_:)`/`.initialStateJSON(for:)` are kept as the same static surface
+  HomeView's routing gate + `GamePlayModeTests` already use. Catan is registered (seats 3...4) but
+  `isAvailable: false`, with an inline how-to, because the Supabase match envelope is 2-seat
+  (host+guest) and Catan needs N seats. **I did NOT touch the backend match model / Supabase
+  schema / OnlineMatchSession — the N-seat rework + RLS is left for the backend lane (Codex),**
+  documented in the catalog and the Catan online parity debt. No game's online availability
+  changed, so this is not user-visible → macOS parity N/A. NOT built/tested here (no Xcode);
+  `SWIFT_VERSION 5.0` confirmed, so the static-let closure registry is fine.
+  Branch `claude/prismet-catan-research-l86o6j`.
+
+### PRISM — Shared Parity Contracts — 2026-07-14T07:36:52Z
+
+- **Branch/worktree:** `codex/prismet-shared-parity-foundation` / `/Users/gtrktscrb/Desktop/Kaleidoscope/.worktrees/codex-prismet-shared-parity`
+- **Status:** ACTIVE
+- **Owns:** `shared/PrismetShared/Sources/PrismetShared/PrismetFeatureManifest.swift`, `PrismetGameModeContracts.swift`, `PrismetIdentityContracts.swift`, `PrismetSaveEnvelope.swift`; matching package tests; `shared/PrismetShared/README.md`
+- **Excludes:** all iOS/macOS app source, Catan, Illuminated Cabinet facelift, online catalog/lobby, The Long Now
+- **Verification:** focused and full SwiftPM tests, then no-sign iOS/macOS compile smokes
+
+### PRISM — Fair Play Phase 1 — 2026-07-15T03:26:55Z
+
+- **Branch/worktree:** `codex/prismet-shared-parity-foundation` / `/Users/gtrktscrb/Desktop/Kaleidoscope/.worktrees/codex-prismet-shared-parity`
+- **Status:** ACTIVE
+- **Owns:** NEW `shared/PrismetShared/Sources/PrismetShared/PrismetPlayingCards.swift`, `PrismetDeterministicRandom.swift`, `PrismetReplayContracts.swift`, `PrismetVersionedGameState.swift` and matching new package tests; EDIT `ios/Sources/Features/Profile/ProfileSetupView.swift`, `ios/Sources/Features/Games/WordleView.swift`, `ios/Tests/WordleSessionTests.swift`, `macos/Sources/Views/LeaderboardViews.swift`, `macos/Tests/GameLeaderboardTests.swift`; NEW `ios/Tests/ProfileSetupAccessibilityTests.swift`
+- **Excludes:** Catan and its registration, Home/catalog/root navigation, shared design-system and Illuminated Cabinet files, App Store/release files, both `project.yml` files, generated projects, `PrismetFeatureManifest.swift`, existing save/identity/launch contracts, and all unrelated source
+- **Method:** one shared, one iOS, and one macOS Legion cohort; tests must fail for the intended reason before each production edit; workers do not stage or commit
+- **Product boundary:** no money, currency, chips, balances, wagering, stakes, payouts, rewards, streaks, urgency, automatic next hands, or outcome manipulation
+- **Verification:** full SwiftPM tests, focused iOS/macOS tests, iPhone and iPad compile smokes, macOS no-sign build, and targeted accessibility review
+
+### PRISM — Practice Casino Blackjack vertical slice — 2026-07-15T03:41:56Z
+
+- **Branch/worktree:** `codex/prismet-shared-parity-foundation` / `/Users/gtrktscrb/Desktop/Kaleidoscope/.worktrees/codex-prismet-shared-parity`
+- **Status:** PLANNED; implementation starts when the Fair Play Phase 1 contracts are green
+- **Owns:** NEW `shared/PrismetShared/Sources/PrismetShared/PrismetBlackjackModels.swift`, `PrismetBlackjackEngine.swift`, `PrismetBlackjackOdds.swift`, `PrismetBlackjackAudit.swift` and matching package tests; NEW `ios/Sources/Features/Casino/` plus focused iOS tests; NEW `macos/Sources/Casino/` plus focused macOS tests; NEW isolated `tools/PracticeCasinoHarness/`
+- **Excludes:** Catan, Home/catalog, `RootView`, `ShotHarness`, `ContentView`, `FacetRegistry`, cabinet/sidebar shell, shared design tokens, both main `project.yml` files, generated main projects, and App Store/release files
+- **Rules:** one deck; independent hands; player Hit/Stand; dealer stands on hard and soft 17; a natural beats non-natural 21; equal final values tie; no split, double, insurance, surrender, money, chips, balances, wagers, stakes, payouts, rewards, streaks, urgency, automatic next hand, or outcome tuning
+- **Launch gate:** every completed slice must build and launch on iPhone 17 Pro, iPad Pro 13-inch, and macOS before release
+
+### PRISM — Practice Casino Blackjack release — 2026-07-15T04:19:30Z
+
+- **Branch/worktree:** `codex/prismet-shared-parity-foundation` / `/Users/gtrktscrb/Desktop/Kaleidoscope/.worktrees/codex-prismet-shared-parity`
+- **Status:** RELEASED TO ISOLATED THREE-PLATFORM PREVIEW; main-shell routing intentionally deferred while the active Home/root-navigation and App Store claims remain in force
+- **Delivered:** auditable one-deck Practice Blackjack shared engine; unbiased deterministic shuffle; Hit/Stand/End Hand/New Hand; dealer stands on every 17; automatic dealer completion at player 21; terminal replay/fairness disclosure; visible-information bust odds; exact future-deck restore; corrupt-save preservation; adaptive iPhone/iPad and native macOS views; accessibility and keyboard support; explicit no-money safety copy; inert Five-Card Poker coming-next card; private concealed session state; ordered teardown-safe Mac persistence; read-failure quarantine; single-window app-scope Command-N routing
+- **Commits:** `25391bd`, `ea14bc4`, `1ddb01c`, `32fad6d`, `a20bd80`, `e786a09`, `00975fe` (plus prerequisite Fair Play contract commits already on this branch)
+- **Verification:** SwiftPM `103/103`; focused iOS `21/21`; focused macOS `25/25`; final no-sign preview builds succeeded for iPhone 17 Pro, iPad Pro 13-inch, and macOS; visual screenshots inspected for all three form factors; live active-hand Command-N test held the Mac preview at one window
+- **Launch evidence:** simulator processes `27593` (iPhone) and `27608` (iPad); installed macOS preview `/Users/gtrktscrb/Applications/Prismet Practice Casino.app` process `27625`; freshest main `/Users/gtrktscrb/Applications/Prismet.app` also open as process `99221`
+- **Next safe integration:** selectively merge this branch after current shell/release owners release Home/root-navigation files, then add the real Casino tab route without crossing their active edits
+
+### PRISM — Casino main-app release integration — 2026-07-15T09:18:00Z
+
+- **Branch/worktree:** `codex/prismet-shared-parity-foundation` / `/Users/gtrktscrb/Desktop/Kaleidoscope/.worktrees/codex-prismet-shared-parity`
+- **Status:** RELEASED / SUBMITTED FOR IOS REVIEW
+- **Delivered:** Practice Casino is now registered in the real iOS/iPadOS Home catalog and the real macOS facet registry/sidebar, with routes into `CasinoHubView()` on both app shells. Version bumped to `1.2 (17)` for iOS/iPadOS and macOS.
+- **Release evidence:** iOS focused tests passed after the bump (`HomeCatalogTests`, `CasinoSafetyContractTests`); iPhone simulator build passed; iPad simulator build passed; macOS no-sign build passed; signed iOS archive `/Users/gtrktscrb/Library/Caches/Prismet-asc-v17.xcarchive` succeeded; upload succeeded and App Store Connect marked build `16502d89-f0c2-414e-9890-d272cb2c0dcb` / build `17` `VALID`; build 17 attached to App Store version `1.2`; review submission `ad04d070-6b8a-4355-b8d0-31c53ee54a1b` moved to `WAITING_FOR_REVIEW` at `2026-07-15T15:55:32.565Z`.
+- **macOS release state:** fresh macOS app was built, installed, and launched at `/Users/gtrktscrb/Applications/Prismet.app`. Mac App Store submission is blocked because App Store Connect has no app record for bundle `com.gtrktscrb.kaleidoscope`; create/verify the Mac app record and store signing/export path before attempting MAS upload.
+- **Legion:** read-only `legion.sh` release scout run `20260715-114516-aquila-legion` completed; its risk finding matched the final state: iOS/iPadOS submission feasible after live ASC verification, macOS MAS path unresolved.
+
+### PRISM — Fair Play Casino 11-table expansion — 2026-07-15T16:12:04Z
+
+- **Branch/worktree:** `codex/prismet-shared-parity-foundation` / `/Users/gtrktscrb/Desktop/Kaleidoscope/.worktrees/codex-prismet-shared-parity`
+- **Status:** ACTIVE FOUR-HOUR PASS
+- **Goal:** ship 11 genuinely playable practice tables across iPhone, iPad, and macOS with deterministic, auditable randomization; exact probability disclosures; an explicit Leave Game and Reset Session path; and no economic or retention loop.
+- **Owns:** NEW `shared/PrismetShared/Sources/PrismetShared/PrismetPracticeCasinoCatalog.swift`, `PrismetFairChanceEngine.swift`, `PrismetFiveCardPoker.swift` and matching package tests; EDIT `ios/Sources/Features/Casino/CasinoHubView.swift`, `CasinoTheme.swift`, `CasinoSafetyContractTests.swift`, `CasinoMobilePresentationTests.swift`; NEW iOS Casino session/game/poker views; EDIT only the navigation-path/banner-visibility seam in `ios/Sources/Features/Home/HomeView.swift`; the matching macOS Casino hub/theme/tests and new session/game/poker views; this ledger plus the expansion spec/plan.
+- **Excludes:** Root/facet registration, all other `HomeView.swift` catalog/shell/social/settings behavior, Catan, all non-Casino games, ads/purchases beyond suppressing the existing banner on pushed game destinations, account/cloud/Game Center/leaderboards, both `project.yml` files, generated projects, version/build numbers, App Store upload/submission, and the pre-existing untracked `docs/superpowers/plans/2026-07-14-prismet-practice-blackjack.md`.
+- **Permanent safety laws:** no money, purchases, wallet, cash-out, transferable or purchasable value, prizes, rewards, ads during play, pressure language, automatic next rounds, misleading near-miss choreography, or outcome tuning. Blackjack is never described as 50/50. New rounds are session-only and begin only after an explicit action.
+- **Legion:** read-only design cohort `20260715-120411-aquila-legion` maps shared engines/probability math and challenges safety, adaptive UI, accessibility, and visual direction before build cohorts receive isolated file portfolios.
+- **Release note:** this pass builds and launches locally on all three form factors. It does not upload or submit a replacement build; the next submission must update App Store age-rating answers honestly for frequent simulated-gambling content.

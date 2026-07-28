@@ -1,197 +1,195 @@
-# Prismet — App Store Connect listing kit
+# Prismet Arcade — App Store listing kit
 
-Everything you paste into App Store Connect for the next iOS update. Drafts —
-tweak voice to taste.
+This is the current, release-facing metadata kit for **Prismet Arcade**, App Store
+app `6785993194`, version **1.2 (build 18)**. It covers the iOS/iPadOS app and the
+native macOS app. It is paste-ready metadata, not evidence of a completed
+submission, review, availability, or approval.
 
-## Current submission target
+## Current release facts — 1.2 (18)
 
-- **Version:** 1.1
-- **Build:** 13
-- **ASC status:** `WAITING_FOR_REVIEW` (submitted 2026-07-10T01:57:16Z)
-- **ASC ids:** version `88c88227-ddc2-4766-a966-cb2d1d703363`, build
-  `4e231958-05cc-4cc2-87d1-6d5123ccf093`, review submission
-  `ba52e847-a300-415f-a111-e0e983ddc443`
-- **Public baseline:** v1.0 build 12 is already live on the App Store.
-- **Name strategy:** in-app/project name is Prismet. The public App Store name can
-  remain `Kaleidescope` for the transition if the rename is not ready in ASC.
+- **Public App Store name:** `Prismet Arcade`
+- **Platforms:** iOS, iPadOS, and native macOS
+- **Casino content:** 21 Casino Practice tables, behind a distinct **Adults 18+**
+  area.
+- **Purpose:** simulated casino-style probability practice and transparent study;
+  it is not real gambling.
+- **No economic value, permanently:** no real money; no purchases; no paid or
+  purchasable chips; no wagering; no prizes; no rewards; no cash-out; no transfers;
+  no crypto; and no real-world value.
+- **Entry gate:** “I’m 18 or older — Enter” is visit-only self-attestation. It does
+  not verify or store age or an access decision. Therefore `ageAssurance` remains
+  **false**.
+- **Fairness disclosure:** each table presents its rules and exact probabilities.
+  Random actions expose an audit trail with seed, rules version, randomizer version,
+  and/or ordered action history as applicable. The copy must never characterize
+  blackjack, war, roulette, or another table as “50/50” when its stated odds differ.
 
-## App name (30 char max)
+### Casino Practice description block
 
-- **First choice:** `Prismet` (12)
-- "Prismet" is a common word and **may be taken** on the App Store. Backups
-  that keep the brand and stay unique:
-  - `Prismet Games` (18)
-  - `Prismet Arcade` (19)
-  - `Prismet: Classics` (22)
+Paste this where a Casino section is useful in the description or review notes:
 
-> Check availability in App Store Connect → New App → the name field tells you if it's free.
+> **CASINO PRACTICE — ADULTS 18+**
+>
+> Prismet Arcade includes 21 simulated Casino Practice tables in a separate Adults
+> 18+ area. Every table is practice only: it has no real money, purchases, paid or
+> purchasable chips, wagering, prizes, rewards, cash-out, transfers, crypto, or
+> real-world value. Entry is a visit-only self-attestation; Prismet Arcade does not
+> verify or store age, and `ageAssurance` is false.
+>
+> The tables show their rules and exact probability ledgers. Random actions provide
+> auditable details such as the seed, rules version, randomizer version, and ordered
+> action history. This is simulated gambling content for probability study, not real
+> gambling.
 
-## Subtitle (30 char max)
+### App Store age-rating questionnaire
 
-- `20+ classic games, one lens` (26)
-- alt: `Daily puzzles and classics` (26)
+Answer the current App Store Connect questionnaire as follows:
 
-## Promotional text (170 char max — editable anytime without review)
+- **Simulated gambling:** `FREQUENT`.
+- **Real gambling:** `false` / No.
+- **Age assurance:** `false` / No; the entry screen is only visit-only
+  self-attestation and neither verifies nor retains age.
+- Do **not** use the deprecated `FREQUENT_OR_INTENSE` value.
+- The expected calculated rating is **18+ on OS 26-era ratings** and **17+ on older
+  storefronts**. Confirm the calculated result in App Store Connect before any
+  submission because Apple controls the final display.
 
-`Twenty+ timeless games in one calm app: Wordgame, Chess, 2048, Sudoku, Sea Battle, Solitaire, Snake, and more. Free to play, no account required.`
+### Territory and regulatory check
 
-## Keywords (100 char max, comma-separated, no spaces)
+Simulated-gambling rules, ratings, availability, disclosures, and age requirements
+can vary by territory. Before submitting or releasing in any territory, verify its
+current requirements in App Store Connect and obtain any required legal/regulatory
+review. This kit neither determines territory eligibility nor represents that a
+submission has been made or approved.
 
-`wordgame,2048,sudoku,chess,solitaire,minesweeper,snake,nonogram,seabattle,gomoku,spider,puzzle`
+## Storefront fields
 
-## Description
+All copy below is within its stated App Store Connect field limit.
 
-Kaleidescope is a calm home for classic games and daily puzzles. Open one app
-and jump into Wordgame, Chess, 2048, Sudoku, Solitaire, Snake, Minesweeper, Sea
-Battle, and more - each with its own hand-crafted look.
+### App name (30 characters maximum)
 
-GAMES INCLUDED
-• Daily Wordgame - guess the five-letter word
-• 2048 - slide, merge, shuffle, and chase your best score
-• Sudoku - clean number grids with helpful highlights
-• Minesweeper - classic boards, custom sizes, and bold visual styles
-• Snake - smooth swipe steering with a modern arcade feel
-• Chess - play a built-in opponent and tune the board style
-• Solitaire and Spider - classic cards on rich table surfaces
-• Sea Battle, Checkers, Reversi, Connect Four, and Gomoku - play solo, pass-and-play, or with a friend where supported
-• Crazy 8 - a quick classic card game
-• Rubik's Cube - a real 3D cube you can spin
-• Lights Out, Sliding Puzzle, and Nonogram - fast puzzle staples
-• Brick Bench - build with 3D bricks
-• Bonus lenses including Oracle, Debt Clock, and Steam Rewind
+`Prismet Arcade` — 14 characters
 
-DESIGNED TO FEEL GOOD
-• Quick sessions, clean controls, and distinctive game styles
-• Sound, haptics, and smooth animation on every move
+### Subtitle (30 characters maximum)
+
+`Classic games and practice` — 26 characters
+
+### Promotional text — iOS/iPadOS (170 characters maximum)
+
+`Classic games, daily puzzles, and 21 transparent Casino Practice tables in an Adults 18+ area. Practice only: no money, purchases, prizes, or real-world value.`
+
+Character count: 159.
+
+### Promotional text — macOS (170 characters maximum)
+
+`A native Mac arcade of classic games, puzzles, and 21 transparent Casino Practice tables for Adults 18+. Practice only, with no money or real-world value.`
+
+Character count: 154.
+
+### Keywords (100 characters maximum; comma-separated, no spaces)
+
+`puzzle,arcade,word,2048,sudoku,chess,solitaire,casino,probability,blackjack,poker,roulette`
+
+Character count: 89.
+
+## Description — iOS/iPadOS and macOS (4,000 characters maximum)
+
+Prismet Arcade is a calm home for classic games, daily puzzles, and thoughtful
+practice. Play Wordgame, Chess, 2048, Sudoku, Solitaire, Snake, Minesweeper, Sea
+Battle, Checkers, Reversi, Connect Four, Gomoku, Crazy 8, and more, each with its
+own hand-crafted look.
+
+GAMES AND LENSES
+
+• Daily Wordgame, 2048, Sudoku, Minesweeper, Snake, Chess, Solitaire, Spider, Sea
+  Battle, Checkers, Reversi, Connect Four, Gomoku, Crazy 8, Rubik’s Cube, Lights
+  Out, Sliding Puzzle, Nonogram, Brick Bench, Oracle, Debt Clock, and more
+• Quick sessions, clean controls, distinctive game styles, sound, haptics, and
+  smooth animation
 • Light, parchment, and dark reading themes
-• Game Center support for friends and leaderboards
-• No account required to start playing
+• Game Center support where available; no account is required to start playing
 
-Free to play. More games and features on the way.
+CASINO PRACTICE — ADULTS 18+
 
-## What's New (version 1.1)
+Prismet Arcade contains 21 simulated Casino Practice tables in a separate Adults
+18+ area. They are probability-study tables with exact probability ledgers and
+auditable random actions. Practice Blackjack shows visible-information odds; poker,
+card, dice, wheel, and study tables show their applicable rules and exact outcomes.
 
-`This update refreshes Kaleidescope while preserving existing saves and Game Center continuity, restores the daily Wordgame feed, and brings the latest game polish, sound, haptics, online friend rooms, and launch-day stability fixes.`
+Casino Practice is permanently non-economic: no real money, purchases, paid or
+purchasable chips, wagering, prizes, rewards, cash-out, transfers, crypto, or
+real-world value. Entering the area is visit-only self-attestation, not age
+verification; no age or access decision is stored. Simulated gambling content only;
+no real gambling.
 
-## What's New draft (version 1.2 / build 14)
+Free to play. More games and features are on the way.
 
-`This update makes Kaleidescope easier to share with friends and family, tightens tester-device deployment, keeps online friend rooms resilient, and rolls in build/test warning cleanup across iPhone, iPad, and Mac.`
+## What’s New — version 1.2 (build 18)
 
-## Category
+`Prismet Arcade 1.2 adds 21 transparent Casino Practice tables in a separate Adults 18+ area, with exact probability ledgers and auditable random actions. Practice only: no money, purchases, prizes, or real-world value.`
 
-- **Primary:** Games → Board (or Games → Puzzle)
-- **Secondary:** Games → Family
+Character count: 218 / 4,000.
 
-## Age rating answers (target: 10+)
+## Review notes — iOS/iPadOS and macOS
 
-In the App Store Connect questionnaire, answer **None / No** to everything EXCEPT:
-- **Cartoon or Fantasy Violence:** *Infrequent/Mild* — (the Chess/Checkers "capture" framing + Minesweeper mines). If you prefer a clean 4+, answer None here and it'll likely rate 4+; choose based on how you want it positioned. To land on **10+**, mild fantasy violence = Infrequent/Mild is the usual lever.
-- Everything else (realistic violence, sexual content, profanity, drugs, gambling, horror): **None**.
-- **Unrestricted web access:** No. **Gambling:** No.
+`Prismet Arcade 1.2 contains 21 simulated Casino Practice tables in a separate Adults 18+ area. The gate is visit-only self-attestation (“I’m 18 or older — Enter”); it does not verify or store age or access, so ageAssurance is false. Each table shows rules and exact probability information; random actions expose auditable seed/rules/randomizer/action details as applicable. There is no real gambling and no real money, purchases, paid or purchasable chips, wagering, prizes, rewards, cash-out, transfers, crypto, or real-world value. No account is required. Reviewers can enter the Casino Practice area by selecting “I’m 18 or older — Enter.”`
 
-## App Privacy ("nutrition label") answers
+## Submission checklist — iOS/iPadOS
 
-For the current review-safe build, phone sign-in and visible ads are disabled. Do **not**
-declare phone-number collection or AdMob advertising identifiers unless those features
-are re-enabled before submission.
+- [ ] Confirm App Store app `6785993194`, public name `Prismet Arcade`, version
+  `1.2`, and build `18` are the intended editable release record and build.
+- [ ] Paste the iOS/iPadOS promotional text, description, and What’s New above;
+  verify the displayed character counters in App Store Connect.
+- [ ] Upload current iPhone and iPad screenshots that show Prismet Arcade and, when
+  shown, label Casino Practice as Adults 18+ and practice only.
+- [ ] Complete the age questionnaire: simulated gambling `FREQUENT`, real gambling
+  false, age assurance false; confirm the calculated 18+ / older-store 17+ result.
+- [ ] Recheck App Privacy, support URL, privacy-policy URL, category, review contact,
+  export compliance, and territory availability against the shipped binary.
+- [ ] Paste the review notes and confirm a reviewer can reach the visit-only gate.
+- [ ] Verify all territory/regulatory requirements before requesting review.
+- [ ] Submit only after the release owner has completed the App Store Connect flow.
 
-Likely current data types:
-- **Name** (Game Center display name / profile display name) — App Functionality. Linked: Yes. Tracking: No.
-- **User Content** (avatar/profile choice, local game/profile data) — App Functionality. Linked: Yes. Tracking: No.
+## Submission checklist — macOS
 
-When real AdMob IDs are enabled later, revisit this section and the IDFA/ATT answers before submitting that build.
-
-## URLs
-
-- **Privacy Policy URL:** host `docs/PRIVACY-POLICY.md` (as HTML) somewhere public — e.g.
-  GitHub Pages, or a one-page site. **Required.**
-- **Support URL:** a simple page or even a mailto landing page. Could be the same site.
-- **Marketing URL:** optional.
-- Support contact email: `artists@deutschleartistry.com`
-
-## Screenshots (current v14 pack)
-
-Apple accepts 1-10 `.png`, `.jpg`, or `.jpeg` screenshots per device family. The
-current staged iPhone set is the highest-resolution 6.9" portrait size
-(`1320x2868`), which App Store Connect can scale down for smaller iPhone displays.
-Use these for the next editable App Store version; the currently submitted v1.1 is
-`WAITING_FOR_REVIEW`, so screenshots may need to wait for the next version/editable
-state if ASC keeps the media locked.
-
-Final App Store-ready PNGs:
-1. `ios/docs/appstore-screenshots-v14/final/01_home.png`
-2. `ios/docs/appstore-screenshots-v14/final/02_wordgame.png`
-3. `ios/docs/appstore-screenshots-v14/final/03_chess.png`
-4. `ios/docs/appstore-screenshots-v14/final/04_seabattle.png`
-5. `ios/docs/appstore-screenshots-v14/final/05_2048.png`
-6. `ios/docs/appstore-screenshots-v14/final/06_solitaire.png`
-7. `ios/docs/appstore-screenshots-v14/final/07_sudoku.png`
-
-Raw simulator captures live beside them in `ios/docs/appstore-screenshots-v14/`.
-Regenerate the final framed set with:
-
-```sh
-python3 ios/scripts/generate-appstore-screenshots.py
-```
-
-The older `ios/docs/appstore-screenshots-1.0.1/` pack is historical only.
-
-## In-app purchase — Remove Ads (future, disabled for v1)
-
-The Remove Ads surface is hidden in the current v1 review build because no App Store
-Connect IAP product is live yet. Re-enable this section when the IAP is ready:
-
-- **Paid Applications Agreement** must be accepted in App Store Connect → Agreements,
-  Tax, and Banking. Only the **Account Holder (Sage's dad)** can accept it.
-- **Banking + tax info** must be completed there too (bank account for payouts, W-9/tax).
-- **Create the IAP product** in App Store Connect → your app → In-App Purchases:
-  - Type: **Non-Consumable**
-  - Product ID: **`com.spocksclub.kaleidoscope.removeads`** (must match `project.yml`)
-  - Price: **$4.99** (Tier 5), display name "Remove Ads", a short description + a review screenshot
-  - The IAP is reviewed **with** the build, so submit it alongside v1.
-- **Tester/family codes** grant the unlock for free (hashed in `PrismetAdUnlockCodeHashes`).
-  App-Store-safe: you're giving the product away, not selling unlocks outside Apple's IAP.
-- **App Privacy:** no new data types from the IAP itself; purchase is handled by Apple.
-
-## Build / submission checklist
-
-- [ ] App record created under SpocksClub (you're Admin) — confirm no pending Apple agreement (else Ben/account-holder must accept)
-- [ ] **Paid Applications Agreement accepted + banking/tax filled** (Account Holder) — required before enabling the Remove Ads IAP
-- [ ] **Remove Ads IAP product created** (`com.spocksclub.kaleidoscope.removeads`, non-consumable, $4.99) before re-enabling Remove Ads
-- [ ] Archive a Release build, upload via Xcode Organizer / `xcodebuild archive`
-- [ ] Real AdMob app id + banner unit id swapped in only when enabling ads (current review build is ads-off)
-- [ ] Game Center capability confirmed in App Store Connect
-- [ ] Privacy policy + support URLs live
-- [ ] Screenshots uploaded
-- [ ] Age rating + App Privacy answered
-- [ ] Submit for review (with the IAP) — then it's Apple's 1–3 day clock
+- [ ] Create or verify the separate native macOS App Store record, bundle identity,
+  signing, export, version `1.2`, and build `18`; this document does not claim they
+  already exist or have been submitted.
+- [ ] Paste the Mac promotional text, description, What’s New, and review notes;
+  verify the displayed character counters in App Store Connect.
+- [ ] Provide Mac App Store screenshots at **2880 × 1800 pixels (16:10)** for the
+  Mac desktop screenshot set; ensure they show the current Prismet Arcade brand.
+- [ ] If Casino Practice appears in screenshots, retain the Adults 18+ and
+  practice-only context; do not depict money, chips of value, prizes, or cash-out.
+- [ ] Complete the same age questionnaire: simulated gambling `FREQUENT`, real
+  gambling false, age assurance false; confirm the calculated platform/store rating.
+- [ ] Recheck App Privacy, support URL, privacy-policy URL, category, review contact,
+  export compliance, sandbox/signing requirements, and territory availability.
+- [ ] Verify territory/regulatory requirements before requesting review; submission
+  and approval remain pending until completed in App Store Connect.
 
 ---
 
-## ★ HISTORICAL BUILD 11 METADATA — 2026-07-04 (Agent-Design)
+## Historical material — do not paste for 1.2 (18)
 
-Retained only as a record that build 11 had a separate metadata pass. Do not
-paste the old build-11 copy into App Store Connect; it used the Prismet public
-name and an older game count. Use the current v14 listing sections above.
+The following is retained solely for release history. It predates the Prismet Arcade
+name, the 21-table Adults 18+ Casino Practice area, and the current age-rating
+answers. It must not override any current section above.
 
-**Historical screenshots (6.9in, 1320x2868, staged):** checkers (red/black), sea battle, chess study table, 2048 walnut, snake neon, sudoku newspaper, solitaire baize - superseded by `ios/docs/appstore-screenshots-v14/final/`.
+### Historical v1.1/build 13 target (superseded)
 
----
+- Version 1.1, build 13, `WAITING_FOR_REVIEW`, and the transition-era Kaleidescope
+  name strategy were former metadata notes.
+- Historical metadata treated gambling as None/No and aimed at a lower age rating.
+  That is incorrect for the current 1.2 (18) Casino release.
+- The v14 iPhone screenshot pack (`ios/docs/appstore-screenshots-v14/final/`) and
+  its 1320×2868 assumptions are historical iPhone material, not the current
+  cross-platform screenshot plan.
 
-## ★ HISTORICAL 1.0.1 SHIP RUNBOOK — pre-launch fork, do not use for v1.1
-Chosen historical path: **ride build 8, ship build 11 as 1.0.1.** This is retained
-only as a record of the pre-launch fork; current state is v1.0 live, v1.1
-submitted, and v1.2/build 14 in source. Assets staged at the time: retired
-build-11 metadata + 7 screenshots in
-`docs/appstore-screenshots-1.0.1/` (6.9in 1320x2868). ASC helper:
-`docs/asc-helper.py` (openssl-ES256 JWT; `import` it and call `api(method,path,body)`).
-Ids: app 6785993194, build 11 id `82554947-3f20-469b-a8db-7f0b1b44ce54`, en-US loc
-template.
+### Historical pre-launch and IAP notes (superseded)
 
-STEPS (once v1.0 is Ready for Sale / Pending Developer Release, or Rejected):
-1. Create version: `POST /v1/appStoreVersions` {attributes:{platform:IOS, versionString:"1.0.1"}, relationships:{app:6785993194}} → new version id.
-2. Attach build 11: `PATCH /v1/appStoreVersions/{newId}/relationships/build` {data:{type:builds, id:"82554947-3f20-469b-a8db-7f0b1b44ce54"}}.
-3. Metadata: `PATCH /v1/appStoreVersionLocalizations/{en-US loc id of new ver}` {attributes:{description, keywords, promotionalText, whatsNew}} from the then-current retired build-11 metadata.
-4. Screenshots (6.9in APP_IPHONE_67 set): reserve `POST /v1/appScreenshots` (fileName,fileSize,appScreenshotSet rel) → PUT bytes to returned uploadOperations url(s) → `PATCH /v1/appScreenshots/{id}` {uploaded:true, sourceFileChecksum:<md5>}. (Delete old shots first.) NOTE: this multi-step upload is UNTESTED — verify interactively.
-5. App Privacy: publish in ASC UI (human step, can't API).
-6. Submit: `POST /v1/reviewSubmissions` + items → PATCH submitted:true.
+- Older v1.0/v1.0.1 build, upload, and submission runbooks are historical only and
+  do not establish present App Store Connect state.
+- Any prior Remove Ads/IAP instructions are not part of the current Casino release
+  metadata. The current Casino Practice promise is permanent: no purchases or paid
+  or purchasable chips, and no value-bearing casino economy.

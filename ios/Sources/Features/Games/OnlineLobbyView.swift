@@ -14,34 +14,19 @@ struct OnlineGameLobbyView: View {
     @State private var retryingConnection = false
     @FocusState private var codeFieldFocused: Bool
 
-    static let supportedGames: Set<CanonicalGameID> = [.chess, .checkers, .connectFour, .reversi, .gomoku, .crazyEight, .seaBattle]
+    /// The games playable online — sourced entirely from `OnlineGameCatalog` (add a
+    /// game there, not here). Kept as a static surface because HomeView's routing gate
+    /// and the test suite reference `OnlineGameLobbyView.supportedGames` /
+    /// `.supports(_:)` / `.initialStateJSON(for:)`.
+    static var supportedGames: Set<CanonicalGameID> { OnlineGameCatalog.availableGameIDs }
 
     static func supports(_ gameID: CanonicalGameID) -> Bool {
-        supportedGames.contains(gameID)
+        OnlineGameCatalog.supports(gameID)
     }
 
-    /// A fresh game snapshot, encoded exactly like the games' save files — the
-    /// same codec both devices already use to persist state.
+    /// A fresh game snapshot, encoded exactly like the games' save files.
     static func initialStateJSON(for gameID: CanonicalGameID) throws -> String {
-        switch gameID {
-        case .chess:
-            return try GameSaveCodec.encodeSnapshot(ChessSnapshot(
-                position: .initial, selected: nil, targets: [], status: .ongoing, lastFrom: nil, lastTo: nil))
-        case .checkers:
-            return try GameSaveCodec.encodeSnapshot(CheckersSnapshot(game: CheckersGame(), selected: nil))
-        case .connectFour:
-            return try GameSaveCodec.encodeSnapshot(ConnectFourSnapshot(game: ConnectFourGame()))
-        case .reversi:
-            return try GameSaveCodec.encodeSnapshot(ReversiSnapshot(game: ReversiGame()))
-        case .gomoku:
-            return try GameSaveCodec.encodeSnapshot(GomokuSnapshot(game: GomokuGame()))
-        case .crazyEight:
-            return try GameSaveCodec.encodeSnapshot(CrazyEightSnapshot(game: CrazyEightGame.newGame(seed: 51), seed: 51))
-        case .seaBattle:
-            return try GameSaveCodec.encodeSnapshot(SeaBattleSnapshot(game: .deploymentGame, setup: .empty))
-        default:
-            throw OnlineMatchError.notConfigured
-        }
+        try OnlineGameCatalog.initialStateJSON(for: gameID)
     }
 
     private var card: GameCard? {
@@ -297,23 +282,6 @@ struct OnlineGameLobbyView: View {
 
     @ViewBuilder
     private var gameContainer: some View {
-        switch gameID {
-        case .chess:
-            ChessView(accountID: nil, playMode: .onlineFriend, online: session)
-        case .checkers:
-            CheckersView(accountID: nil, playMode: .onlineFriend, online: session)
-        case .connectFour:
-            ConnectFourView(accountID: nil, playMode: .onlineFriend, online: session)
-        case .reversi:
-            ReversiView(accountID: nil, playMode: .onlineFriend, online: session)
-        case .gomoku:
-            GomokuView(accountID: nil, playMode: .onlineFriend, online: session)
-        case .crazyEight:
-            CrazyEightView(accountID: nil, playMode: .onlineFriend, online: session)
-        case .seaBattle:
-            SeaBattleView(accountID: nil, playMode: .onlineFriend, online: session)
-        default:
-            EmptyView()
-        }
+        OnlineGameCatalog.gameView(for: gameID, session: session)
     }
 }

@@ -1,9 +1,12 @@
 // PRISM: RELEASE Agent-Design(shell) 2026-07-03 — v10 design pass
 // PRISM: RELEASE Codex 2026-07-03 — Spider/Crazy 8/Sea Battle registry routes added
+// PRISM: RELEASE Agent-Design/Claude 2026-07-12 — Catan game registry route added (Board)
+// PRISM: RELEASE Codex 2026-07-15 — Casino main-app release route
 import SwiftUI
 
 struct GameCard: Identifiable {
     static let debtClockID = "debtclock"
+    static let casinoID = "casino"
     // PRISM: Agent-Design/Fable 2026-07-04 — SteamRewind fold-in (Lens)
     static let steamRewindID = "steamrewind"
 
@@ -34,9 +37,11 @@ struct GameCard: Identifiable {
             .init(id: "connectfour", title: "Connect Four", icon: "circle.grid.3x3.fill", accent: Color(red: 0.85, green: 0.55, blue: 0.20), ready: true, category: "Board"),
             .init(id: "gomoku", title: "Gomoku", icon: "circle.grid.3x3.fill", accent: Color(red: 0.42, green: 0.48, blue: 0.34), ready: true, category: "Board"),
             .init(id: "seabattle", title: "Sea Battle", icon: "scope", accent: Color(red: 0.16, green: 0.42, blue: 0.68), ready: true, category: "Board"),
+            .init(id: "catan", title: "Catan", icon: "hexagon.fill", accent: Color(red: 0.80, green: 0.52, blue: 0.24), ready: true, category: "Board"),
             .init(id: "solitaire", title: "Solitaire", icon: "suit.spade.fill", accent: Color(red: 0.20, green: 0.45, blue: 0.30), ready: true, category: "Cards"),
             .init(id: "spider", title: "Spider", icon: "suit.spade.fill", accent: Color(red: 0.42, green: 0.24, blue: 0.18), ready: true, category: "Cards"),
             .init(id: "crazyeight", title: "Crazy 8", icon: "8.circle.fill", accent: Color(red: 0.60, green: 0.28, blue: 0.42), ready: true, category: "Cards"),
+            .init(id: casinoID, title: "Casino", icon: "suit.spade.fill", accent: Color(red: 0.18, green: 0.46, blue: 0.36), ready: true, category: "Casino"),
             .init(id: "brickbench", title: "Brick Bench", icon: "square.stack.3d.up.fill", accent: Color(red: 0.80, green: 0.20, blue: 0.20), ready: true, category: "Workshop"),
             .init(id: "oracle", title: "Oracle", icon: "sparkles", accent: Color(red: 0.72, green: 0.54, blue: 0.20), ready: true, category: "Lenses"),
             .init(id: debtClockID, title: "Debt Clock", icon: "chart.line.uptrend.xyaxis", accent: Color(red: 0.20, green: 0.62, blue: 0.42), ready: true, category: "Lenses"),
@@ -49,7 +54,7 @@ struct GameCard: Identifiable {
         return cards
     }()
 
-    static let categoryOrder = ["Daily", "Puzzles", "Board", "Cards", "Workshop", "Lenses"]
+    static let categoryOrder = ["Daily", "Puzzles", "Board", "Cards", "Casino", "Workshop", "Lenses"]
 }
 
 struct HomeView: View {
@@ -61,6 +66,7 @@ struct HomeView: View {
     @State private var showRemoveAds = false
     @State private var showGameCenterHint = false
     @State private var showSettings = false
+    @State private var navigationPath = NavigationPath()
     // Default mirrors PrismetDesign.paper's fallback (dark) so the Reading picker reflects
     // the true paper before a choice is ever stored.
     @AppStorage("kaleido.paper") private var paperRaw = PrismetPaper.dark.rawValue
@@ -68,7 +74,7 @@ struct HomeView: View {
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 16)]
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     brandStrip
@@ -89,6 +95,8 @@ struct HomeView: View {
             .navigationDestination(for: String.self) { id in
                 if id == GameCard.debtClockID {
                     DebtClockStatsView()
+                } else if id == GameCard.casinoID {
+                    CasinoHubView()
                 } else if id == GameCard.steamRewindID {
                     SteamRewindView()
                 } else if let card = GameCard.all.first(where: { $0.id == id }),
@@ -167,7 +175,7 @@ struct HomeView: View {
                 Text("Open Settings ▸ Game Center to sign in, then you can add friends and compare scores.")
             }
             .safeAreaInset(edge: .bottom) {
-                if AdConfig.shouldDisplayBanner(adsRemoved: adEntitlement.adsRemoved, liveReadiness: AdConfig.currentLiveReadiness) {
+                if navigationPath.isEmpty && AdConfig.shouldDisplayBanner(adsRemoved: adEntitlement.adsRemoved, liveReadiness: AdConfig.currentLiveReadiness) {
                     BannerAdBar(entitlement: adEntitlement)
                         .padding(.top, 4)
                 }
@@ -237,6 +245,7 @@ struct HomeView: View {
         case .crazyEight: CrazyEightView(accountID: signedInAccountID, playMode: route.mode, online: nil)
         case .brickBench: BrickBenchView(accountID: signedInAccountID)
         case .oracle: OracleView(accountID: signedInAccountID)
+        case .catan: CatanView(accountID: signedInAccountID)
         }
     }
 

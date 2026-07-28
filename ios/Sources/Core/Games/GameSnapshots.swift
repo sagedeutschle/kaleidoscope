@@ -290,6 +290,10 @@ struct OracleSnapshot: Codable {
     var rng: SeededGenerator
 }
 
+struct CatanSnapshot: Codable, Equatable {
+    var game: CatanGame
+}
+
 struct GameSaveSnapshotSample {
     var gameID: CanonicalGameID
     var fingerprint: String
@@ -370,7 +374,8 @@ enum GameSaveSnapshotRegistry {
                 current: nil,
                 consultCount: 0,
                 rng: SeededGenerator(seed: 77)
-            ))
+            )),
+            sample(.catan, CatanSnapshot(game: CatanGame.newGame(seed: 61)))
         ]
     }
 

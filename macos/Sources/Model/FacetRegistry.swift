@@ -5,6 +5,7 @@ enum FacetCategory: String, CaseIterable, Identifiable {
     case puzzles = "Puzzles"
     case board = "Board"
     case cards = "Cards"
+    case casino = "Casino"
     case workshop = "Workshop"
     case lenses = "Lenses"
 
@@ -164,6 +165,12 @@ enum FacetRegistry {
                         systemImage: "suit.spade",
                         accent: Color(red: 0.25, green: 0.42, blue: 0.30),
                         category: .cards,
+                        status: .ready),
+        FacetDescriptor(id: "casino",
+                        title: "Casino",
+                        systemImage: "suit.spade.fill",
+                        accent: Color(red: 0.18, green: 0.46, blue: 0.36),
+                        category: .casino,
                         status: .ready)
     ]
 

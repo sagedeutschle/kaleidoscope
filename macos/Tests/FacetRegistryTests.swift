@@ -4,12 +4,12 @@ import XCTest
 final class FacetRegistryTests: XCTestCase {
     func testCategoryOrderMatchesLaunchGrouping() {
         XCTAssertEqual(FacetCategory.allCases.map(\.rawValue),
-                       ["Daily", "Puzzles", "Board", "Cards", "Oracle"])
+                       ["Daily", "Puzzles", "Board", "Cards", "Casino", "Workshop", "Lenses"])
     }
 
     func testReadyFacetIDsMatchWave1() {
         XCTAssertEqual(FacetRegistry.ready.map(\.id),
-                       ["chess", "brick-bench", "wordle", "oracle", "debt-clock", "rubiks-cube", "2048", "lights-out", "minesweeper", "snake", "sudoku", "sliding-15", "nonogram", "reversi", "connect-four", "checkers", "solitaire"])
+                       ["chess", "brick-bench", "wordle", "oracle", "debt-clock", "steam-rewind", "rubiks-cube", "2048", "lights-out", "minesweeper", "snake", "sudoku", "sliding-15", "nonogram", "reversi", "connect-four", "checkers", "solitaire", "gomoku", "sea-battle", "crazy-8", "spider", "casino"])
         XCTAssertEqual(FacetRegistry.descriptor(for: "wordle")?.title, "Wordgame")
     }
 
@@ -21,9 +21,10 @@ final class FacetRegistryTests: XCTestCase {
         XCTAssertEqual(FacetRegistry.descriptor(for: "chess")?.category.rawValue, "Board")
         XCTAssertEqual(FacetRegistry.descriptor(for: "checkers")?.category.rawValue, "Board")
         XCTAssertEqual(FacetRegistry.descriptor(for: "solitaire")?.category.rawValue, "Cards")
-        XCTAssertEqual(FacetRegistry.descriptor(for: "brick-bench")?.category.rawValue, "Oracle")
-        XCTAssertEqual(FacetRegistry.descriptor(for: "oracle")?.category.rawValue, "Oracle")
-        XCTAssertEqual(FacetRegistry.descriptor(for: "debt-clock")?.category.rawValue, "Oracle")
+        XCTAssertEqual(FacetRegistry.descriptor(for: "casino")?.category.rawValue, "Casino")
+        XCTAssertEqual(FacetRegistry.descriptor(for: "brick-bench")?.category.rawValue, "Workshop")
+        XCTAssertEqual(FacetRegistry.descriptor(for: "oracle")?.category.rawValue, "Lenses")
+        XCTAssertEqual(FacetRegistry.descriptor(for: "debt-clock")?.category.rawValue, "Lenses")
     }
 
     func testFormerComingSoonFacetsAreReady() {

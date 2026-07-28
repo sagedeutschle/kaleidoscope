@@ -1,8 +1,8 @@
 import Foundation
 
 /// Live-refreshing source of the Wizard King's Decree chronicle. Starts from the
-/// bundled `decrees.json` snapshot and can pull a fresh copy from archbox's court
-/// historian endpoint. On any failure it keeps the existing data and reports a
+/// bundled `decrees.json` snapshot and can pull a fresh copy from the published
+/// chronicle endpoint. On any failure it keeps the existing data and reports a
 /// friendly status — the bundled snapshot is always a safe fallback.
 @MainActor
 final class DecreeStore: ObservableObject {
@@ -11,15 +11,10 @@ final class DecreeStore: ObservableObject {
     nonisolated static let endpointOverrideDefaultsKey = "oracle.decreesURL"
     nonisolated static let endpointOverrideEnvironmentKey = "KALEIDOSCOPE_ORACLE_DECREES_URL"
 
-    /// Live Oracle chronicle endpoints, tried in order. The public gist is the
-    /// source of truth — published daily from the source laptop's council run, so
-    /// EVERY install (including phones off the home network) sees the same decrees.
-    /// The tailnet/LAN entries stay as fast local fallbacks when developing at home.
+    /// The public Oracle chronicle endpoint, published daily from the source
+    /// laptop's council run. The bundled chronicle remains the offline fallback.
     nonisolated static let defaultDecreesURLs = [
-        URL(string: "https://gist.githubusercontent.com/sagedeutschle/30f361c71a78dc0df3ab5904565d4ac0/raw/decrees.json")!,
-        URL(string: "http://100.108.54.108:8787/decrees.json")!,
-        URL(string: "http://archbox.lan:8787/decrees.json")!,
-        URL(string: "http://archbox.lan:8790/decrees.json")!
+        URL(string: "https://gist.githubusercontent.com/sagedeutschle/30f361c71a78dc0df3ab5904565d4ac0/raw/decrees.json")!
     ]
 
     @Published var chronicle: DecreeChronicle
@@ -41,19 +36,32 @@ final class DecreeStore: ObservableObject {
 
     nonisolated static func configuredURLs(environment: [String: String] = ProcessInfo.processInfo.environment,
                                            defaults: UserDefaults = .standard) -> [URL] {
-        let overrides = [
+        let overrideStrings = [
             environment[endpointOverrideEnvironmentKey],
             defaults.string(forKey: endpointOverrideDefaultsKey)
         ]
-        .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-        .filter { !$0.isEmpty }
-        .compactMap(URL.init(string:))
 
-        var urls = overrides
+        var urls: [URL] = []
+        for override in overrideStrings {
+            guard let url = secureHTTPSURL(from: override), !urls.contains(url) else { continue }
+            urls.append(url)
+        }
         for defaultURL in defaultDecreesURLs where !urls.contains(defaultURL) {
             urls.append(defaultURL)
         }
         return urls
+    }
+
+    private nonisolated static func secureHTTPSURL(from value: String?) -> URL? {
+        guard let value = value?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !value.isEmpty,
+              let url = URL(string: value),
+              url.scheme?.lowercased() == "https",
+              let host = url.host,
+              !host.isEmpty else {
+            return nil
+        }
+        return url
     }
 
     /// The Oracle view calls this on appearance. It only attempts a live pull once
