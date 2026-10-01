@@ -1,0 +1,12 @@
+[Unit]
+Description=Prismet Wordgame Daily broker: 00:03 ET, every 10 min until 03:00, then hourly
+
+[Timer]
+# The broker is idempotent: once today's word is live each run is one GET and exits.
+OnCalendar=*-*-* 00..02:03/10:00 America/New_York
+OnCalendar=*-*-* 03..23:03:00 America/New_York
+AccuracySec=15s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

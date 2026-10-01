@@ -1,0 +1,13 @@
+[Unit]
+Description=Prismet Wordgame Daily broker (publish today's answer to Supabase)
+Documentation=https://github.com/sagedeutschle/kaleidoscope/tree/main/oracle/wordle-broker
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/prismet-wordle-broker
+# npm-global bin holds the codex CLI used for the optional fallback vote
+Environment=PATH=%h/.local/share/npm/bin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 %h/prismet-wordle-broker/wordle_broker.py
+TimeoutStartSec=15min
+Nice=10

@@ -13,9 +13,11 @@ Current next-update gates:
 - **[x] Wordgame daily endpoint:** app code points at `https://prismet.xyz/api/wordle`;
   proxy and Supabase source both returned the 2026-07-09 payload during the
   launch-day smoke check.
-- **[x] Wordgame broker schedule restored:** local LaunchAgent
-  `com.gtrktscrb.wordle-broker.daily` is loaded with 01:15, 02:15, and 10:00
-  local runs. Broker source lives in `oracle/wordle-broker/`.
+- **[x] Wordgame broker schedule restored:** since 2026-10-01 the broker runs on
+  Spelltower (archbox) as systemd user timer `prismet-wordle-broker.timer`
+  (00:03 ET, 10-minute retries to 03:00, hourly catch-up). The Mac LaunchAgent
+  `com.gtrktscrb.wordle-broker.daily` is retired (it had failed since 07-10).
+  Broker source and runbook live in `oracle/wordle-broker/`.
 - **[x] v13 Task 8 local rename:** app/source/package/project/display names now
   use Prismet; bundle identifiers, IAP product ID, Supabase refs, Game Center IDs,
   and legacy persistence paths remain frozen.
