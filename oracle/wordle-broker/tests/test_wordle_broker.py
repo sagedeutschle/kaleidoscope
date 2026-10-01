@@ -204,7 +204,7 @@ class RunTests(unittest.TestCase):
     def go(self, **kw):
         a = args(date=DAY.isoformat(), force=True, key_file=str(self.key), **kw)
         return wb.run(a, fetch=PAGES.__getitem__, read_current=lambda: self.store or None,
-                      publish=self.publish)
+                      publish=self.publish, proxy_check=lambda p: True)
 
     def test_publishes_consensus_payload(self):
         self.assertEqual(self.go(), 0)
@@ -242,7 +242,7 @@ class RunTests(unittest.TestCase):
         llm = lambda day, state: wb.Vote("codex-web-search", "llm:codex", "ritzy")
         a = args(date=DAY.isoformat(), force=True, no_llm=False, key_file=str(self.key))
         rc = wb.run(a, fetch=fetch, read_current=lambda: self.store or None,
-                    publish=self.publish, llm=llm)
+                    publish=self.publish, llm=llm, proxy_check=lambda p: True)
         self.assertEqual(rc, 0)
         self.assertEqual(self.published[0][0]["answer"], "ritzy")
 
@@ -257,6 +257,21 @@ class RunTests(unittest.TestCase):
             wb.today_eastern = real
         self.assertEqual(rc, 2)
         self.assertEqual(self.published, [])
+
+    def test_upload_that_does_not_read_back_is_an_error(self):
+        a = args(date=DAY.isoformat(), force=True, key_file=str(self.key))
+        rc = wb.run(a, fetch=PAGES.__getitem__, read_current=lambda: None,
+                    publish=lambda p, k: 200, proxy_check=lambda p: True)
+        self.assertEqual(rc, 1)
+
+    def test_slow_proxy_is_a_warning_not_a_failure(self):
+        a = args(date=DAY.isoformat(), force=True, key_file=str(self.key))
+        rc = wb.run(a, fetch=PAGES.__getitem__, read_current=lambda: self.store or None,
+                    publish=self.publish, proxy_check=lambda p: False)
+        self.assertEqual(rc, 0)
+
+    def test_fresh_url_is_unique(self):
+        self.assertNotEqual(wb.fresh_url(wb.PUBLIC_URL), wb.fresh_url(wb.PUBLIC_URL))
 
     def test_failed_upload_is_an_error(self):
         a = args(date=DAY.isoformat(), force=True, key_file=str(self.key))

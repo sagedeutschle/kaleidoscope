@@ -27,7 +27,7 @@ Carried over from the 2026-07-09 clean-room rebuild Sage approved:
 
 ## How a run decides
 
-1. Reads the live object. If it already has today's date, exit 0 (one GET).
+1. Reads the object from origin. If it already has today's date, exit 0 (one GET).
 2. Fetches the sources below. Each parser only returns a word when the page ties it to
    today's exact date or puzzle number (`#N = days since 2021-06-19`), so a stale page or
    a markup change yields "no answer", never a guess.
@@ -35,8 +35,12 @@ Carried over from the 2026-07-09 clean-room rebuild Sage approved:
    TechRadar and Tom's Guide are both Future plc, so they count as **one** vote.
 4. If there's no consensus, asks Codex (web search, on archbox's ChatGPT login) for one
    extra vote, at most 4 times a day. Codex alone can never publish.
-5. PUTs `{"answer","date","sourceName":"Daily"}` with `Cache-Control: no-cache`, then
-   reads it back from the public URL.
+5. PUTs `{"answer","date","sourceName":"Daily"}` with `Cache-Control: no-cache`, reads it
+   back from origin, then polls `prismet.xyz/api/wordle` for up to ~3 minutes (a warning,
+   not a failure, if the proxy lags).
+
+Supabase's CDN keeps serving the previous object for about a minute after an upload, so
+every read goes through a unique `?v=` query string to reach origin.
 
 | Source | Publisher (vote) | What it reads |
 |---|---|---|

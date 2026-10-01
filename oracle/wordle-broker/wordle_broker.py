@@ -34,6 +34,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import uuid
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -337,13 +338,33 @@ def build_payload(answer: str, day: date) -> Dict[str, str]:
     return {"answer": answer, "date": day.isoformat(), "sourceName": SOURCE_NAME}
 
 
-def read_published(fetch: Callable[[str], str] = None) -> Optional[Dict[str, str]]:
-    fetch = fetch or (lambda url: http_get(url, {"Cache-Control": "no-cache"}, 64 * 1024))
+def fresh_url(url: str) -> str:
+    # Supabase's CDN keeps serving the old object for ~1 minute after an upload;
+    # a unique query string reads through to origin.
+    return f"{url}?v={uuid.uuid4().hex}"
+
+
+def read_json(url: str) -> Optional[Dict[str, str]]:
     try:
-        payload = json.loads(fetch(PUBLIC_URL))
+        payload = json.loads(http_get(fresh_url(url), {"Cache-Control": "no-cache"}, 64 * 1024))
         return payload if isinstance(payload, dict) else None
     except Exception:
         return None
+
+
+def read_published() -> Optional[Dict[str, str]]:
+    return read_json(PUBLIC_URL)
+
+
+def proxy_serves(payload: Dict[str, str], attempts: int = 7, delay: float = 30.0) -> bool:
+    """What the apps actually see. Allows for the CDN window before prismet.xyz catches up."""
+    for i in range(attempts):
+        live = read_json(PROXY_URL)
+        if live and live.get("date") == payload["date"] and live.get("answer") == payload["answer"]:
+            return True
+        if i + 1 < attempts:
+            time.sleep(delay)
+    return False
 
 
 def load_key(path: Path) -> str:
@@ -399,7 +420,8 @@ def run(args: argparse.Namespace,
         fetch: Callable[[str], str] = http_get,
         read_current: Callable[[], Optional[Dict[str, str]]] = read_published,
         publish: Callable[[Dict[str, str], str], int] = upload,
-        llm: Optional[Callable[[date, Path], Vote]] = None) -> int:
+        llm: Optional[Callable[[date, Path], Vote]] = None,
+        proxy_check: Callable[[Dict[str, str]], bool] = proxy_serves) -> int:
     day = date.fromisoformat(args.date) if args.date else today_eastern()
     log(f"broker run for {day.isoformat()} (puzzle #{puzzle_number(day)})")
 
@@ -449,11 +471,17 @@ def run(args: argparse.Namespace,
     for _ in range(3):
         after = read_current()
         if after and after.get("date") == payload["date"] and after.get("answer") == payload["answer"]:
-            log(f"OK: published {json.dumps(payload)}")
-            return 0
+            break
         time.sleep(args.verify_delay)
-    log("FAIL: upload returned 200 but the public object did not read back")
-    return 1
+    else:
+        log("FAIL: upload returned 200 but the object did not read back from origin")
+        return 1
+    log(f"OK: published {json.dumps(payload)}")
+    if proxy_check(payload):
+        log(f"OK: {PROXY_URL} serves it")
+    else:  # storage is right; the proxy/CDN is the thing to look at, not the broker
+        log(f"WARN: {PROXY_URL} still not serving today's word after ~3 min")
+    return 0
 
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
