@@ -9,5 +9,6 @@ WorkingDirectory=%h/prismet-wordle-broker
 Environment=PATH=%h/.local/share/npm/bin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
 Environment=PYTHONUNBUFFERED=1
 ExecStart=/usr/bin/python3 %h/prismet-wordle-broker/wordle_broker.py
-TimeoutStartSec=15min
+# worst case: ~100s of fetches + 600s Codex fallback + 180s proxy poll
+TimeoutStartSec=20min
 Nice=10
