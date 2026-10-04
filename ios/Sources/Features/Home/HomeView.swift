@@ -1,11 +1,14 @@
 // PRISM: RELEASE Agent-Design(shell) 2026-07-03 — v10 design pass
 // PRISM: RELEASE Codex 2026-07-03 — Spider/Crazy 8/Sea Battle registry routes added
 import SwiftUI
+import PrismetShared
 
 struct GameCard: Identifiable {
     static let debtClockID = "debtclock"
     // PRISM: Agent-Design/Fable 2026-07-04 — SteamRewind fold-in (Lens)
     static let steamRewindID = "steamrewind"
+    // PRISM: Fable/Claude 2026-10-04: Uncle Scam lens (shared screen in PrismetShared; same lens as prismet.xyz/scam)
+    static let uncleScamID = "unclescam"
 
     let id: String
     let title: String
@@ -40,7 +43,8 @@ struct GameCard: Identifiable {
             .init(id: "brickbench", title: "Brick Bench", icon: "square.stack.3d.up.fill", accent: Color(red: 0.80, green: 0.20, blue: 0.20), ready: true, category: "Workshop"),
             .init(id: "oracle", title: "Oracle", icon: "sparkles", accent: Color(red: 0.72, green: 0.54, blue: 0.20), ready: true, category: "Lenses"),
             .init(id: debtClockID, title: "Debt Clock", icon: "chart.line.uptrend.xyaxis", accent: Color(red: 0.20, green: 0.62, blue: 0.42), ready: true, category: "Lenses"),
-            .init(id: steamRewindID, title: "Steam Rewind", icon: "gamecontroller.fill", accent: Color(red: 0.26, green: 0.42, blue: 0.72), ready: true, category: "Lenses")
+            .init(id: steamRewindID, title: "Steam Rewind", icon: "gamecontroller.fill", accent: Color(red: 0.26, green: 0.42, blue: 0.72), ready: true, category: "Lenses"),
+            .init(id: uncleScamID, title: "Uncle Scam", icon: "scroll.fill", accent: Color(red: 0.70, green: 0.15, blue: 0.12), ready: true, category: "Lenses")
         ]
 
         if WordleLaunchConfiguration.isEnabledForLaunchReview {
@@ -91,6 +95,8 @@ struct HomeView: View {
                     DebtClockStatsView()
                 } else if id == GameCard.steamRewindID {
                     SteamRewindView()
+                } else if id == GameCard.uncleScamID {
+                    UncleScamView(ground: PrismetDesign.ground)
                 } else if let card = GameCard.all.first(where: { $0.id == id }),
                    let gameID = card.canonicalGameID {
                     if GameModeCatalog.requiresLaunchModeSelection(for: gameID) {

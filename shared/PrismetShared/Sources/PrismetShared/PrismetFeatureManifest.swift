@@ -86,6 +86,7 @@ public enum PrismetFeatureID: String, CaseIterable, Codable, Hashable, Sendable 
     case brickBench = "brick-bench"
     case oracle
     case debtClock = "debt-clock"
+    case uncleScam = "uncle-scam"
 }
 
 public enum PrismetFeatureManifest {
@@ -185,7 +186,12 @@ public enum PrismetFeatureManifest {
                             title: "Debt Clock",
                             category: .oracle,
                             iOSID: "debtclock",
-                            macOSID: "debt-clock")
+                            macOSID: "debt-clock"),
+        PrismetFeature(canonicalID: .uncleScam,
+                            title: "Uncle Scam",
+                            category: .oracle,
+                            iOSID: "unclescam",
+                            macOSID: "uncle-scam")
     ]
 
     public static func feature(for canonicalID: PrismetFeatureID) -> PrismetFeature? {

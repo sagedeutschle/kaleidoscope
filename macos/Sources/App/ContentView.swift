@@ -1,4 +1,5 @@
 import SwiftUI
+import PrismetShared
 import UniformTypeIdentifiers
 
 // PRISM: RELEASE Agent-A 2026-06-27 — rustic top bar: parchment toolbar background + centered gilt serif facet title-plate.
@@ -203,6 +204,7 @@ struct ContentView: View {
             case "oracle": DecreeView()
             case "debt-clock": DebtClockStatsView()
             case "steam-rewind": SteamRewindLensView()
+            case "uncle-scam": UncleScamView(ground: PrismetDesign.ground)
             case "2048": Game2048View(session: game2048Session)
             case "lights-out": LightsOutView(session: lightsOutSession)
             case "rubiks-cube": RubiksCubeView(session: rubiksCubeSession)

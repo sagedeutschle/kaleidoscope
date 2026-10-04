@@ -21,6 +21,7 @@ final class HomeCatalogTests: XCTestCase {
         XCTAssertEqual(cardsByID["brickbench"]?.category, "Workshop")
         XCTAssertEqual(cardsByID["oracle"]?.category, "Lenses")
         XCTAssertEqual(cardsByID[GameCard.debtClockID]?.category, "Lenses")
+        XCTAssertEqual(cardsByID[GameCard.uncleScamID]?.category, "Lenses")
 
         let categories = Set(GameCard.all.map(\.category))
         XCTAssertFalse(categories.contains("Arcade"))

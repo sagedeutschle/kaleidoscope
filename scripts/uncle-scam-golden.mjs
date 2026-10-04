@@ -5,9 +5,9 @@
 //
 // It imports showcase/prismet-site/pages/scam-calc.js (the code prismet.xyz/scam runs), feeds it the site's data
 // files, and writes:
-//   shared/PrismetShared/Tests/PrismetSharedTests/Resources/uncle-scam-golden.json   the answers
-//   shared/PrismetShared/Sources/PrismetShared/UncleScam/Resources/tax-2026.json      the same data, bundled as the
-//   shared/PrismetShared/Sources/PrismetShared/UncleScam/Resources/mts-snapshot.json  apps' offline fallback
+//   shared/PrismetShared/Tests/PrismetSharedTests/Golden/uncle-scam-golden.json   the answers
+//   shared/PrismetShared/Sources/PrismetShared/UncleScam/Bundled/tax-2026.json    the same data, bundled as the
+//   shared/PrismetShared/Sources/PrismetShared/UncleScam/Bundled/mts-snapshot.json apps' offline fallback
 // UncleScamGoldenTests.swift holds the Swift port to these answers, to the cent. Run this again whenever the site's
 // data or arithmetic changes, and the tests say whether the apps still agree with the website.
 import { readFileSync, writeFileSync, copyFileSync } from 'node:fs';
@@ -66,8 +66,8 @@ const golden = {
   },
   names: ['OHIO STATE UNIVERSITY, THE', 'BATTELLE MEMORIAL INSTITUTE', 'ACME  WIDGETS OF OHIO LLC', "O'NEIL-SMITH & SONS", 'REDACTED DUE TO PII', 'MULTIPLE RECIPIENTS', 'DIRCKSEN & ASSOCIATES, INC.'].map((raw) => ({ raw, tidy: calc.tidyName(raw) })),
 };
-writeFileSync(join(SHARED, 'Tests/PrismetSharedTests/Resources/uncle-scam-golden.json'), JSON.stringify(golden) + '\n');
-for (const f of ['tax-2026.json', 'mts-snapshot.json']) copyFileSync(join(PAGES, 'scam-data', f), join(SHARED, 'Sources/PrismetShared/UncleScam/Resources', f));
+writeFileSync(join(SHARED, 'Tests/PrismetSharedTests/Golden/uncle-scam-golden.json'), JSON.stringify(golden) + '\n');
+for (const f of ['tax-2026.json', 'mts-snapshot.json']) copyFileSync(join(PAGES, 'scam-data', f), join(SHARED, 'Sources/PrismetShared/UncleScam/Bundled', f));
 // the member list as the tests saw it (the apps fetch the live one)
-writeFileSync(join(SHARED, 'Tests/PrismetSharedTests/Resources/uncle-scam-congress.json'), JSON.stringify(congress) + '\n');
+writeFileSync(join(SHARED, 'Tests/PrismetSharedTests/Golden/uncle-scam-congress.json'), JSON.stringify(congress) + '\n');
 console.log(`uncle-scam golden: ${bills.length} bills, ${golden.splits.length} splits, site ${sha}, tax data ${tax.built}`);

@@ -69,6 +69,13 @@ enum FacetRegistry {
                         accent: Color(red: 0.36, green: 0.60, blue: 0.92),
                         category: .lenses,
                         status: .ready),
+        // PRISM: Fable/Claude 2026-10-04: Uncle Scam lens (shared screen in PrismetShared; same lens as prismet.xyz/scam)
+        FacetDescriptor(id: "uncle-scam",
+                        title: "Uncle Scam",
+                        systemImage: "scroll",
+                        accent: Color(red: 0.70, green: 0.15, blue: 0.12),
+                        category: .lenses,
+                        status: .ready),
         FacetDescriptor(id: "rubiks-cube",
                         title: "Rubik's Cube",
                         systemImage: "cube.transparent",

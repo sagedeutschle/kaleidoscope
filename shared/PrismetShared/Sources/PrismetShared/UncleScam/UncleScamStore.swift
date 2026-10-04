@@ -9,7 +9,7 @@ import Foundation
 /// The website's own data files, bundled as the offline fallback (`scripts/uncle-scam-golden.mjs` copies them).
 public enum UncleScamBundled {
     static func data(_ name: String, _ ext: String) throws -> Data {
-        guard let url = Bundle.module.url(forResource: name, withExtension: ext, subdirectory: "Resources") else {
+        guard let url = Bundle.module.url(forResource: name, withExtension: ext, subdirectory: "Bundled") else {
             throw CocoaError(.fileNoSuchFile)
         }
         return try Data(contentsOf: url)

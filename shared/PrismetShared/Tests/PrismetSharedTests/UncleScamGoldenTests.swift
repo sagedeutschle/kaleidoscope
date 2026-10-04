@@ -1,7 +1,7 @@
 import XCTest
 @testable import PrismetShared
 
-/// The apps' Uncle Scam must give the answers prismet.xyz/scam gives. `Resources/uncle-scam-golden.json` holds
+/// The apps' Uncle Scam must give the answers prismet.xyz/scam gives. `Golden/uncle-scam-golden.json` holds
 /// those answers (`scripts/uncle-scam-golden.mjs` writes it from the website's `scam-calc.js`); the data the
 /// website used is the data bundled in the package, so every figure here is compared to the cent.
 final class UncleScamGoldenTests: XCTestCase {
@@ -40,7 +40,7 @@ final class UncleScamGoldenTests: XCTestCase {
     }
 
     static func resource(_ name: String) throws -> Data {
-        let url = try XCTUnwrap(Bundle.module.url(forResource: name, withExtension: "json", subdirectory: "Resources"))
+        let url = try XCTUnwrap(Bundle.module.url(forResource: name, withExtension: "json", subdirectory: "Golden"))
         return try Data(contentsOf: url)
     }
 
